@@ -11,6 +11,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Inject
@@ -28,6 +29,16 @@ class CorpPortalApi {
                     ignoreUnknownKeys = true
                     useAlternativeNames = false
                 }
+            )
+            register(
+                contentType = ContentType.Any,
+                converter = KotlinxSerializationConverter(
+                    Json {
+                        prettyPrint = true
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    }
+                )
             )
         }
 

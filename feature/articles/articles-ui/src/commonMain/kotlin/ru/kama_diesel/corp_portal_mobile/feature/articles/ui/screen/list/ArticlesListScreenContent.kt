@@ -1,5 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,20 +37,25 @@ fun ArticleItemContent(
             .padding(all = 16.dp),
         contentAlignment = Alignment.BottomStart,
     ) {
-        Column {
-            Text(
-                text = item.title,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = item.compressedText,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-            )
-        }
         AsyncImage(
             model = item.imagePath,
             contentDescription = null,
         )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.5f))
+                .padding(16.dp)
+        ) {
+            Text(
+                text = item.title,
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = item.text,
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
+        }
     }
 }

@@ -41,7 +41,7 @@ buildkonfig {
     packageName = "ru.kama_diesel.corp_portal_mobile"
 
     defaultConfigs {
-        buildConfigField(STRING, "BASE_URL", "http://test.corp-portal.kama-diesel.ru/api/")
+        buildConfigField(STRING, "BASE_URL", "https://test.corp-portal.kama-diesel.ru/api/")
     }
 }
 

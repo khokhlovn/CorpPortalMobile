@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class ArticleItem(
     val id: String,
     val title: String,
-    val compressedText: String,
-    val imagePath: String,
+    val text: String,
+    val imagePath: String?,
 )

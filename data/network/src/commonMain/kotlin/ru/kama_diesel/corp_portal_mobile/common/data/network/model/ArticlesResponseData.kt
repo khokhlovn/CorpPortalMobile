@@ -15,14 +15,8 @@ data class ArticleData(
     val postId: String,
     @SerialName("title")
     val title: String,
-    @SerialName("compressed_text")
-    val compressedText: String,
+    @SerialName("text")
+    val text: String,
     @SerialName("images")
-    val images: List<Image>,
-)
-
-@Serializable
-data class Image(
-    @SerialName("path")
-    val path: String,
+    val imagesPaths: List<String>?,
 )

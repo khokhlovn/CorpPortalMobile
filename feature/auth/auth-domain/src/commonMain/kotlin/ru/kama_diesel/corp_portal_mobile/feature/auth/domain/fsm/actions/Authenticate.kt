@@ -5,7 +5,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.auth.domain.fsm.AuthFSMState.Lo
 import ru.kontur.mobile.visualfsm.Transition
 
 internal class Authenticate : AuthFSMAction() {
-    class AuthenticationStart : Transition<Login, AsyncWorkState.Authenticating>() {
+    inner class AuthenticationStart : Transition<Login, AsyncWorkState.Authenticating>() {
         override fun transform(state: Login): AsyncWorkState.Authenticating {
             return AsyncWorkState.Authenticating(name = state.name, password = state.password)
         }

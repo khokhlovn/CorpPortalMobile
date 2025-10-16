@@ -15,8 +15,8 @@ class ArticlesRepository(
             ArticleItem(
                 id = it.postId,
                 title = it.title,
-                compressedText = it.compressedText,
-                imagePath = it.images.first().path,
+                text = it.text,
+                imagePath = it.imagesPaths?.firstOrNull(),
             )
         }
     }
