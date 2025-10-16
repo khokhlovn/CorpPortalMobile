@@ -88,6 +88,13 @@ android {
         warningsAsErrors = true
         htmlReport = true
     }
+
+    val apkName = "CorpPortalMobile-${libs.versions.app.versionName.get()}.${libs.versions.app.versionCode.get()}.apk"
+
+    buildOutputs.all {
+        val variantOutputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+        variantOutputImpl.outputFileName = apkName
+    }
 }
 
 compose.desktop {
