@@ -1,0 +1,14 @@
+package ru.kama_diesel.corp_portal_mobile.common.ui.navigation
+
+import kotlin.reflect.KProperty
+
+class RouterHolder<T : IRouter>(private var routerInstance: T? = null) {
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        return routerInstance ?: error("Router is not initialized")
+    }
+
+    fun updateInstance(newRouterInstance: T) {
+        routerInstance = newRouterInstance
+    }
+}
