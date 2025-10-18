@@ -1,10 +1,12 @@
 package ru.kama_diesel.corp_portal_mobile.feature.auth.ui.element.input
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.resources.Res
@@ -23,5 +25,6 @@ fun NameInputField(
         textStyle = TextStyle(fontSize = 16.sp),
         singleLine = true,
         placeholder = { Text(text = stringResource(Res.string.name)) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
     )
 }

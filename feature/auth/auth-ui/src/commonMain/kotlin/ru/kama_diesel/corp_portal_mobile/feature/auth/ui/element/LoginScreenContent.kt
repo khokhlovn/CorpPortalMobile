@@ -83,13 +83,7 @@ private fun SignInButton(
     Button(
         modifier = modifier,
         shape = ShapeDefaults.Medium,
-        colors = ButtonColors(
-            containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            disabledContentColor = MaterialTheme.colorScheme.onSecondary
-        ),
-        onClick = onClick
+        onClick = onClick,
     ) {
         Text(text = stringResource(Res.string.sign_in))
     }

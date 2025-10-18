@@ -7,4 +7,5 @@
     <string name="password">Пароль</string>
 
     <string name="news">Новости</string>
+    <string name="filters">Фильтры</string>
 </resources>
