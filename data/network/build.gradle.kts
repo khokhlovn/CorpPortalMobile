@@ -3,8 +3,8 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.buildkonfig)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -41,7 +41,9 @@ buildkonfig {
     packageName = "ru.kama_diesel.corp_portal_mobile"
 
     defaultConfigs {
+        exposeObjectWithName = "BuildKonfig"
         buildConfigField(STRING, "BASE_URL", "https://test.corp-portal.kama-diesel.ru/api/")
+        buildConfigField(STRING, "APPMETRICA_KEY", "578aaac8-176e-46bc-9284-d23932a24b9d")
     }
 }
 

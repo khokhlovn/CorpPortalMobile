@@ -42,8 +42,10 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(projects.data.network)
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.appmetrica)
         }
 
         jvmMain.dependencies {

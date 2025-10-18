@@ -28,6 +28,7 @@ napier = "2.7.1"
 uuid = "0.8.4"
 jetbrainsKotlinJvm = "2.2.20"
 coil = "3.3.0"
+appmetrica = "7.13.0"
 
 [libraries]
 
@@ -64,6 +65,8 @@ uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
 coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
+appmetrica = { module = "io.appmetrica.analytics:analytics", version.ref = "appmetrica" }
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
