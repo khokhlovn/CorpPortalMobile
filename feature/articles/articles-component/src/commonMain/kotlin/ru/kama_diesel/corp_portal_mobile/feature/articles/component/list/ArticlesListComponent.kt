@@ -17,6 +17,8 @@ class ArticlesListComponent(
         key = ARTICLES_LIST_SAVED_STATE,
         initialValue = ArticlesListViewState(
             articleItems = listOf(),
+            tagItems = listOf(),
+            isLoading = true,
         ),
         deserialization = ArticlesListViewState.serializer(),
         serialization = ArticlesListViewState.serializer()

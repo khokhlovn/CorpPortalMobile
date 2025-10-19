@@ -18,5 +18,5 @@ data class ArticleData(
     @SerialName("text")
     val text: String,
     @SerialName("images")
-    val imagesPaths: List<String>?,
+    val imagesPaths: List<String>? = null,
 )

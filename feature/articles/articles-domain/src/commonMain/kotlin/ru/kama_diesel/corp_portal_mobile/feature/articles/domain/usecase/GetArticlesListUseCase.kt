@@ -5,8 +5,8 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IArticlesRepos
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 
 @Inject
-class ObserveArticlesListUseCase(
+class GetArticlesListUseCase(
     private val articlesRepository: IArticlesRepository,
 ) {
-    suspend operator fun invoke(): List<ArticleItem> = articlesRepository.observeArticlesList()
+    suspend operator fun invoke(): List<ArticleItem> = articlesRepository.getArticlesList()
 }

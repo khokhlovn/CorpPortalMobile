@@ -12,5 +12,7 @@ fun ArticlesListScreenContainer(viewModel: ArticlesListViewModel) {
     ArticlesListScreen(
         viewState = viewState,
         onLogoutClick = viewModel::onLogoutClick,
+        onRefresh = viewModel::getData,
+        onCheckedChange = viewModel::checkTag
     )
 }

@@ -12,16 +12,20 @@ import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.A
 private fun ArticlesListScreenPreview() {
     ArticlesListScreen(
         viewState = ArticlesListViewState(
-            listOf()
+            articleItems = listOf(),
+            tagItems = listOf(),
+            isLoading = false,
         ),
         onLogoutClick = {},
+        onRefresh = {},
+        onCheckedChange = { _, _ -> },
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ArticlesListScreenContentPreview() {
-    ArticlesListScreenContent(articleItemsPreviewData)
+    ArticlesListScreenContent(articleItems = articleItemsPreviewData, isRefreshing = false, onRefresh = {})
 }
 
 private val articleItemsPreviewData = listOf(

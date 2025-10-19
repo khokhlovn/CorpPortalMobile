@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
@@ -13,7 +14,6 @@ import ru.kama_diesel.corp_portal_mobile.feature.auth.ui.element.input.NameInput
 import ru.kama_diesel.corp_portal_mobile.feature.auth.ui.element.input.PasswordInputField
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.login
-import ru.kama_diesel.corp_portal_mobile.resources.password
 import ru.kama_diesel.corp_portal_mobile.resources.sign_in
 
 @Composable
@@ -28,6 +28,10 @@ fun LoginScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+
+        val focusManager = LocalFocusManager.current
+        val isError = !data.errorMessage.isNullOrBlank()
+
         Spacer(modifier = Modifier.height(height = 64.dp))
 
         LoginText()
@@ -42,11 +46,10 @@ fun LoginScreenContent(
         PasswordInputField(
             modifier = Modifier.fillMaxWidth(),
             value = data.password,
-            placeholder = stringResource(Res.string.password),
             onValueChange = onPasswordChange
         )
 
-        if (!data.errorMessage.isNullOrBlank()) {
+        if (isError) {
             Spacer(modifier = Modifier.height(height = 16.dp))
             Text(
                 text = data.errorMessage,
@@ -54,13 +57,16 @@ fun LoginScreenContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(height = 32.dp))
+        Spacer(modifier = Modifier.height(height = 24.dp))
         if (data.isAuthenticationInProgress) {
             CircularProgressIndicator()
         } else {
             SignInButton(
                 modifier = Modifier.height(64.dp).fillMaxWidth(),
-                onClick = onSignInClick
+                onClick = {
+                    focusManager.clearFocus()
+                    onSignInClick()
+                }
             )
         }
     }

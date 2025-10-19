@@ -1,8 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.common.ui.theme
 
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
 
 internal val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
@@ -28,8 +26,8 @@ internal val LightColorScheme = lightColorScheme(
     surfaceVariant = md_theme_light_surfaceVariant,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
     outline = md_theme_light_outline,
-    inverseOnSurface = md_theme_light_inverseOnSurface,
-    inverseSurface = md_theme_light_inverseSurface,
+    inverseOnSurface = md_theme_light_inverseOnPrimary,
+    inverseSurface = md_theme_light_inversePrimary,
     inversePrimary = md_theme_light_inversePrimary,
     surfaceTint = md_theme_light_surfaceTint,
     outlineVariant = md_theme_light_outlineVariant,
