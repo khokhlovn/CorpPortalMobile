@@ -8,5 +8,11 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.model.TagItem
 class GetTagsUseCase(
     private val articlesRepository: IArticlesRepository,
 ) {
-    suspend operator fun invoke(): List<TagItem> = articlesRepository.getTagsList()
+    suspend operator fun invoke(): List<TagItem> {
+        return try {
+            articlesRepository.getTagsList()
+        } catch (_: Exception) {
+            listOf()
+        }
+    }
 }

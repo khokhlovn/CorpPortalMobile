@@ -8,5 +8,15 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 class GetArticlesListUseCase(
     private val articlesRepository: IArticlesRepository,
 ) {
-    suspend operator fun invoke(): List<ArticleItem> = articlesRepository.getArticlesList()
+    suspend operator fun invoke(fromDate: Long?, toDate: Long?, selectedTagsIds: List<String>): List<ArticleItem> {
+        return try {
+            articlesRepository.getArticlesList(
+                fromDate = fromDate,
+                toDate = toDate,
+                selectedTagsIds = selectedTagsIds,
+            )
+        } catch (_: Exception) {
+            listOf()
+        }
+    }
 }

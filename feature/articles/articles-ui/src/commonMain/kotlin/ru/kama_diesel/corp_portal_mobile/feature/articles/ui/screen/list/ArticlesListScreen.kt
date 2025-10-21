@@ -2,6 +2,7 @@ package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,8 +26,10 @@ import ru.kama_diesel.corp_portal_mobile.resources.news
 fun ArticlesListScreen(
     viewState: ArticlesListViewState,
     onCheckedChange: (String, Boolean) -> Unit,
+    onDateChange: (Long?, Long?) -> Unit,
     onLogoutClick: () -> Unit,
     onRefresh: () -> Unit,
+    onResetFilters: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -47,6 +50,13 @@ fun ArticlesListScreen(
                 }
             )
         },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { },
+            ) {
+                Icon(imageVector = androidx.compose.material.icons.Icons.Filled.FilterList, contentDescription = null)
+            }
+        }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues = paddingValues).fillMaxSize()) {
             val focusRequester = remember { FocusRequester() }
@@ -76,10 +86,19 @@ fun ArticlesListScreen(
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
+                if (expanded) {
+                    VerticalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
+                }
                 FiltersContent(
-                    tagItems = viewState.tagItems,
                     expanded = expanded,
+                    tagItems = viewState.tagItems,
+                    fromDate = viewState.fromDate,
+                    toDate = viewState.toDate,
                     onCheckedChange = onCheckedChange,
+                    onDateChange = onDateChange,
+                    onResetFilters = onResetFilters,
+                    onApplyFilters = onRefresh,
+                    onHideFilters = { expanded = false },
                 )
             }
 

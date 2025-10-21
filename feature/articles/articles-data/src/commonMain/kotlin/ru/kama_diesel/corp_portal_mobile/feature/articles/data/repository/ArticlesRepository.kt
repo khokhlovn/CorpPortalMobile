@@ -14,9 +14,17 @@ class ArticlesRepository(
     private val corpPortalApi: CorpPortalApi,
 ) : IArticlesRepository {
 
-    override suspend fun getArticlesList(): List<ArticleItem> {
+    override suspend fun getArticlesList(
+        fromDate: Long?,
+        toDate: Long?,
+        selectedTagsIds: List<String>
+    ): List<ArticleItem> {
         return withContext(Dispatchers.IO) {
-            corpPortalApi.getArticles().articles.map {
+            corpPortalApi.getArticles(
+                fromDate = fromDate,
+                toDate = toDate,
+                selectedTagsIds = selectedTagsIds,
+            ).articles.map {
                 ArticleItem(
                     id = it.postId,
                     title = it.title,

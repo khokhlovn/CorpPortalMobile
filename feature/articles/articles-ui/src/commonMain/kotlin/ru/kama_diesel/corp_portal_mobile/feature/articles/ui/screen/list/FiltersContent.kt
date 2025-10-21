@@ -3,29 +3,50 @@ package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
+import kotlinx.datetime.*
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
+import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.TagItemUIModel
+import ru.kama_diesel.corp_portal_mobile.resources.*
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersContent(
-    tagItems: List<TagItemUIModel>,
-    onCheckedChange: (String, Boolean) -> Unit,
     expanded: Boolean,
+    tagItems: List<TagItemUIModel>,
+    fromDate: Long?,
+    toDate: Long?,
+    onCheckedChange: (String, Boolean) -> Unit,
+    onDateChange: (Long?, Long?) -> Unit,
+    onResetFilters: () -> Unit,
+    onApplyFilters: () -> Unit,
+    onHideFilters: () -> Unit,
 ) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxHeight()
             .background(color = MaterialTheme.colorScheme.inverseSurface)
@@ -37,16 +58,139 @@ fun FiltersContent(
                     Modifier.width(0.dp)
                 }
             )
-            .fillMaxHeight()
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(end = 12.dp, top = 12.dp, bottom = 12.dp),
-        ) {
-            items(items = tagItems) { tagItem ->
-                TagItemContent(
-                    item = tagItem,
-                    onCheckedChange = onCheckedChange,
+        var showModal by remember { mutableStateOf(false) }
+
+        if (expanded) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().weight(2f),
+                contentPadding = PaddingValues(end = 12.dp, top = 12.dp, bottom = 12.dp),
+            ) {
+                stickyHeader {
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp),
+                        text = stringResource(Res.string.filters),
+                        fontSize = 24.sp
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(height = 12.dp))
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp),
+                        fontSize = 16.sp,
+                        text = stringResource(Res.string.tags)
+                    )
+                }
+
+                items(items = tagItems) { tagItem ->
+                    TagItemContent(
+                        item = tagItem,
+                        onCheckedChange = onCheckedChange,
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(height = 12.dp))
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 12.dp)
+                            .pointerInput(Pair(fromDate, toDate)) {
+                                awaitEachGesture {
+                                    awaitFirstDown(pass = PointerEventPass.Initial)
+                                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                                    if (upEvent != null) {
+                                        showModal = true
+                                    }
+                                }
+                            },
+                        value = convertMillisToDateRange(fromDate, toDate),
+                        onValueChange = { },
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.date),
+                            )
+                        },
+                        textStyle = TextStyle(fontSize = 14.sp),
+                        readOnly = true,
+                        trailingIcon = {
+                            Icon(Icons.Filled.DateRange, contentDescription = null)
+                        },
+                        colors = OutlinedTextFieldDefaults.colors().copy(
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Column {
+                Button(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                    enabled = tagItems.any { it.isChecked } || fromDate != null || toDate != null,
+                    shape = ShapeDefaults.Medium,
+                    onClick = onResetFilters,
+                ) {
+                    Text(text = stringResource(Res.string.reset))
+                }
+                Button(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                    shape = ShapeDefaults.Medium,
+                    onClick = {
+                        onApplyFilters()
+                        onHideFilters()
+                    },
+                ) {
+                    Text(text = stringResource(Res.string.search))
+                }
+                Spacer(modifier = Modifier.height(height = 12.dp))
+            }
+        }
+        if (showModal) {
+            val dateRangePickerState = rememberDateRangePickerState(
+                initialSelectedStartDateMillis = fromDate,
+                initialSelectedEndDateMillis = toDate,
+                selectableDates = PastOrPresentSelectableDates,
+            )
+            DatePickerDialog(
+                properties = DialogProperties(usePlatformDefaultWidth = false),
+                onDismissRequest = { showModal = false },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            onDateChange(
+                                dateRangePickerState.selectedStartDateMillis,
+                                dateRangePickerState.selectedEndDateMillis
+                            )
+                            showModal = false
+                        }) {
+                        Text(text = stringResource(Res.string.apply))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showModal = false }) {
+                        Text(
+                            text = stringResource(Res.string.close)
+                        )
+                    }
+                }
+            ) {
+                DateRangePicker(
+                    state = dateRangePickerState,
+                    headline = null,
+                    title = null,
+                    showModeToggle = false,
+                    colors = DatePickerDefaults.colors(
+                        dayContentColor = MaterialTheme.colorScheme.inverseOnSurface,
+                        disabledDayContentColor = MaterialTheme.colorScheme.outline,
+                        dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.7f)
+                    ),
+                    modifier = Modifier
+                        .height(500.dp)
+                        .padding(vertical = 12.dp)
                 )
             }
         }
@@ -132,5 +276,46 @@ private fun String.toColor(): Color {
         }
 
         else -> throw IllegalArgumentException("Invalid Hex color: $this")
+    }
+}
+
+@OptIn(ExperimentalTime::class, FormatStringsInDatetimeFormats::class)
+@Composable
+private fun convertMillisToDateRange(fromDate: Long?, toDate: Long?): String {
+    val formatter = LocalDateTime.Format {
+        byUnicodePattern("dd.MM.yyyy")
+    }
+    val fromDateString = fromDate?.let {
+        Instant
+            .fromEpochMilliseconds(fromDate)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .format(formatter)
+
+    }
+    val toDateString = toDate?.let {
+        Instant
+            .fromEpochMilliseconds(toDate)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .format(formatter)
+    }
+
+    return buildString {
+        if (fromDateString != null && toDateString != null) {
+            append(stringResource(Res.string.from_to, fromDateString, toDateString))
+        } else {
+            append(fromDateString ?: toDateString ?: "")
+        }
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+object PastOrPresentSelectableDates : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return utcTimeMillis <= Clock.System.now().plus(DateTimePeriod(days = 1), TimeZone.currentSystemDefault())
+            .toEpochMilliseconds()
+    }
+
+    override fun isSelectableYear(year: Int): Boolean {
+        return year <= Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
     }
 }

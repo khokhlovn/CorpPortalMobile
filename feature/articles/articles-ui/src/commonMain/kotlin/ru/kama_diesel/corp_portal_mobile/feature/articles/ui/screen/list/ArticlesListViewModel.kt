@@ -34,12 +34,22 @@ class ArticlesListViewModel(
 
     fun getData() {
         coroutineScope.launch {
-            val articleItems = getArticlesListUseCase()
+            val articleItems = getArticlesListUseCase(
+                fromDate = currentState.fromDate,
+                toDate = currentState.toDate,
+                selectedTagsIds = currentState.tagItems.filter { it.isChecked }.map { it.tagItem.id },
+            )
             val tagItems = getTagsUseCase()
             setState {
                 copy(
                     articleItems = articleItems,
-                    tagItems = tagItems.map { tagItem -> TagItemUIModel(tagItem = tagItem, isChecked = false) },
+                    tagItems = tagItems.map { tagItem ->
+                        TagItemUIModel(
+                            tagItem = tagItem,
+                            isChecked = currentState.tagItems.firstOrNull { it.tagItem.id == tagItem.id }?.isChecked
+                                ?: false
+                        )
+                    },
                     isLoading = false,
                 )
             }
@@ -56,6 +66,31 @@ class ArticlesListViewModel(
                 }
             )
         }
+    }
+
+    fun onDateChange(fromDate: Long?, toDate: Long?) {
+        setState {
+            copy(
+                fromDate = fromDate,
+                toDate = toDate,
+            )
+        }
+    }
+
+    fun onResetFilters() {
+        setState {
+            copy(
+                fromDate = null,
+                toDate = null,
+                tagItems = tagItems.map { tagItemUIModel ->
+                    tagItemUIModel.copy(
+                        isChecked = false,
+                    )
+                },
+                isLoading = true,
+            )
+        }
+        getData()
     }
 
     override fun createInitialState() = initialState

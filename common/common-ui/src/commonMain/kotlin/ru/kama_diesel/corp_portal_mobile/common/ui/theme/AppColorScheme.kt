@@ -24,6 +24,7 @@ internal val LightColorScheme = lightColorScheme(
     surface = md_theme_light_surface,
     onSurface = md_theme_light_onSurface,
     surfaceVariant = md_theme_light_surfaceVariant,
+    surfaceContainerHigh = md_theme_light_surfaceContainerHigh,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
     outline = md_theme_light_outline,
     inverseOnSurface = md_theme_light_inverseOnPrimary,

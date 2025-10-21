@@ -6,6 +6,7 @@ import ru.kama_diesel.corp_portal_mobile.common.component.registerAndGetSavedSta
 import ru.kama_diesel.corp_portal_mobile.feature.articles.component.di.ArticlesFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.articles.component.list.di.ArticlesListDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.articles.component.list.di.create
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListViewState
 
 class ArticlesListComponent(
@@ -18,6 +19,9 @@ class ArticlesListComponent(
         initialValue = ArticlesListViewState(
             articleItems = listOf(),
             tagItems = listOf(),
+            fromDate = null,
+            toDate = null,
+            dialog = ArticlesListDialog.No,
             isLoading = true,
         ),
         deserialization = ArticlesListViewState.serializer(),

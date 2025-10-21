@@ -49,6 +49,7 @@ fun ArticlesListScreenContent(
         onRefresh = onRefresh,
     ) {
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 16.dp, horizontal = 20.dp)
         ) {
