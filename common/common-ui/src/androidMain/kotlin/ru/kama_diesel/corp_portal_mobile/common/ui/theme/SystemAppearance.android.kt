@@ -14,8 +14,8 @@ internal actual fun SystemAppearance(useDarkTheme: Boolean) {
         val window = (view.context as Activity).window
 
         WindowInsetsControllerCompat(window, window.decorView).apply {
-            isAppearanceLightStatusBars = !useDarkTheme
-            isAppearanceLightNavigationBars = !useDarkTheme
+            isAppearanceLightStatusBars = false
+            isAppearanceLightNavigationBars = true
         }
     }
 }

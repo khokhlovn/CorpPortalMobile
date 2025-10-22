@@ -22,7 +22,7 @@ internal class HandleAuthResult(private val result: AuthResult) : AuthFSMAction(
         }
 
         override fun transform(state: AsyncWorkState.Authenticating): Login {
-            return Login(name = state.name, password = state.password, errorMessage = "Ошибка сети")
+            return Login(name = state.name, password = state.password, errorMessage = "Неправильный логин/пароль")
         }
     }
 
@@ -35,7 +35,7 @@ internal class HandleAuthResult(private val result: AuthResult) : AuthFSMAction(
             return Login(
                 name = state.name,
                 password = state.password,
-                errorMessage = "Проверьте соединение сети Интернет"
+                errorMessage = "Ошибка сети",
             )
         }
     }

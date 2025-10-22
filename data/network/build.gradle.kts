@@ -30,6 +30,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.appmetrica)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -43,7 +44,7 @@ buildkonfig {
     defaultConfigs {
         exposeObjectWithName = "BuildKonfig"
         buildConfigField(STRING, "BASE_URL", "https://test.corp-portal.kama-diesel.ru/api/")
-        buildConfigField(STRING, "APPMETRICA_KEY", "578aaac8-176e-46bc-9284-d23932a24b9d")
+        buildConfigField(STRING, "APPMETRICA_KEY", "326afbc0-ae5c-4b46-b17a-7c160948df78")
     }
 }
 
