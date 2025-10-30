@@ -33,6 +33,7 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
             implementation(libs.kotlin.inject.runtime)
+            implementation(libs.ktor.client.core)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

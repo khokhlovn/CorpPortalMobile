@@ -25,13 +25,24 @@ private fun ArticlesListScreenPreview() {
         onCheckedChange = { _, _ -> },
         onDateChange = { _, _ -> },
         onResetFilters = {},
+        onArticleClick = { _, _, _, _, _ -> },
+        onCloseDetailsClick = {},
+        onCommentChange = { _ -> },
+        onSendComment = {},
+        onHideSnackbar = {},
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ArticlesListScreenContentPreview() {
-    ArticlesListScreenContent(articleItems = articleItemsPreviewData, isRefreshing = false, onRefresh = {})
+    ArticlesListScreenContent(
+        articleItems = articleItemsPreviewData,
+        isRefreshing = false,
+        scrollEnabled = true,
+        onRefresh = {},
+        onArticleClick = { _, _, _, _, _ -> },
+    )
 }
 
 private val articleItemsPreviewData = listOf(
@@ -39,6 +50,8 @@ private val articleItemsPreviewData = listOf(
         id = "",
         title = "План выполнен!",
         text = "В рамках годового собрания коллектива объявлено об успешном выполнении плана за 2023 год",
-        imagePath = "",
+        imagePaths = null,
+        tags = null,
+        creationDate = "01.01.2025 12:00"
     ),
 )

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TagsResponseData(
     @SerialName("tags")
-    val tags: List<TagData>,
+    val tags: List<TagData>? = null,
 )
 
 @Serializable
