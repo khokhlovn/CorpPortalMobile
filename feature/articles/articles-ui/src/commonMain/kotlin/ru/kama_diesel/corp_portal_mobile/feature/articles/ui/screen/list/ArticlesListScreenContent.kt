@@ -22,19 +22,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import org.jetbrains.compose.resources.painterResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.placeholder
 
 @Composable
 fun ArticlesListScreenContent(
-    modifier: Modifier = Modifier,
     articleItems: List<ArticleItem>,
     isRefreshing: Boolean,
+    scrollEnabled: Boolean,
     onRefresh: () -> Unit,
+    onArticleClick: (String, String, List<String>?, List<String>?, String) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
     PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         state = state,
         isRefreshing = isRefreshing,
         indicator = {
@@ -50,12 +54,15 @@ fun ArticlesListScreenContent(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            userScrollEnabled = scrollEnabled,
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 16.dp, horizontal = 20.dp)
         ) {
             items(items = articleItems) { articleItem ->
                 ArticleItemContent(
                     item = articleItem,
+                    scrollEnabled = scrollEnabled,
+                    onArticleClick = onArticleClick,
                 )
             }
         }
@@ -65,16 +72,28 @@ fun ArticlesListScreenContent(
 @Composable
 fun ArticleItemContent(
     item: ArticleItem,
+    scrollEnabled: Boolean,
+    onArticleClick: (String, String, List<String>?, List<String>?, String) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(160.dp)
             .clip(shape = RoundedCornerShape(size = 12.dp))
-            .clickable { },
+            .then(
+                if (scrollEnabled) {
+                    Modifier.clickable {
+                        onArticleClick(item.id, item.title, item.imagePaths, item.tags, item.creationDate)
+                    }
+                } else {
+                    Modifier
+                }
+            ),
         contentAlignment = Alignment.BottomStart,
     ) {
         AsyncImage(
-            model = item.imagePath,
+            model = item.imagePaths?.firstOrNull(),
+            placeholder = painterResource(Res.drawable.placeholder),
+            error = painterResource(Res.drawable.placeholder),
             contentDescription = null,
             contentScale = ContentScale.Crop,
         )

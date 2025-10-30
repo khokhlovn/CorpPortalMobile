@@ -29,6 +29,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.feature.root.rootComponent)
+            implementation(projects.data.network)
             implementation(projects.common.commonUi)
             implementation(projects.common.commonData)
 
@@ -39,6 +40,9 @@ kotlin {
             implementation(libs.kotlin.inject.runtime)
 
             implementation(libs.napier)
+
+            implementation(libs.ktor.client.core)
+
         }
 
         androidMain.dependencies {
@@ -79,6 +83,7 @@ android {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
@@ -120,4 +125,5 @@ dependencies {
     add("kspJvm", libs.kotlin.inject.compiler)
     add("kspIosSimulatorArm64", libs.kotlin.inject.compiler)
     add("kspIosArm64", libs.kotlin.inject.compiler)
+    coreLibraryDesugaring(libs.desugar)
 }

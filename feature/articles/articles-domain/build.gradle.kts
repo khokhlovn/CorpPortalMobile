@@ -16,7 +16,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlin.inject.runtime)
-            api(libs.uuid)
+            implementation(libs.ktor.client.core)
         }
 
         commonTest.dependencies {

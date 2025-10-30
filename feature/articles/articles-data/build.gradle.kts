@@ -16,7 +16,7 @@ kotlin {
             implementation(projects.common.commonData)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlin.inject.runtime)
-            api(libs.uuid)
+            api(libs.ktor.client.core)
         }
 
         commonTest.dependencies {

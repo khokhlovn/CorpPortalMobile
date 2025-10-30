@@ -17,4 +17,10 @@
     <string name="select_date_or_range">Выберите дату или промежуток</string>
     <string name="apply">Подтвердить</string>
     <string name="close">Закрыть</string>
+
+    <string name="article_tags">Теги: %1$s</string>
+    <string name="comments">Комментарии (%1$s):</string>
+    <string name="comments_empty">Комментариев пока нет</string>
+    <string name="comment">Комментарий</string>
+    <string name="comment_sent">Комментарий отправлен на модерацию</string>
 </resources>

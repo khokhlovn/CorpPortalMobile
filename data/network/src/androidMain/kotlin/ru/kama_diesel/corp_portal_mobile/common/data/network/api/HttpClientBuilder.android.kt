@@ -6,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
@@ -16,7 +17,12 @@ import ru.kama_diesel.corp_portal_mobile.BuildKonfig
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual object HttpClientBuilder {
-    actual fun build(): HttpClient = HttpClient(CIO) {
+
+    actual fun build(preferencesCookieStorage: CookiesStorage): HttpClient = HttpClient(CIO) {
+        install(HttpCookies) {
+            storage = preferencesCookieStorage
+        }
+
         install(ContentNegotiation) {
             json(
                 Json {
