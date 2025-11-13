@@ -19,17 +19,19 @@ private fun ArticlesListScreenPreview() {
             toDate = null,
             dialog = ArticlesListDialog.No,
             isLoading = false,
+            openedImagesPaths = listOf(),
+            selectedImageIndex = 0,
         ),
-        onLogoutClick = {},
         onRefresh = {},
         onCheckedChange = { _, _ -> },
         onDateChange = { _, _ -> },
         onResetFilters = {},
-        onArticleClick = { _, _, _, _, _ -> },
+        onArticleClick = { _, _, _, _, _, _, _ -> },
         onCloseDetailsClick = {},
         onCommentChange = { _ -> },
         onSendComment = {},
         onHideSnackbar = {},
+        onLikeClick = {},
     )
 }
 
@@ -41,7 +43,7 @@ private fun ArticlesListScreenContentPreview() {
         isRefreshing = false,
         scrollEnabled = true,
         onRefresh = {},
-        onArticleClick = { _, _, _, _, _ -> },
+        onArticleClick = { _, _, _, _, _, _, _ -> },
     )
 }
 
@@ -52,6 +54,8 @@ private val articleItemsPreviewData = listOf(
         text = "В рамках годового собрания коллектива объявлено об успешном выполнении плана за 2023 год",
         imagePaths = null,
         tags = null,
-        creationDate = "01.01.2025 12:00"
+        creationDate = "01.01.2025 12:00",
+        isLiked = false,
+        likesAmount = 1234,
     ),
 )

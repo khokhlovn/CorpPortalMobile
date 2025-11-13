@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.root.component.di.dependencies
+package ru.kama_diesel.corp_portal_mobile.feature.main.component.di.dependencies
 
 import io.ktor.client.*
 import me.tatarka.inject.annotations.Inject

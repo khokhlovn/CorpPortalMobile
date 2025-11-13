@@ -7,7 +7,6 @@ import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
-import ru.kama_diesel.corp_portal_mobile.feature.articles.component.ArticlesFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.auth.component.AuthFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.root.component.di.RootFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.root.ui.api.IRootFlowRouter
@@ -32,15 +31,15 @@ internal class RootFlowRouter(
                 component = AuthFlowComponent(componentContext, rootFlowDIComponent.authComponentDependencies)
             )
 
-            Configuration.Articles -> SlotChild.ArticlesFlow(
-                component = ArticlesFlowComponent(componentContext, rootFlowDIComponent.articlesComponentDependencies)
+            Configuration.Main -> SlotChild.MainFlow(
+                component = MainFlowComponent(componentContext, rootFlowDIComponent.mainComponentDependencies)
             )
         }
     }
 
     internal sealed interface SlotChild {
         data class AuthFlow(val component: AuthFlowComponent) : SlotChild
-        data class ArticlesFlow(val component: ArticlesFlowComponent) : SlotChild
+        data class MainFlow(val component: MainFlowComponent) : SlotChild
     }
 
     @Serializable
@@ -49,14 +48,14 @@ internal class RootFlowRouter(
         data object Auth : Configuration()
 
         @Serializable
-        data object Articles : Configuration()
+        data object Main : Configuration()
     }
 
     override fun toAuth() {
         slotNavigation.activate(Configuration.Auth)
     }
 
-    override fun toArticles() {
-        slotNavigation.activate(Configuration.Articles)
+    override fun toMain() {
+        slotNavigation.activate(Configuration.Main)
     }
 }

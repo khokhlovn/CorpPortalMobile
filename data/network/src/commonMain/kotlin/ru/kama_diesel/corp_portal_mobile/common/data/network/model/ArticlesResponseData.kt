@@ -23,4 +23,8 @@ data class ArticleData(
     val imagesPaths: List<String>? = null,
     @SerialName("tags")
     val tags: List<TagData>? = null,
+    @SerialName("is_liked")
+    val isLiked: Boolean,
+    @SerialName("likes_amount")
+    val likesAmount: Int,
 )

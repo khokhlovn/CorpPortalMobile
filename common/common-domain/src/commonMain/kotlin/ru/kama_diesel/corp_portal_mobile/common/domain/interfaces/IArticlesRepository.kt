@@ -12,4 +12,6 @@ interface IArticlesRepository {
     suspend fun getArticleDetails(articleId: String): ArticleDetailsItem
 
     suspend fun sendComment(postId: String, comment: String)
+
+    suspend fun like(postId: String)
 }

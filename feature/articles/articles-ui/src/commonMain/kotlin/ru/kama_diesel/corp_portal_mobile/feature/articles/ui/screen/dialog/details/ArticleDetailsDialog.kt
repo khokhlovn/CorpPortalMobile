@@ -33,12 +33,15 @@ fun ArticleDetailsDialog(
     articleDetailsItem: ArticleDetailsItem,
     tags: List<String>?,
     creationDate: String,
+    isLiked: Boolean,
+    likesAmount: Int,
     comment: String,
     commentSendingState: CommentSendingState,
     onCloseClick: () -> Unit,
     onCommentChange: (String) -> Unit,
     onSendComment: () -> Unit,
     onHideSnackbar: () -> Unit,
+    onLikeClick: () -> Unit,
 ) {
     Dialog(onDismissRequest = { onCloseClick() }) {
         Card(
@@ -98,7 +101,10 @@ fun ArticleDetailsDialog(
                     imagePaths = imagePaths,
                     articleDetailsItem = articleDetailsItem,
                     tags = tags,
+                    isLiked = isLiked,
+                    likesAmount = likesAmount,
                     creationDate = creationDate,
+                    onLikeClick = onLikeClick,
                 )
             }
         }

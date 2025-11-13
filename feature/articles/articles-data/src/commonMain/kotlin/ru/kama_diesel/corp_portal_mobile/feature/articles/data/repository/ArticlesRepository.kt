@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.data.network.api.CorpPortalApi
 import ru.kama_diesel.corp_portal_mobile.common.data.network.mapper.DateTimeMapper
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.LikeRequestData
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.SendCommentRequestData
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IArticlesRepository
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleDetailsItem
@@ -39,6 +40,8 @@ class ArticlesRepository(
                     ),
                     imagePaths = it.imagesPaths,
                     tags = it.tags?.map { tag -> tag.name },
+                    isLiked = it.isLiked,
+                    likesAmount = it.likesAmount,
                 )
             } ?: listOf()
         }
@@ -88,6 +91,16 @@ class ArticlesRepository(
                 sendCommentRequestData = SendCommentRequestData(
                     postId = postId.toInt(),
                     text = comment,
+                )
+            )
+        }
+    }
+
+    override suspend fun like(postId: String) {
+        withContext(Dispatchers.IO) {
+            corpPortalApi.like(
+                likeRequestData = LikeRequestData(
+                    postId = postId.toInt(),
                 )
             )
         }

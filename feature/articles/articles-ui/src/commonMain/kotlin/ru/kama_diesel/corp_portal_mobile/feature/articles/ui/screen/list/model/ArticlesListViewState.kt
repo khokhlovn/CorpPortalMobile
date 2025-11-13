@@ -13,6 +13,8 @@ data class ArticlesListViewState(
     val fromDate: Long?,
     val toDate: Long?,
     val isLoading: Boolean,
+    val openedImagesPaths: List<String>,
+    val selectedImageIndex: Int,
 )
 
 @Serializable
@@ -30,6 +32,8 @@ sealed class ArticlesListDialog {
         val imagePaths: List<String>?,
         val tags: List<String>?,
         val creationDate: String,
+        val isLiked: Boolean,
+        val likesAmount: Int,
         val articleDetailsItem: ArticleDetailsItem,
         val comment: String,
         val commentSendingState: CommentSendingState,

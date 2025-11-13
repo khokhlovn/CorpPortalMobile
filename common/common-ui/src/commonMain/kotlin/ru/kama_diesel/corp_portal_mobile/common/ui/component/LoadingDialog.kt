@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.dialog.loading
+package ru.kama_diesel.corp_portal_mobile.common.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -14,7 +14,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 @Composable
-fun ArticleListLoadingDialog() {
+fun LoadingDialog() {
     Dialog(
         onDismissRequest = {},
         properties = DialogProperties(

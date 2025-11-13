@@ -22,7 +22,9 @@ kotlin {
             implementation(projects.feature.auth.authComponent)
             implementation(projects.feature.auth.authDomain)
 
-            implementation(projects.feature.articles.articlesComponent)
+            implementation(projects.feature.main.mainComponent)
+            implementation(projects.feature.main.mainDomain)
+
             implementation(projects.feature.articles.articlesDomain)
 
             implementation(projects.common.commonComponent)

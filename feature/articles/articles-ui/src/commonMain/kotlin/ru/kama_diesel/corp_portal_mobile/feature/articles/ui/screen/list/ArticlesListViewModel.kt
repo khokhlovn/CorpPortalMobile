@@ -3,14 +3,8 @@ package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
-import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.api.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.di.ArticlesListScope
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetArticleDetailsUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetArticlesListUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetTagsUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.SendCommentUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.api.IArticlesFlowRouter
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.*
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListViewState
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentSendingState
@@ -23,19 +17,12 @@ class ArticlesListViewModel(
     private val getTagsUseCase: GetTagsUseCase,
     private val getArticleDetailsUseCase: GetArticleDetailsUseCase,
     private val sendCommentUseCase: SendCommentUseCase,
-    routerHolder: RouterHolder<IArticlesFlowRouter>,
-    private val logout: ILogoutUseCase,
+    private val likeUseCase: LikeUseCase,
     private val initialState: ArticlesListViewState,
 ) : BaseStateViewModel<ArticlesListViewState>() {
 
-    private val router by routerHolder
-
     init {
         getData()
-    }
-
-    fun onLogoutClick() {
-        logout()
     }
 
     fun getData() {
@@ -106,6 +93,8 @@ class ArticlesListViewModel(
         imagePaths: List<String>?,
         tags: List<String>?,
         creationDate: String,
+        isLiked: Boolean,
+        likesAmount: Int,
     ) {
         setState {
             copy(dialog = ArticlesListDialog.Loading)
@@ -117,6 +106,8 @@ class ArticlesListViewModel(
             imagePaths = imagePaths,
             tags = tags,
             creationDate = creationDate,
+            isLiked = isLiked,
+            likesAmount = likesAmount,
         )
     }
 
@@ -181,12 +172,32 @@ class ArticlesListViewModel(
         }
     }
 
+    fun onLikeClick() {
+        with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+            coroutineScope.launch {
+                val isLikeSuccess = likeUseCase(postId = articleId)
+                if (isLikeSuccess) {
+                    setState {
+                        copy(
+                            dialog = copy(
+                                isLiked = true,
+                                likesAmount = likesAmount + 1,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private fun loadArticleDetails(
         articleId: String,
         title: String,
         imagePaths: List<String>?,
         tags: List<String>?,
         creationDate: String,
+        isLiked: Boolean,
+        likesAmount: Int,
     ) {
         coroutineScope.launch {
             val articleDetailsItem = getArticleDetailsUseCase(articleId = articleId)
@@ -195,9 +206,11 @@ class ArticlesListViewModel(
                     dialog = ArticlesListDialog.Details(
                         articleId = articleId,
                         title = title,
-                        imagePaths = imagePaths,
+                        imagePaths = List(4) { imagePaths!! }.flatten(),
                         tags = tags,
                         creationDate = creationDate,
+                        isLiked = isLiked,
+                        likesAmount = likesAmount,
                         articleDetailsItem = articleDetailsItem,
                         comment = "",
                         commentSendingState = CommentSendingState.No,

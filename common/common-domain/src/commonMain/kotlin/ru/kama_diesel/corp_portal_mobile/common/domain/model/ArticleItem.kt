@@ -10,4 +10,6 @@ data class ArticleItem(
     val imagePaths: List<String>?,
     val tags: List<String>?,
     val creationDate: String,
+    val isLiked: Boolean,
+    val likesAmount: Int,
 )

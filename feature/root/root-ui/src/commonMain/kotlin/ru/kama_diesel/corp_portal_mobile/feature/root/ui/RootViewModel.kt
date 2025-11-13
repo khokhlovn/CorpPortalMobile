@@ -28,7 +28,7 @@ class RootViewModel(
             when (state) {
                 RootFSMState.AsyncWorkState.Initial -> Unit
                 RootFSMState.AuthFlow -> router.toAuth()
-                RootFSMState.ArticlesFlow -> router.toArticles()
+                RootFSMState.MainFlow -> router.toMain()
             }
 
         }.launchIn(coroutineScope)
