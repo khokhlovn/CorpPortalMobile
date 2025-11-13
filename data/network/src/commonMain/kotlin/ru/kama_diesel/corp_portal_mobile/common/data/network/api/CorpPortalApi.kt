@@ -54,4 +54,15 @@ class CorpPortalApi(
             setBody(body = sendCommentRequestData)
         }
     }
+
+    suspend fun like(likeRequestData: LikeRequestData): HttpResponse {
+        return httpClient.post("like") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = likeRequestData)
+        }
+    }
+
+    suspend fun getShopList(): ShopListResponseData {
+        return httpClient.get("shop_list").body()
+    }
 }

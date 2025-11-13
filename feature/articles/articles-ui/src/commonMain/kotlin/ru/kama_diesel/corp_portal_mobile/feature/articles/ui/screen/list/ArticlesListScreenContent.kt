@@ -33,7 +33,7 @@ fun ArticlesListScreenContent(
     isRefreshing: Boolean,
     scrollEnabled: Boolean,
     onRefresh: () -> Unit,
-    onArticleClick: (String, String, List<String>?, List<String>?, String) -> Unit,
+    onArticleClick: (String, String, List<String>?, List<String>?, String, Boolean, Int) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
@@ -73,7 +73,7 @@ fun ArticlesListScreenContent(
 fun ArticleItemContent(
     item: ArticleItem,
     scrollEnabled: Boolean,
-    onArticleClick: (String, String, List<String>?, List<String>?, String) -> Unit,
+    onArticleClick: (String, String, List<String>?, List<String>?, String, Boolean, Int) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -82,7 +82,15 @@ fun ArticleItemContent(
             .then(
                 if (scrollEnabled) {
                     Modifier.clickable {
-                        onArticleClick(item.id, item.title, item.imagePaths, item.tags, item.creationDate)
+                        onArticleClick(
+                            item.id,
+                            item.title,
+                            item.imagePaths,
+                            item.tags,
+                            item.creationDate,
+                            item.isLiked,
+                            item.likesAmount
+                        )
                     }
                 } else {
                     Modifier

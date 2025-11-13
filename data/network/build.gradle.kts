@@ -43,7 +43,7 @@ buildkonfig {
 
     defaultConfigs {
         exposeObjectWithName = "BuildKonfig"
-        buildConfigField(STRING, "BASE_URL", "https://test.corp-portal.kama-diesel.ru/api/")
+        buildConfigField(STRING, "BASE_URL", "https://corp-portal.kama-diesel.ru/api/")
         buildConfigField(STRING, "APPMETRICA_KEY", "326afbc0-ae5c-4b46-b17a-7c160948df78")
     }
 }

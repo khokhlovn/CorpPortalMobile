@@ -3,8 +3,8 @@ package ru.kama_diesel.corp_portal_mobile.feature.root.component
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import ru.kama_diesel.corp_portal_mobile.feature.articles.component.ArticlesFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.auth.component.AuthFlowScreenComponent
+import ru.kama_diesel.corp_portal_mobile.feature.main.component.MainFlowScreenComponent
 
 @Composable
 fun RootFlowScreenComponent(rootFlowComponent: RootFlowComponent) {
@@ -12,7 +12,7 @@ fun RootFlowScreenComponent(rootFlowComponent: RootFlowComponent) {
 
     when (val child = childSlot.child?.instance) {
         is RootFlowRouter.SlotChild.AuthFlow -> AuthFlowScreenComponent(child.component)
-        is RootFlowRouter.SlotChild.ArticlesFlow -> ArticlesFlowScreenComponent(child.component)
+        is RootFlowRouter.SlotChild.MainFlow -> MainFlowScreenComponent(child.component)
         null -> Unit
     }
 }

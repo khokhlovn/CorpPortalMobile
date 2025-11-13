@@ -238,7 +238,7 @@ private fun TagItemContent(
 }
 
 private fun String.toColor(): Color {
-    val clean = this.removePrefix("#").uppercase()
+    val clean = this.trim().removePrefix("#").uppercase()
 
     return when (clean.length) {
         3 -> {

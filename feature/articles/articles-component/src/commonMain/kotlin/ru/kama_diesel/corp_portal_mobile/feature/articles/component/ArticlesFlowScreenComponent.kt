@@ -18,7 +18,9 @@ fun ArticlesFlowScreenComponent(articlesFlowComponent: ArticlesFlowComponent) {
     ) {
         when (val child = it.instance) {
             is ArticlesFlowRouter.Child.ArticlesList -> {
-                ArticlesListScreenContainer(child.component.viewModel)
+                ArticlesListScreenContainer(
+                    child.component.viewModel
+                )
             }
         }
     }

@@ -19,6 +19,9 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.coil)
+            implementation(libs.coil.network)
         }
         commonTest.dependencies {
             // implementation(libs.kotlin.test)

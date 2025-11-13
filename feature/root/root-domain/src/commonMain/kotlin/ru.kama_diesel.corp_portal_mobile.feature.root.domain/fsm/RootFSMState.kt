@@ -14,7 +14,7 @@ sealed class RootFSMState : State {
     }
 
     @Serializable
-    data object ArticlesFlow : RootFSMState()
+    data object MainFlow : RootFSMState()
 
     @Serializable
     data object AuthFlow : RootFSMState()

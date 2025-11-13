@@ -23,6 +23,8 @@ class ArticlesListComponent(
             toDate = null,
             dialog = ArticlesListDialog.No,
             isLoading = true,
+            openedImagesPaths = listOf(),
+            selectedImageIndex = 0,
         ),
         deserialization = ArticlesListViewState.serializer(),
         serialization = ArticlesListViewState.serializer()
