@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -78,7 +78,7 @@ fun MainScreen(
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Logout,
+                                imageVector = Icons.Default.Menu,
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 contentDescription = null,
                             )
@@ -89,7 +89,7 @@ fun MainScreen(
                             onClick = onLogoutClick,
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.Person,
+                                imageVector = Icons.AutoMirrored.Filled.Logout,
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 contentDescription = null,
                             )
