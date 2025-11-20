@@ -6,6 +6,9 @@ import ru.kama_diesel.corp_portal_mobile.common.component.registerAndGetSavedSta
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.di.ShopFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.ShopListDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.create
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.Filter
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.Sorter
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
 
@@ -18,7 +21,12 @@ class ShopListComponent(
         key = SHOP_LIST_SAVED_STATE,
         initialValue = ShopListViewState(
             shopItems = listOf(),
+            sortedShopItems = listOf(),
+            cartItems = listOf(),
+            selectedSorter = Sorter.PriceIncreasing,
+            selectedFilter = Filter.All,
             dialog = ShopListDialog.No,
+            cartAddingState = CartAddingState.No,
             isLoading = true,
         ),
         deserialization = ShopListViewState.serializer(),

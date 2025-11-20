@@ -13,5 +13,6 @@ fun MainScreenContainer(
         tab = tab,
         onArticlesClick = viewModel::onArticlesClick,
         onShopClick = viewModel::onShopClick,
+        onLogoutClick = viewModel::onLogoutClick,
     )
 }

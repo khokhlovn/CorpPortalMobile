@@ -33,7 +33,7 @@ class ArticlesRepository(
                 ArticleItem(
                     id = it.postId,
                     title = it.title,
-                    text = it.text,
+                    text = it.text.replace("new_string", "\n"),
                     creationDate = DateTimeMapper.getFormattedDate(
                         iso8601Timestamp = it.creationDate,
                         format = "dd.MM.yyyy HH:mm",
@@ -64,12 +64,12 @@ class ArticlesRepository(
         return withContext(Dispatchers.IO) {
             corpPortalApi.getArticleDetails(articleId = articleId).article.let {
                 ArticleDetailsItem(
-                    text = it.text,
+                    text = it.text.replace("new_string", "\n"),
                     comments = it.comments?.map { comment ->
                         CommentItem(
                             commentId = comment.commentId,
                             userId = comment.userId,
-                            text = comment.text,
+                            text = comment.text.replace("new_string", "\n"),
                             creationDate = DateTimeMapper.getFormattedDate(
                                 iso8601Timestamp = comment.creationDate,
                                 format = "dd.MM.yyyy HH:mm",

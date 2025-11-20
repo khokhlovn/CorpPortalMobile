@@ -253,8 +253,8 @@ private fun CommentListItem(commentItem: CommentItem) {
         AsyncImage(
             modifier = Modifier.clip(shape = CircleShape).size(48.dp).background(Color.Black),
             model = commentItem.imagePath,
-            placeholder = painterResource(Res.drawable.placeholder),
-            error = painterResource(Res.drawable.placeholder),
+            placeholder = painterResource(Res.drawable.person_placeholder),
+            error = painterResource(Res.drawable.person_placeholder),
             contentDescription = null,
             contentScale = ContentScale.Crop,
         )
@@ -274,7 +274,7 @@ private fun CommentListItem(commentItem: CommentItem) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = commentItem.position,
-                color = MaterialTheme.colorScheme.scrim,
+                color = MaterialTheme.colorScheme.primary,
                 style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                 fontWeight = FontWeight.Medium,
                 fontSize = 12.sp,
@@ -284,9 +284,8 @@ private fun CommentListItem(commentItem: CommentItem) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = commentItem.text,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.scrim,
                 style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                fontWeight = FontWeight.Medium,
                 lineHeight = 14.sp,
                 fontSize = 12.sp,
             )
@@ -296,7 +295,6 @@ private fun CommentListItem(commentItem: CommentItem) {
                 text = commentItem.creationDate,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.End,
-                fontWeight = FontWeight.Medium,
                 fontSize = 12.sp,
             )
         }

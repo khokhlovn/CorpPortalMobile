@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,6 +25,7 @@ fun MainScreen(
     tab: @Composable () -> Unit,
     onArticlesClick: () -> Unit,
     onShopClick: () -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -76,12 +78,23 @@ fun MainScreen(
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Menu,
+                                imageVector = Icons.AutoMirrored.Filled.Logout,
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 contentDescription = null,
                             )
                         }
                     },
+                    actions = {
+                        IconButton(
+                            onClick = onLogoutClick,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Person,
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 )
             },
         ) { paddingValues ->

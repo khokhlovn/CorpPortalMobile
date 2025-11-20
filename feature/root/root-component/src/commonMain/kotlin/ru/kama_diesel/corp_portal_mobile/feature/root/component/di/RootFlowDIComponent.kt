@@ -5,8 +5,8 @@ import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 import ru.kama_diesel.corp_portal_mobile.common.data.repository.AuthorizedUserRepository
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IAuthorizedUserRepository
+import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.api.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.auth.component.api.IAuthComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.auth.domain.interfaces.IAuthCompletionUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.main.component.api.IMainComponentDependencies
@@ -52,7 +52,6 @@ internal abstract class RootFlowDIComponent(
 
     @Provides
     protected fun bind(it: LogoutUseCase): ILogoutUseCase = it
-
 
     @Provides
     protected fun bind(it: AuthComponentDependencies): IAuthComponentDependencies = it

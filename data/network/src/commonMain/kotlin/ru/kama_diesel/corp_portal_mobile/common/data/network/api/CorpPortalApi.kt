@@ -65,4 +65,15 @@ class CorpPortalApi(
     suspend fun getShopList(): ShopListResponseData {
         return httpClient.get("shop_list").body()
     }
+
+    suspend fun addToCart(addToCartRequestData: AddToCartRequestData): HttpResponse {
+        return httpClient.post("add_cart_item") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = addToCartRequestData)
+        }
+    }
+
+    suspend fun getCartData(): CartResponseData {
+        return httpClient.get("cart_data").body()
+    }
 }

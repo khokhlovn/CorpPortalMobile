@@ -1,11 +1,9 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.LoadingDialog
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details.ShopItemDetailsDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
 
@@ -14,22 +12,38 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopL
 fun ShopListScreen(
     viewState: ShopListViewState,
     onRefresh: () -> Unit,
-    onShopItemClick: () -> Unit,
+    onSorterChange: (Sorter) -> Unit,
+    onFilterChange: (Filter) -> Unit,
+    onResetFilters: () -> Unit,
+    onShopItemClick: (Int) -> Unit,
+    onAddToCartClick: (Int) -> Unit,
+    onToCartClick: () -> Unit,
+    onCloseDialogClick: () -> Unit,
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    ShopListScreenContent(
+        shopItems = viewState.sortedShopItems,
+        cartItems = viewState.cartItems,
+        selectedSorter = viewState.selectedSorter,
+        selectedFilter = viewState.selectedFilter,
+        isRefreshing = viewState.isLoading,
+        cartAddingState = viewState.cartAddingState,
+        onRefresh = onRefresh,
+        onShopItemClick = onShopItemClick,
+        onSorterChange = onSorterChange,
+        onFilterChange = onFilterChange,
+        onResetFilters = onResetFilters,
+        onAddToCartClick = onAddToCartClick,
+        onToCartClick = onToCartClick,
+    )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        ShopListScreenContent(
-            shopItems = viewState.shopItems,
-            isRefreshing = viewState.isLoading,
-            scrollEnabled = !expanded,
-            onRefresh = onRefresh,
-            onShopItemClick = onShopItemClick,
+    when (val dialog = viewState.dialog) {
+        ShopListDialog.Loading -> LoadingDialog()
+        is ShopListDialog.Details -> ShopItemDetailsDialog(
+            shopItem = dialog.shopItem,
+            onCloseClick = onCloseDialogClick,
+            onAddToCartClick = { },
         )
 
-        when (viewState.dialog) {
-            ShopListDialog.Loading -> LoadingDialog()
-            ShopListDialog.No -> Unit
-        }
+        ShopListDialog.No -> Unit
     }
 }

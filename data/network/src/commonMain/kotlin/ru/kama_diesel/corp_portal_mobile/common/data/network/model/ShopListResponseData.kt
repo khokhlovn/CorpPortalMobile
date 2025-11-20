@@ -2,6 +2,7 @@ package ru.kama_diesel.corp_portal_mobile.common.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class ShopListResponseData(
@@ -17,6 +18,8 @@ data class ShopItemData(
     val name: String,
     @SerialName("description")
     val description: String,
+    @SerialName("characteristics")
+    val characteristics: JsonObject,
     @SerialName("part_number")
     val partNumber: String? = null,
     @SerialName("price")
@@ -24,7 +27,7 @@ data class ShopItemData(
     @SerialName("photo_paths")
     val photoPaths: List<String>? = null,
     @SerialName("is_available")
-    val isAvailable: Boolean,
+    val isAvailable: Boolean? = null,
     @SerialName("is_active")
-    val isActive: Boolean,
+    val isActive: Boolean? = null,
 )

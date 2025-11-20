@@ -13,7 +13,11 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
     val childPages by mainFlowComponent.router.childPages.subscribeAsState()
 
     MainScreenContainer(
-        selectedIndex = childPages.selectedIndex,
+        selectedIndex = when (childPages.items.first().instance) {
+            is MainFlowRouter.PagesChild.ArticlesFlow -> 0
+            is MainFlowRouter.PagesChild.ShopFlow -> 1
+            null -> 0
+        },
         tab = {
             when (val page = childPages.items[childPages.selectedIndex].instance) {
                 is MainFlowRouter.PagesChild.ArticlesFlow -> ArticlesFlowScreenComponent(articlesFlowComponent = page.component)

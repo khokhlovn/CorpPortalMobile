@@ -16,6 +16,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.common.commonUi)
+            implementation(projects.common.commonDomain)
             implementation(projects.feature.main.mainDomain)
 
             implementation(compose.runtime)

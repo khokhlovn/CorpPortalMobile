@@ -64,90 +64,82 @@ fun FiltersContent(
         var showModal by remember { mutableStateOf(false) }
 
         if (expanded) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().weight(2f),
-                contentPadding = PaddingValues(end = 12.dp, top = 12.dp, bottom = 12.dp),
-            ) {
-                stickyHeader {
-                    Text(
-                        modifier = Modifier.padding(start = 12.dp),
-                        text = stringResource(Res.string.filters),
-                        fontSize = 24.sp
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(height = 12.dp))
-                    Text(
-                        modifier = Modifier.padding(start = 12.dp),
-                        fontSize = 16.sp,
-                        text = stringResource(Res.string.tags)
-                    )
-                }
-
-                items(items = tagItems) { tagItem ->
-                    TagItemContent(
-                        item = tagItem,
-                        onCheckedChange = onCheckedChange,
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(height = 12.dp))
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 12.dp)
-                            .pointerInput(Pair(fromDate, toDate)) {
-                                awaitEachGesture {
-                                    awaitFirstDown(pass = PointerEventPass.Initial)
-                                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                                    if (upEvent != null) {
-                                        showModal = true
-                                    }
-                                }
-                            },
-                        value = convertMillisToDateRange(fromDate, toDate),
-                        onValueChange = { },
-                        label = {
-                            Text(
-                                text = stringResource(Res.string.date),
-                            )
-                        },
-                        textStyle = TextStyle(fontSize = 14.sp),
-                        readOnly = true,
-                        trailingIcon = {
-                            Icon(Icons.Filled.DateRange, contentDescription = null)
-                        },
-                        colors = OutlinedTextFieldDefaults.colors().copy(
-                            focusedTextColor = MaterialTheme.colorScheme.primary,
-                            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Column {
-                Button(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-                    enabled = tagItems.any { it.isChecked } || fromDate != null || toDate != null,
-                    shape = ShapeDefaults.Medium,
-                    onClick = onResetFilters,
+            Text(
+                modifier = Modifier.padding(top = 12.dp, start = 12.dp),
+                text = stringResource(Res.string.filters),
+                fontSize = 24.sp
+            )
+            Spacer(modifier = Modifier.height(height = 12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    modifier = Modifier.padding(start = 12.dp),
+                    fontSize = 16.sp,
+                    text = stringResource(Res.string.tags)
+                )
+                Spacer(modifier = Modifier.height(height = 8.dp))
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp),
+                    contentPadding = PaddingValues(end = 12.dp),
                 ) {
-                    Text(text = stringResource(Res.string.reset))
-                }
-                Button(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-                    shape = ShapeDefaults.Medium,
-                    onClick = {
-                        onApplyFilters()
-                        onHideFilters()
-                    },
-                ) {
-                    Text(text = stringResource(Res.string.search))
+                    items(items = tagItems) { tagItem ->
+                        TagItemContent(
+                            item = tagItem,
+                            onCheckedChange = onCheckedChange,
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(height = 12.dp))
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, end = 12.dp)
+                        .pointerInput(Pair(fromDate, toDate)) {
+                            awaitEachGesture {
+                                awaitFirstDown(pass = PointerEventPass.Initial)
+                                val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                                if (upEvent != null) {
+                                    showModal = true
+                                }
+                            }
+                        },
+                    value = convertMillisToDateRange(fromDate, toDate),
+                    onValueChange = { },
+                    label = {
+                        Text(
+                            text = stringResource(Res.string.date),
+                        )
+                    },
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    readOnly = true,
+                    trailingIcon = {
+                        Icon(Icons.Filled.DateRange, contentDescription = null)
+                    },
+                    colors = OutlinedTextFieldDefaults.colors().copy(
+                        focusedTextColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                    ),
+                )
             }
+            Spacer(modifier = Modifier.height(height = 12.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                enabled = tagItems.any { it.isChecked } || fromDate != null || toDate != null,
+                shape = ShapeDefaults.Medium,
+                onClick = onResetFilters,
+            ) {
+                Text(text = stringResource(Res.string.reset))
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                shape = ShapeDefaults.Medium,
+                onClick = {
+                    onApplyFilters()
+                    onHideFilters()
+                },
+            ) {
+                Text(text = stringResource(Res.string.search))
+            }
+            Spacer(modifier = Modifier.height(height = 12.dp))
         }
         if (showModal) {
             val dateRangePickerState = rememberDateRangePickerState(
