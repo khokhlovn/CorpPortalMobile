@@ -40,7 +40,7 @@ internal fun ShopListFilterPanel(
     ) {
         val focusManager = LocalFocusManager.current
         ExposedDropdownMenuBox(
-            modifier = Modifier.width(160.dp),
+            modifier = Modifier.width(148.dp),
             expanded = sorterExpanded,
             onExpandedChange = {
                 sorterExpanded = !sorterExpanded
@@ -67,6 +67,7 @@ internal fun ShopListFilterPanel(
             ExposedDropdownMenu(
                 modifier = Modifier.background(color = MaterialTheme.colorScheme.inverseSurface),
                 expanded = sorterExpanded,
+                matchAnchorWidth = false,
                 onDismissRequest = {
                     sorterExpanded = false
                     focusManager.clearFocus()
@@ -107,7 +108,7 @@ internal fun ShopListFilterPanel(
         }
 
         ExposedDropdownMenuBox(
-            modifier = Modifier.width(120.dp),
+            modifier = Modifier.width(80.dp),
             expanded = filterExpanded,
             onExpandedChange = {
                 filterExpanded = !filterExpanded
@@ -134,6 +135,7 @@ internal fun ShopListFilterPanel(
             ExposedDropdownMenu(
                 modifier = Modifier.background(color = MaterialTheme.colorScheme.inverseSurface),
                 expanded = filterExpanded,
+                matchAnchorWidth = false,
                 onDismissRequest = {
                     filterExpanded = false
                     focusManager.clearFocus()

@@ -27,14 +27,14 @@
     <string name="all_photos">Все фото</string>
 
     <string name="shop">Магазин</string>
-    <string name="in_stock">В наличии</string>
-    <string name="to_order">Под заказ</string>
-    <string name="add_cart">В корзину</string>
+    <string name="in_stock">В наличии</string>
+    <string name="to_order">Под заказ</string>
+    <string name="add_cart">В корзину</string>
     <string name="order">Заказать</string>
 
-    <string name="by_price_increasing">По возрастанию цены</string>
-    <string name="by_price_decreasing">По убыванию цены</string>
-    <string name="by_name">По названию</string>
+    <string name="by_price_increasing">По возрастанию цены</string>
+    <string name="by_price_decreasing">По убыванию цены</string>
+    <string name="by_name">По названию</string>
     <string name="all">Все</string>
 
     <string name="description">Описание</string>
