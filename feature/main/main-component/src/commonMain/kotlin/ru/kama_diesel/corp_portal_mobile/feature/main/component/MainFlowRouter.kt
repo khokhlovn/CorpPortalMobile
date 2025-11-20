@@ -1,6 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.main.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.pages.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
@@ -9,6 +10,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.MainFlowDICom
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.api.IMainFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowComponent
 
+@OptIn(ExperimentalDecomposeApi::class)
 internal class MainFlowRouter(
     componentContext: ComponentContext,
     private val mainFlowDIComponent: MainFlowDIComponent
@@ -22,7 +24,6 @@ internal class MainFlowRouter(
             Pages(
                 items = listOf(
                     Configuration.Articles,
-                    Configuration.Shop
                 ),
                 selectedIndex = 0,
             )
@@ -60,10 +61,14 @@ internal class MainFlowRouter(
     }
 
     override fun toArticles() {
-        pagesNavigation.select(0)
+        pagesNavigation.clear()
+        pagesNavigation.setItems { items -> items.plus(Configuration.Articles) }
+        pagesNavigation.selectFirst()
     }
 
     override fun toShop() {
-        pagesNavigation.select(1)
+        pagesNavigation.clear()
+        pagesNavigation.setItems { items -> items.plus(Configuration.Shop) }
+        pagesNavigation.selectFirst()
     }
 }

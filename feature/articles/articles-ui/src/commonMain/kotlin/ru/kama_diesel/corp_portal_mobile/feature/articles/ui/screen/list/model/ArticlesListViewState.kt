@@ -46,7 +46,7 @@ sealed class CommentSendingState {
     data object No : CommentSendingState()
 
     @Serializable
-    data object Sendind : CommentSendingState()
+    data object Sending : CommentSendingState()
 
     @Serializable
     data object Success : CommentSendingState()

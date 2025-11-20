@@ -140,7 +140,7 @@ private fun CommentTextField(
             )
         },
         trailingIcon = {
-            if (commentSendingState is CommentSendingState.Sendind) {
+            if (commentSendingState is CommentSendingState.Sending) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                 )

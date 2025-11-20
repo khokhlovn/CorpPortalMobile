@@ -12,6 +12,12 @@ fun ShopListScreenContainer(viewModel: ShopListViewModel) {
     ShopListScreen(
         viewState = viewState,
         onRefresh = viewModel::getData,
+        onSorterChange = viewModel::onSorterChange,
+        onFilterChange = viewModel::onFilterChange,
+        onResetFilters = viewModel::onResetFilters,
         onShopItemClick = viewModel::onShopItemClick,
+        onAddToCartClick = viewModel::addToCart,
+        onToCartClick = viewModel::toCart,
+        onCloseDialogClick = viewModel::onCloseDialogClick,
     )
 }

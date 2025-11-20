@@ -4,3 +4,6 @@ import me.tatarka.inject.annotations.Scope
 
 @Scope
 annotation class ShopListScope
+
+@Scope
+annotation class CartScope

@@ -1,14 +1,17 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -17,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -25,52 +29,124 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.CartItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.resources.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopListScreenContent(
     shopItems: List<ShopItem>,
+    cartItems: List<CartItem>,
+    selectedSorter: Sorter,
+    selectedFilter: Filter,
     isRefreshing: Boolean,
-    scrollEnabled: Boolean,
+    cartAddingState: CartAddingState,
     onRefresh: () -> Unit,
-    onShopItemClick: () -> Unit,
+    onSorterChange: (Sorter) -> Unit,
+    onFilterChange: (Filter) -> Unit,
+    onResetFilters: () -> Unit,
+    onShopItemClick: (Int) -> Unit,
+    onAddToCartClick: (Int) -> Unit,
+    onToCartClick: () -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
-    PullToRefreshBox(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(red = 243, green = 243, blue = 243)),
-        state = state,
-        isRefreshing = isRefreshing,
-        indicator = {
-            Indicator(
-                modifier = Modifier.align(Alignment.TopCenter),
-                isRefreshing = isRefreshing,
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                state = state,
-            )
-        },
-        onRefresh = onRefresh,
+    Box(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxSize(),
-            columns = GridCells.Fixed(count = 2),
-            userScrollEnabled = scrollEnabled,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color(red = 243, green = 243, blue = 243)),
         ) {
-            items(items = shopItems) { shopItem ->
-                ShopItemContent(
-                    item = shopItem,
-                    scrollEnabled = scrollEnabled,
-                    onShopItemClick = onShopItemClick,
-                )
+            ShopListFilterPanel(
+                selectedSorter = selectedSorter,
+                selectedFilter = selectedFilter,
+                onSorterChange = onSorterChange,
+                onFilterChange = onFilterChange,
+                onResetFilters = onResetFilters,
+            )
+            Spacer(
+                modifier = Modifier
+                    .height(4.dp)
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.15f),
+                                Color.Transparent,
+                            )
+                        )
+                    )
+            )
+            PullToRefreshBox(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                isRefreshing = isRefreshing,
+                indicator = {
+                    Indicator(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        isRefreshing = isRefreshing,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        state = state,
+                    )
+                },
+                onRefresh = onRefresh,
+            ) {
+                LazyVerticalGrid(
+                    modifier = Modifier.fillMaxSize(),
+                    columns = GridCells.Fixed(count = 2),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+                ) {
+                    itemsIndexed(items = shopItems) { index, shopItem ->
+                        ShopItemContent(
+                            item = shopItem,
+                            cartAddingState = cartAddingState,
+                            onShopItemClick = {
+                                onShopItemClick(index)
+                            },
+                            onAddToCartClick = {
+                                onAddToCartClick(shopItem.id)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+        if (cartItems.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd),
+            ) {
+                FloatingActionButton(
+                    onClick = onToCartClick,
+                ) {
+                    BadgedBox(
+                        badge = {
+                            Badge(
+                                containerColor = Color.Red,
+                                contentColor = Color.White
+                            ) {
+                                Text(text = cartItems.size.toString())
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = null
+                        )
+                    }
+                }
             }
         }
     }
@@ -79,22 +155,16 @@ fun ShopListScreenContent(
 @Composable
 fun ShopItemContent(
     item: ShopItem,
-    scrollEnabled: Boolean,
+    cartAddingState: CartAddingState,
     onShopItemClick: () -> Unit,
+    onAddToCartClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
             .height(244.dp)
-            .then(
-                if (scrollEnabled) {
-                    Modifier
-//                        .clickable {
-//                            onShopItemClick()
-//                        }
-                } else {
-                    Modifier
-                }
-            ),
+            .clickable {
+                onShopItemClick()
+            },
         shape = RoundedCornerShape(size = 12.dp),
         colors = CardDefaults.cardColors().copy(containerColor = MaterialTheme.colorScheme.inverseSurface)
     ) {
@@ -114,7 +184,9 @@ fun ShopItemContent(
                 state = pagerState,
             ) { page ->
                 AsyncImage(
-                    modifier = Modifier.height(120.dp),
+                    modifier = Modifier
+                        .height(120.dp)
+                        .fillMaxWidth(),
                     model = item.imagePaths?.get(page),
                     placeholder = painterResource(Res.drawable.placeholder),
                     error = painterResource(Res.drawable.placeholder),
@@ -177,24 +249,30 @@ fun ShopItemContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
-                Button(
-                    modifier = Modifier
-                        .height(28.dp)
-                        .width(68.dp),
-                    shape = ShapeDefaults.Small,
-                    contentPadding = PaddingValues(all = 4.dp),
-                    onClick = {},
-                ) {
-                    Text(
-                        text = stringResource(
-                            resource = if (item.isAvailable) {
-                                Res.string.add_cart
-                            } else {
-                                Res.string.order
-                            }
-                        ),
-                        fontSize = 8.sp
+                if (cartAddingState is CartAddingState.Adding) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(28.dp),
                     )
+                } else {
+                    Button(
+                        modifier = Modifier
+                            .height(28.dp)
+                            .width(68.dp),
+                        shape = ShapeDefaults.Small,
+                        contentPadding = PaddingValues(all = 4.dp),
+                        onClick = onAddToCartClick,
+                    ) {
+                        Text(
+                            text = stringResource(
+                                resource = if (item.isAvailable) {
+                                    Res.string.add_cart
+                                } else {
+                                    Res.string.order
+                                }
+                            ),
+                            fontSize = 8.sp
+                        )
+                    }
                 }
             }
         }
@@ -223,4 +301,18 @@ fun PagerIndicator(pageCount: Int, currentPageIndex: Int, modifier: Modifier = M
             )
         }
     }
+}
+
+@Serializable
+enum class Sorter(val stringResourceId: StringResource) {
+    PriceIncreasing(stringResourceId = Res.string.by_price_increasing),
+    PriceDecreasing(stringResourceId = Res.string.by_price_decreasing),
+    Name(stringResourceId = Res.string.by_name),
+}
+
+@Serializable
+enum class Filter(val stringResourceId: StringResource) {
+    All(stringResourceId = Res.string.all),
+    Available(stringResourceId = Res.string.in_stock),
+    NotAvailable(stringResourceId = Res.string.to_order),
 }

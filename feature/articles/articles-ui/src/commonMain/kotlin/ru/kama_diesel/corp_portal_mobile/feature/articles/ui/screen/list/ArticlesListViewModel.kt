@@ -132,7 +132,7 @@ class ArticlesListViewModel(
             setState {
                 copy(
                     dialog = copy(
-                        commentSendingState = CommentSendingState.Sendind,
+                        commentSendingState = CommentSendingState.Sending,
                     ),
                 )
             }
