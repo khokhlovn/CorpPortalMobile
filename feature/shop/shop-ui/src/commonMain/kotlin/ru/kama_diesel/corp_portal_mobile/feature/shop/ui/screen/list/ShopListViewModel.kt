@@ -2,23 +2,28 @@ package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
+import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.di.ShopListScope
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.AddToCartUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetCartDataUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetShopListUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.*
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
 
 @ShopListScope
 @Inject
 class ShopListViewModel(
+    private val logoutUseCase: ILogoutUseCase,
     private val getShopListUseCase: GetShopListUseCase,
     private val getCartDataUseCase: GetCartDataUseCase,
+    private val getOrdersUseCase: GetOrdersUseCase,
     private val addToCartUseCase: AddToCartUseCase,
+    private val updateCartItemUseCase: UpdateCartItemUseCase,
+    private val dropCartItemUseCase: DropCartItemUseCase,
+    private val getBalanceUseCase: GetBalanceUseCase,
     routerHolder: RouterHolder<IShopFlowRouter>,
     private val initialState: ShopListViewState,
 ) : BaseStateViewModel<ShopListViewState>() {
@@ -30,8 +35,18 @@ class ShopListViewModel(
     }
 
     fun getData() {
+        setState {
+            copy(
+                isLoading = true,
+            )
+        }
+        getBalance()
         getShopList()
-        getCartData()
+        getCartAndOrdersData()
+    }
+
+    fun onLogoutClick() {
+        logoutUseCase()
     }
 
     fun onShopItemClick(shopItemIndex: Int) {
@@ -73,7 +88,20 @@ class ShopListViewModel(
             copy(
                 selectedSorter = Sorter.PriceIncreasing,
                 selectedFilter = Filter.All,
-                sortedShopItems = shopItems,
+                sortedShopItems = shopItems.map {
+                    ShopItemUIModel(
+                        id = it.id,
+                        name = it.name,
+                        description = it.description,
+                        characteristics = it.characteristics,
+                        partNumber = it.partNumber,
+                        price = it.price,
+                        imagePaths = it.imagePaths,
+                        isAvailable = it.isAvailable,
+                        isActive = it.isActive,
+                        cartAddingState = CartAddingState.No,
+                    )
+                },
             )
         }
     }
@@ -81,26 +109,73 @@ class ShopListViewModel(
     fun addToCart(itemId: Int) {
         setState {
             copy(
-                cartAddingState = CartAddingState.Adding,
+                sortedShopItems = sortedShopItems.map {
+                    if (it.id != itemId) {
+                        it
+                    } else {
+                        it.copy(
+                            cartAddingState = CartAddingState.Adding,
+                        )
+                    }
+                }
             )
         }
         coroutineScope.launch {
             addToCartUseCase(itemId = itemId, quantity = 1)
+            getCartAndOrdersData()
+        }
+    }
+
+    fun onUpdateCartItemQuantityClick(inCartItemId: Int, quantity: Int) {
+        with(currentState.cartItems.first { cartItem -> cartItem.inCartItemId == inCartItemId }) {
             setState {
                 copy(
-                    cartAddingState = CartAddingState.No,
+                    sortedShopItems = sortedShopItems.map {
+                        if (it.id != itemId) {
+                            it
+                        } else {
+                            it.copy(
+                                cartAddingState = CartAddingState.Adding,
+                            )
+                        }
+                    }
                 )
             }
-            getCartData()
+            coroutineScope.launch {
+                updateCartItemUseCase(inCartItemId = inCartItemId, quantity = quantity)
+                getCartAndOrdersData()
+            }
+        }
+    }
+
+    fun onDeleteCartItemClick(inCartItemId: Int) {
+        with(currentState.cartItems.first { cartItem -> cartItem.inCartItemId == inCartItemId }) {
+            setState {
+                copy(
+                    sortedShopItems = sortedShopItems.map {
+                        if (it.id != itemId) {
+                            it
+                        } else {
+                            it.copy(
+                                cartAddingState = CartAddingState.Adding,
+                            )
+                        }
+                    }
+                )
+            }
+            coroutineScope.launch {
+                dropCartItemUseCase(inCartItemId = inCartItemId)
+                getCartAndOrdersData()
+            }
         }
     }
 
     fun toCart() {
-        router.toCart(
-            shopItems = currentState.shopItems.filter {
-                it.id in currentState.cartItems.map { cartItem -> cartItem.itemId }
-            }
-        )
+        router.toCart()
+    }
+
+    fun toOrders() {
+        router.toOrders()
     }
 
     private fun sortAndFilterItems() {
@@ -119,9 +194,33 @@ class ShopListViewModel(
                             Sorter.PriceDecreasing -> compareByDescending { it.price }
                             Sorter.Name -> compareBy { it.name }
                         }
-                    ),
+                    ).map {
+                        ShopItemUIModel(
+                            id = it.id,
+                            name = it.name,
+                            description = it.description,
+                            characteristics = it.characteristics,
+                            partNumber = it.partNumber,
+                            price = it.price,
+                            imagePaths = it.imagePaths,
+                            isAvailable = it.isAvailable,
+                            isActive = it.isActive,
+                            cartAddingState = CartAddingState.No,
+                        )
+                    },
                     isLoading = false,
                     dialog = ShopListDialog.No,
+                )
+            }
+        }
+    }
+
+    private fun getBalance() {
+        coroutineScope.launch {
+            val balance = getBalanceUseCase()
+            setState {
+                copy(
+                    balance = balance,
                 )
             }
         }
@@ -139,12 +238,15 @@ class ShopListViewModel(
         }
     }
 
-    private fun getCartData() {
+    private fun getCartAndOrdersData() {
         coroutineScope.launch {
             val cartItems = getCartDataUseCase()
+            val orderItems = getOrdersUseCase()
             setState {
                 copy(
+                    sortedShopItems = sortedShopItems.map { it.copy(cartAddingState = CartAddingState.No) },
                     cartItems = cartItems,
+                    orderItems = orderItems,
                 )
             }
         }

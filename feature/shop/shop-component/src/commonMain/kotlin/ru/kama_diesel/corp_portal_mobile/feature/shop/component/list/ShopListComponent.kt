@@ -8,7 +8,6 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.ShopList
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.create
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.Filter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.Sorter
-import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
 
@@ -23,10 +22,11 @@ class ShopListComponent(
             shopItems = listOf(),
             sortedShopItems = listOf(),
             cartItems = listOf(),
+            orderItems = listOf(),
             selectedSorter = Sorter.PriceIncreasing,
             selectedFilter = Filter.All,
+            balance = null,
             dialog = ShopListDialog.No,
-            cartAddingState = CartAddingState.No,
             isLoading = true,
         ),
         deserialization = ShopListViewState.serializer(),

@@ -73,7 +73,33 @@ class CorpPortalApi(
         }
     }
 
+    suspend fun updateCartItem(updateCartItemRequestData: UpdateCartItemRequestData): HttpResponse {
+        return httpClient.post("update_cart_item") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = updateCartItemRequestData)
+        }
+    }
+
+    suspend fun dropCartItem(dropCartItemRequestData: DropCartItemRequestData): HttpResponse {
+        return httpClient.post("drop_cart_item") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = dropCartItemRequestData)
+        }
+    }
+
     suspend fun getCartData(): CartResponseData {
         return httpClient.get("cart_data").body()
+    }
+
+    suspend fun getMyInfo(): MeResponseData {
+        return httpClient.get("me").body()
+    }
+
+    suspend fun makeOrder(): HttpResponse {
+        return httpClient.post("order")
+    }
+
+    suspend fun getOrders(): OrdersListResponseData {
+        return httpClient.get("orders_list").body()
     }
 }

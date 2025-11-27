@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.FullScreenImageViewer
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.PagerIndicator
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.characteristics
 import ru.kama_diesel.corp_portal_mobile.resources.description
@@ -32,7 +32,7 @@ import ru.kama_diesel.corp_portal_mobile.resources.placeholder
 @Composable
 internal fun ShopItemDetailsContent(
     modifier: Modifier = Modifier,
-    shopItem: ShopItem,
+    shopItem: ShopItemUIModel,
 ) {
     var selectedImageIndex by remember { mutableIntStateOf(0) }
     var isImageOpened by remember { mutableStateOf(false) }
@@ -81,7 +81,7 @@ internal fun ShopItemDetailsContent(
 
         if (!shopItem.imagePaths.isNullOrEmpty() && shopItem.imagePaths!!.size > 1) {
             Spacer(modifier = Modifier.height(12.dp))
-            PagerIndicator(shopItem.imagePaths!!.size, pagerState.currentPage)
+            PagerIndicator(shopItem.imagePaths.size, pagerState.currentPage)
         }
 
         Spacer(modifier = Modifier.height(12.dp))

@@ -7,3 +7,6 @@ annotation class ShopListScope
 
 @Scope
 annotation class CartScope
+
+@Scope
+annotation class OrdersScope

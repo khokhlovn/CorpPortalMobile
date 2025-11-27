@@ -6,13 +6,13 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IShopRepository
 
 @Inject
-class AddToCartUseCase(
+class MakeOrderUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val shopRepository: IShopRepository,
 ) {
-    suspend operator fun invoke(itemId: Int, quantity: Int) {
-        return try {
-            shopRepository.addToCart(itemId = itemId, quantity = quantity)
+    suspend operator fun invoke() {
+        try {
+            shopRepository.makeOrder()
         } catch (_: ClientRequestException) {
             logoutUseCase.invoke()
         } catch (_: Exception) {

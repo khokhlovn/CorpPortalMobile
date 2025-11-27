@@ -1,16 +1,31 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import ru.kama_diesel.corp_portal_mobile.common.ui.component.LoadingDialog
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details.ShopItemDetailsDialog
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.shop
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopListScreen(
     viewState: ShopListViewState,
+    drawerState: DrawerState,
+    onLogoutClick: () -> Unit,
     onRefresh: () -> Unit,
     onSorterChange: (Sorter) -> Unit,
     onFilterChange: (Filter) -> Unit,
@@ -18,31 +33,108 @@ fun ShopListScreen(
     onShopItemClick: (Int) -> Unit,
     onAddToCartClick: (Int) -> Unit,
     onToCartClick: () -> Unit,
+    onToOrdersClick: () -> Unit,
     onCloseDialogClick: () -> Unit,
+    onUpdateQuantityClick: (Int, Int) -> Unit,
+    onDeleteClick: (Int) -> Unit,
 ) {
-    ShopListScreenContent(
-        shopItems = viewState.sortedShopItems,
-        cartItems = viewState.cartItems,
-        selectedSorter = viewState.selectedSorter,
-        selectedFilter = viewState.selectedFilter,
-        isRefreshing = viewState.isLoading,
-        cartAddingState = viewState.cartAddingState,
-        onRefresh = onRefresh,
-        onShopItemClick = onShopItemClick,
-        onSorterChange = onSorterChange,
-        onFilterChange = onFilterChange,
-        onResetFilters = onResetFilters,
-        onAddToCartClick = onAddToCartClick,
-        onToCartClick = onToCartClick,
-    )
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(Res.string.shop))
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.apply {
+                                    if (isClosed) open() else close()
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                actions = {
+                    if (viewState.balance != null) {
+                        Text(
+                            text = viewState.balance.toString(),
+                            maxLines = 1,
+                            fontSize = 20.sp,
+                            lineHeight = 20.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
+                    IconButton(
+                        onClick = onLogoutClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            )
+        },
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = paddingValues),
+        ) {
+            ShopListScreenContent(
+                shopItems = viewState.sortedShopItems,
+                cartItems = viewState.cartItems,
+                orderItems = viewState.orderItems,
+                selectedSorter = viewState.selectedSorter,
+                selectedFilter = viewState.selectedFilter,
+                isRefreshing = viewState.isLoading,
+                onRefresh = onRefresh,
+                onShopItemClick = onShopItemClick,
+                onSorterChange = onSorterChange,
+                onFilterChange = onFilterChange,
+                onResetFilters = onResetFilters,
+                onAddToCartClick = onAddToCartClick,
+                onToCartClick = onToCartClick,
+                onToOrdersClick = onToOrdersClick,
+                onUpdateQuantityClick = onUpdateQuantityClick,
+                onDeleteClick = onDeleteClick,
+            )
+        }
+    }
 
     when (val dialog = viewState.dialog) {
-        ShopListDialog.Loading -> LoadingDialog()
-        is ShopListDialog.Details -> ShopItemDetailsDialog(
-            shopItem = dialog.shopItem,
-            onCloseClick = onCloseDialogClick,
-            onAddToCartClick = { },
-        )
+        is ShopListDialog.Details -> {
+            val cartItem = viewState.cartItems.find { it.itemId == dialog.shopItem.id }
+            ShopItemDetailsDialog(
+                shopItem = dialog.shopItem,
+                quantity = cartItem?.quantity ?: 0,
+                cartAddingState = viewState.sortedShopItems.find { it.id == dialog.shopItem.id }?.cartAddingState
+                    ?: CartAddingState.No,
+                onCloseClick = onCloseDialogClick,
+                onAddToCartClick = onAddToCartClick,
+                onAddClick = {
+                    onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.plus(1) ?: 0)
+                },
+                onRemoveClick = {
+                    onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.minus(1) ?: 0)
+                },
+                onDeleteClick = {
+                    onDeleteClick(cartItem?.inCartItemId ?: 0)
+                },
+            )
+        }
 
         ShopListDialog.No -> Unit
     }

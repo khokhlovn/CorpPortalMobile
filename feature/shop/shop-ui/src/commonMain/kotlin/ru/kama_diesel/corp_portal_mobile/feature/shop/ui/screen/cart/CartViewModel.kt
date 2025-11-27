@@ -5,18 +5,22 @@ import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.di.CartScope
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.AddToCartUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetCartDataUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.*
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartAddingState
-import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartDialog
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartItemUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartViewState
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.MakingOrderState
 
 @CartScope
 @Inject
 class CartViewModel(
     private val getCartDataUseCase: GetCartDataUseCase,
-    private val addToCartUseCase: AddToCartUseCase,
+    private val getShopListUseCase: GetShopListUseCase,
+    private val updateCartItemUseCase: UpdateCartItemUseCase,
+    private val dropCartItemUseCase: DropCartItemUseCase,
+    private val getBalanceUseCase: GetBalanceUseCase,
+    private val makeOrderUseCase: MakeOrderUseCase,
     routerHolder: RouterHolder<IShopFlowRouter>,
     private val initialState: CartViewState,
 ) : BaseStateViewModel<CartViewState>() {
@@ -32,35 +36,141 @@ class CartViewModel(
     }
 
     fun getData() {
+        getBalance()
         getCartData()
     }
 
-    fun addToCart(itemId: Int) {
+    fun onUpdateCartItemQuantityClick(inCartItemId: Int, quantity: Int) {
         setState {
             copy(
-                cartAddingState = CartAddingState.Adding,
+                cartItems = cartItems.map {
+                    if (it.inCartItemId != inCartItemId) {
+                        it
+                    } else {
+                        it.copy(
+                            cartAddingState = CartAddingState.Adding,
+                        )
+                    }
+                }
             )
         }
         coroutineScope.launch {
-            addToCartUseCase(itemId = itemId, quantity = 1)
+            updateCartItemUseCase(inCartItemId = inCartItemId, quantity = quantity)
+            getCartData()
+        }
+    }
+
+    fun onDeleteCartItemClick(inCartItemId: Int) {
+        setState {
+            copy(
+                cartItems = cartItems.map {
+                    if (it.inCartItemId != inCartItemId) {
+                        it
+                    } else {
+                        it.copy(
+                            cartAddingState = CartAddingState.Adding,
+                        )
+                    }
+                }
+            )
+        }
+        coroutineScope.launch {
+            dropCartItemUseCase(inCartItemId = inCartItemId)
+            getCartData()
+        }
+    }
+
+    fun onMakeOrderClick() {
+        setState {
+            copy(
+                makingOrderState = MakingOrderState.Process,
+            )
+        }
+        coroutineScope.launch {
+            makeOrderUseCase()
+            back()
+        }
+    }
+
+    fun onCartItemCheckedChange(inCartItemId: Int, isChecked: Boolean) {
+        setState {
+            copy(
+                cartItems = cartItems.map {
+                    if (it.inCartItemId != inCartItemId) {
+                        it
+                    } else {
+                        it.copy(
+                            isChecked = isChecked,
+                        )
+                    }
+                }
+            )
+        }
+    }
+
+    fun onSelectAllClick(isChecked: Boolean) {
+        setState {
+            copy(
+                cartItems = cartItems.map {
+                    it.copy(
+                        isChecked = isChecked,
+                    )
+                }
+            )
+        }
+    }
+
+    fun onDropSelectedItems() {
+        setState {
+            copy(
+                isLoading = true,
+            )
+        }
+        coroutineScope.launch {
+            currentState.cartItems.filter { it.isChecked }.map { it.inCartItemId }.forEach {
+                dropCartItemUseCase(inCartItemId = it)
+            }
+            back()
+        }
+    }
+
+    private fun getBalance() {
+        coroutineScope.launch {
+            val balance = getBalanceUseCase()
             setState {
                 copy(
-                    cartAddingState = CartAddingState.No,
+                    balance = balance,
                 )
             }
-            getCartData()
         }
     }
 
     private fun getCartData() {
         coroutineScope.launch {
             val cartItems = getCartDataUseCase()
-            setState {
-                copy(
-                    cartItems = cartItems,
-                    isLoading = false,
-                    dialog = CartDialog.No,
-                )
+            val shopItems = getShopListUseCase()
+            if (cartItems.isEmpty()) {
+                back()
+            } else {
+                setState {
+                    copy(
+                        cartItems = cartItems.map {
+                            CartItemUIModel(
+                                inCartItemId = it.inCartItemId,
+                                itemId = it.itemId,
+                                quantity = it.quantity,
+                                isChecked = false,
+                                cartAddingState = CartAddingState.No,
+                            )
+                        },
+                        shopItems = shopItems,
+                        totalSum = cartItems.sumOf { cartItem ->
+                            shopItems.find { shopItem -> shopItem.id == cartItem.itemId }?.price?.times(cartItem.quantity)
+                                ?: 0
+                        },
+                        isLoading = false,
+                    )
+                }
             }
         }
     }

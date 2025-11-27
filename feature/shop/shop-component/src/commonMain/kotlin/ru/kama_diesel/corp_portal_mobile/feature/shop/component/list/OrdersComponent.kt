@@ -4,39 +4,35 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import ru.kama_diesel.corp_portal_mobile.common.component.registerAndGetSavedState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.di.ShopFlowDIComponent
-import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.CartDIComponent
+import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.OrdersDiComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.create
-import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartViewState
-import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.MakingOrderState
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.model.OrdersViewState
 
-class CartComponent(
+class OrdersComponent(
     componentContext: ComponentContext,
     shopFlowDIComponent: ShopFlowDIComponent,
 ) : ComponentContext by componentContext {
 
-    private val savedState: CartViewState = registerAndGetSavedState(
-        key = CART_SAVED_STATE,
-        initialValue = CartViewState(
-            cartItems = listOf(),
+    private val savedState: OrdersViewState = registerAndGetSavedState(
+        key = ORDERS_SAVED_STATE,
+        initialValue = OrdersViewState(
+            orderItems = listOf(),
             shopItems = listOf(),
-            balance = null,
-            totalSum = null,
-            makingOrderState = MakingOrderState.No,
             isLoading = true,
         ),
-        deserialization = CartViewState.serializer(),
-        serialization = CartViewState.serializer()
+        deserialization = OrdersViewState.serializer(),
+        serialization = OrdersViewState.serializer()
     ) {
         viewModel.currentState
     }
 
     private val diComponent = instanceKeeper.getOrCreate {
-        CartDIComponent::class.create(shopFlowDIComponent, savedState)
+        OrdersDiComponent::class.create(shopFlowDIComponent, savedState)
     }
 
     val viewModel = diComponent.viewModel
 
     companion object Companion {
-        private const val CART_SAVED_STATE = "CART_SAVED_STATE"
+        private const val ORDERS_SAVED_STATE = "ORDERS_SAVED_STATE"
     }
 }
