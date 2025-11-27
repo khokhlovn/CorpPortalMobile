@@ -1,26 +1,26 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model
 
 import kotlinx.serialization.Serializable
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.CartItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
 
 @Serializable
 data class CartViewState(
-    val cartItems: List<CartItem>,
+    val cartItems: List<CartItemUIModel>,
     val shopItems: List<ShopItem>,
-    val dialog: CartDialog,
-    val cartAddingState: CartAddingState,
+    val totalSum: Int?,
+    val balance: Int?,
+    val makingOrderState: MakingOrderState,
     val isLoading: Boolean,
 )
 
 @Serializable
-sealed class CartDialog {
-    @Serializable
-    data object No : CartDialog()
-
-    @Serializable
-    data object Loading : CartDialog()
-}
+data class CartItemUIModel(
+    val inCartItemId: Int,
+    val itemId: Int,
+    val quantity: Int,
+    val isChecked: Boolean,
+    val cartAddingState: CartAddingState,
+)
 
 @Serializable
 sealed class CartAddingState {
@@ -29,7 +29,13 @@ sealed class CartAddingState {
 
     @Serializable
     data object Adding : CartAddingState()
+}
+
+@Serializable
+sealed class MakingOrderState {
+    @Serializable
+    data object No : MakingOrderState()
 
     @Serializable
-    data object Success : CartAddingState()
+    data object Process : MakingOrderState()
 }

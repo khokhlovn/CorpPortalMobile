@@ -4,19 +4,21 @@ import io.ktor.client.plugins.*
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IShopRepository
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderItem
 
 @Inject
-class AddToCartUseCase(
+class GetOrdersUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val shopRepository: IShopRepository,
 ) {
-    suspend operator fun invoke(itemId: Int, quantity: Int) {
+    suspend operator fun invoke(): List<OrderItem> {
         return try {
-            shopRepository.addToCart(itemId = itemId, quantity = quantity)
+            shopRepository.getOrders()
         } catch (_: ClientRequestException) {
             logoutUseCase.invoke()
+            listOf()
         } catch (_: Exception) {
-            return
+            listOf()
         }
     }
 }

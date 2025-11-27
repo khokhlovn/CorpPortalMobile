@@ -1,16 +1,20 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -34,19 +38,22 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.CartItem
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderStatus
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.component.ShopItemQuantityComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ShopListScreenContent(
-    shopItems: List<ShopItem>,
+    shopItems: List<ShopItemUIModel>,
     cartItems: List<CartItem>,
+    orderItems: List<OrderItem>,
     selectedSorter: Sorter,
     selectedFilter: Filter,
     isRefreshing: Boolean,
-    cartAddingState: CartAddingState,
     onRefresh: () -> Unit,
     onSorterChange: (Sorter) -> Unit,
     onFilterChange: (Filter) -> Unit,
@@ -54,6 +61,9 @@ fun ShopListScreenContent(
     onShopItemClick: (Int) -> Unit,
     onAddToCartClick: (Int) -> Unit,
     onToCartClick: () -> Unit,
+    onToOrdersClick: () -> Unit,
+    onUpdateQuantityClick: (Int, Int) -> Unit,
+    onDeleteClick: (Int) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
@@ -100,34 +110,75 @@ fun ShopListScreenContent(
                 },
                 onRefresh = onRefresh,
             ) {
+                val percentCacheWindow = LazyLayoutCacheWindow(
+                    aheadFraction = 0.5f,
+                    behindFraction = 0.3f
+                )
+                val state = rememberLazyGridState(cacheWindow = percentCacheWindow)
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
+                    state = state,
                     columns = GridCells.Fixed(count = 2),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
                 ) {
                     itemsIndexed(items = shopItems) { index, shopItem ->
+                        val cartItem = cartItems.find { it.itemId == shopItem.id }
                         ShopItemContent(
                             item = shopItem,
-                            cartAddingState = cartAddingState,
+                            quantity = cartItem?.quantity ?: 0,
                             onShopItemClick = {
                                 onShopItemClick(index)
                             },
                             onAddToCartClick = {
                                 onAddToCartClick(shopItem.id)
-                            }
+                            },
+                            onAddClick = {
+                                onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.plus(1) ?: 0)
+                            },
+                            onRemoveClick = {
+                                onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.minus(1) ?: 0)
+                            },
+                            onDeleteClick = {
+                                onDeleteClick(cartItem?.inCartItemId ?: 0)
+                            },
                         )
                     }
                 }
             }
         }
-        if (cartItems.isNotEmpty()) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd),
-            ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+        ) {
+            if (orderItems.isNotEmpty()) {
+                FloatingActionButton(
+                    onClick = onToOrdersClick,
+                ) {
+                    BadgedBox(
+                        badge = {
+                            val activeOrders = orderItems.count { it.status == OrderStatus.Ordered }
+                            if (activeOrders > 0) {
+                                Badge(
+                                    containerColor = Color.Red,
+                                    contentColor = Color.White
+                                ) {
+                                    Text(text = orderItems.count { it.status == OrderStatus.Ordered }.toString())
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ListAlt,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+            if (cartItems.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
                 FloatingActionButton(
                     onClick = onToCartClick,
                 ) {
@@ -137,7 +188,7 @@ fun ShopListScreenContent(
                                 containerColor = Color.Red,
                                 contentColor = Color.White
                             ) {
-                                Text(text = cartItems.size.toString())
+                                Text(text = cartItems.sumOf { it.quantity }.toString())
                             }
                         }
                     ) {
@@ -154,10 +205,13 @@ fun ShopListScreenContent(
 
 @Composable
 fun ShopItemContent(
-    item: ShopItem,
-    cartAddingState: CartAddingState,
+    item: ShopItemUIModel,
+    quantity: Int,
     onShopItemClick: () -> Unit,
     onAddToCartClick: () -> Unit,
+    onAddClick: () -> Unit,
+    onRemoveClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -195,9 +249,11 @@ fun ShopItemContent(
                 )
             }
 
-            if (!item.imagePaths.isNullOrEmpty() && item.imagePaths!!.size > 1) {
+            if (!item.imagePaths.isNullOrEmpty() && item.imagePaths.size > 1) {
                 Spacer(modifier = Modifier.height(4.dp))
-                PagerIndicator(item.imagePaths!!.size, pagerState.currentPage)
+                PagerIndicator(item.imagePaths.size, pagerState.currentPage)
+            } else {
+                Spacer(modifier = Modifier.height(10.dp))
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -246,32 +302,53 @@ fun ShopItemContent(
                         .fillMaxWidth(),
                     text = item.price.toString(),
                     fontSize = 16.sp,
+                    maxLines = 1,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
-                if (cartAddingState is CartAddingState.Adding) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(28.dp),
-                    )
-                } else {
-                    Button(
-                        modifier = Modifier
-                            .height(28.dp)
-                            .width(68.dp),
-                        shape = ShapeDefaults.Small,
-                        contentPadding = PaddingValues(all = 4.dp),
-                        onClick = onAddToCartClick,
-                    ) {
-                        Text(
-                            text = stringResource(
-                                resource = if (item.isAvailable) {
-                                    Res.string.add_cart
-                                } else {
-                                    Res.string.order
-                                }
-                            ),
-                            fontSize = 8.sp
+                Row(
+                    modifier = Modifier
+                        .height(28.dp)
+                        .width(68.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (item.cartAddingState is CartAddingState.Adding) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(24.dp),
                         )
+                    } else if (quantity > 0) {
+                        ShopItemQuantityComponent(
+                            modifier = Modifier
+                                .padding(vertical = 4.dp),
+                            quantity = quantity,
+                            onAddClick = onAddClick,
+                            onRemoveClick = onRemoveClick,
+                            onDeleteClick = onDeleteClick,
+                        )
+                    } else {
+                        Button(
+                            modifier = Modifier,
+                            shape = ShapeDefaults.Small,
+                            contentPadding = PaddingValues(all = 4.dp),
+                            onClick = {
+                                if (item.isAvailable) {
+                                    onAddToCartClick()
+                                }
+                            },
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    resource = if (item.isAvailable) {
+                                        Res.string.add_cart
+                                    } else {
+                                        Res.string.order
+                                    }
+                                ),
+                                fontSize = 8.sp
+                            )
+                        }
                     }
                 }
             }

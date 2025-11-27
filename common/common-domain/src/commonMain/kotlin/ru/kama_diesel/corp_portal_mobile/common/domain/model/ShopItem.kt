@@ -9,7 +9,7 @@ data class ShopItem(
     val description: String,
     val characteristics: Map<String, String>,
     val partNumber: String?,
-    val price: Int?,
+    val price: Int,
     val imagePaths: List<String>?,
     val isAvailable: Boolean,
     val isActive: Boolean,

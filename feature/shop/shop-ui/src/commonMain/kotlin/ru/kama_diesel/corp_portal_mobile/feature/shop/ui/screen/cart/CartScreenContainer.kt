@@ -13,6 +13,11 @@ fun CartScreenContainer(viewModel: CartViewModel) {
         viewState = viewState,
         onRefresh = viewModel::getData,
         onBackClick = viewModel::back,
-        onAddToCartClick = viewModel::addToCart,
+        onUpdateQuantityClick = viewModel::onUpdateCartItemQuantityClick,
+        onDeleteClick = viewModel::onDeleteCartItemClick,
+        onOrderClick = viewModel::onMakeOrderClick,
+        onCheckedChange = viewModel::onCartItemCheckedChange,
+        onSelectAllClick = viewModel::onSelectAllClick,
+        onDropSelectedItems = viewModel::onDropSelectedItems,
     )
 }

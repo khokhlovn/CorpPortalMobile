@@ -5,9 +5,9 @@ import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.di.ShopFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.CartComponent
+import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.OrdersComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.ShopListComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 
@@ -38,7 +38,13 @@ class ShopFlowRouter(
 
             is Configuration.Cart -> Child.Cart(
                 component = CartComponent(
-                    shopItems = config.shopItems,
+                    componentContext = componentContext,
+                    shopFlowDIComponent = shopFlowDIComponent
+                )
+            )
+
+            is Configuration.Orders -> Child.Orders(
+                component = OrdersComponent(
                     componentContext = componentContext,
                     shopFlowDIComponent = shopFlowDIComponent
                 )
@@ -49,6 +55,7 @@ class ShopFlowRouter(
     internal sealed interface Child {
         class ShopList(val component: ShopListComponent) : Child
         class Cart(val component: CartComponent) : Child
+        class Orders(val component: OrdersComponent) : Child
     }
 
     @Serializable
@@ -57,14 +64,25 @@ class ShopFlowRouter(
         data object ShopList : Configuration()
 
         @Serializable
-        data class Cart(val shopItems: List<ShopItem>) : Configuration()
+        data object Cart : Configuration()
+
+        @Serializable
+        data object Orders : Configuration()
     }
 
-    override fun toCart(shopItems: List<ShopItem>) {
-        stackNavigation.push(Configuration.Cart(shopItems = shopItems))
+    override fun toCart() {
+        stackNavigation.push(Configuration.Cart)
+    }
+
+    override fun toOrders() {
+        stackNavigation.push(Configuration.Orders)
     }
 
     override fun back() {
-        stackNavigation.pop()
+        stackNavigation.pop(
+            onComplete = {
+                (childStack.active.instance as Child.ShopList).component.viewModel.getData()
+            }
+        )
     }
 }

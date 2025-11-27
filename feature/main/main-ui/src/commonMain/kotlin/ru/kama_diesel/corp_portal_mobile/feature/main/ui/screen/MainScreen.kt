@@ -21,13 +21,13 @@ import ru.kama_diesel.corp_portal_mobile.resources.shop
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
+    drawerState: DrawerState,
     selectedIndex: Int,
     tab: @Composable () -> Unit,
     onArticlesClick: () -> Unit,
     onShopClick: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -54,57 +54,61 @@ fun MainScreen(
         },
         scrimColor = Color.Transparent,
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text =
-                                when (selectedIndex) {
-                                    0 -> stringResource(Res.string.news)
-                                    1 -> stringResource(Res.string.shop)
-                                    else -> ""
-                                }
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (isClosed) open() else close()
+        if (selectedIndex != 1) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text =
+                                    when (selectedIndex) {
+                                        0 -> stringResource(Res.string.news)
+                                        1 -> stringResource(Res.string.shop)
+                                        else -> ""
+                                    }
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(
+                                onClick = {
+                                    scope.launch {
+                                        drawerState.apply {
+                                            if (isClosed) open() else close()
+                                        }
                                     }
                                 }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Menu,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    contentDescription = null,
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                tint = MaterialTheme.colorScheme.onPrimary,
-                                contentDescription = null,
-                            )
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = onLogoutClick,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.Logout,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    contentDescription = null,
+                                )
+                            }
                         }
-                    },
-                    actions = {
-                        IconButton(
-                            onClick = onLogoutClick,
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Logout,
-                                tint = MaterialTheme.colorScheme.onPrimary,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-                )
-            },
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues = paddingValues)
-            ) {
-                tab()
+                    )
+                },
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues = paddingValues)
+                ) {
+                    tab()
+                }
             }
+        } else {
+            tab()
         }
     }
 }

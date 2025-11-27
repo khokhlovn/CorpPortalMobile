@@ -41,4 +41,13 @@
     <string name="characteristics">Характеристики</string>
 
     <string name="cart">Корзина</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="drop_selected">Удалить выбранное</string>
+    <string name="make_order">Оформить заказ</string>
+
+    <string name="orders">Заказы</string>
+    <string name="order_number">Заказ №%1$s</string>
+    <string name="price_quantity">%1$s × %2$s</string>
+    <string name="ordered_at">Оформлен: %1$s</string>
+    <string name="cancelled_at">Отменен: %1$s</string>
 </resources>

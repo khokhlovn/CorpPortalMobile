@@ -23,7 +23,7 @@ data class ShopItemData(
     @SerialName("part_number")
     val partNumber: String? = null,
     @SerialName("price")
-    val price: Int? = null,
+    val price: Int,
     @SerialName("photo_paths")
     val photoPaths: List<String>? = null,
     @SerialName("is_available")

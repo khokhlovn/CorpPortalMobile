@@ -7,13 +7,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.stringResource
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.component.ShopItemQuantityComponent
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.add_cart
 import ru.kama_diesel.corp_portal_mobile.resources.order
@@ -21,9 +24,14 @@ import ru.kama_diesel.corp_portal_mobile.resources.order
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopItemDetailsDialog(
-    shopItem: ShopItem,
+    shopItem: ShopItemUIModel,
+    cartAddingState: CartAddingState,
+    quantity: Int,
     onCloseClick: () -> Unit,
-    onAddToCartClick: () -> Unit,
+    onAddToCartClick: (Int) -> Unit,
+    onAddClick: () -> Unit,
+    onRemoveClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Dialog(onDismissRequest = { onCloseClick() }) {
         Card(
@@ -57,25 +65,48 @@ fun ShopItemDetailsDialog(
                 },
                 bottomBar = {
                     Row(
-                        modifier = Modifier.padding(all = 12.dp)
+                        modifier = Modifier
+                            .height(72.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            shape = ShapeDefaults.Small,
-                            onClick = {},
-                        ) {
-                            Text(
-                                text = stringResource(
-                                    resource = if (shopItem.isAvailable) {
-                                        Res.string.add_cart
-                                    } else {
-                                        Res.string.order
-                                    }
-                                ),
-                                fontSize = 12.sp
+                        if (cartAddingState is CartAddingState.Adding) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(36.dp),
                             )
+                        } else if (quantity > 0) {
+                            ShopItemQuantityComponent(
+                                modifier = Modifier
+                                    .width(100.dp),
+                                quantity = quantity,
+                                onAddClick = onAddClick,
+                                onRemoveClick = onRemoveClick,
+                                onDeleteClick = onDeleteClick,
+                            )
+                        } else {
+                            Button(
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp)
+                                    .fillMaxWidth(),
+                                shape = ShapeDefaults.Small,
+                                onClick = {
+                                    onAddToCartClick(shopItem.id)
+                                },
+                            ) {
+                                Text(
+                                    text = stringResource(
+                                        resource = if (shopItem.isAvailable) {
+                                            Res.string.add_cart
+                                        } else {
+                                            Res.string.order
+                                        }
+                                    ),
+                                    fontSize = 12.sp
+                                )
+                            }
                         }
                     }
                 },
