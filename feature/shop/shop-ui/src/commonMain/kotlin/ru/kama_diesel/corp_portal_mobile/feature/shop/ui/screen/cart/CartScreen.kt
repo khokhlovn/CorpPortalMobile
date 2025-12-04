@@ -3,17 +3,17 @@ package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartViewState
 import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.arrow_back_24px
 import ru.kama_diesel.corp_portal_mobile.resources.cart
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +40,7 @@ fun CartScreen(
                         onClick = onBackClick,
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(Res.drawable.arrow_back_24px),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             contentDescription = null,
                         )

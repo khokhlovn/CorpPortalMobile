@@ -20,4 +20,8 @@ actual object DateTimeMapper {
     private fun getDateFromIso8601Timestamp(string: String): NSDate? {
         return NSISO8601DateFormatter().dateFromString(string)
     }
+
+    actual fun getFormattedDate(millis: Long, format: String): String {
+        TODO("Not yet implemented")
+    }
 }

@@ -25,6 +25,9 @@ kotlin {
             implementation(projects.feature.shop.shopComponent)
             implementation(projects.feature.shop.shopDomain)
 
+            implementation(projects.feature.phoneDirectory.phoneDirectoryComponent)
+            implementation(projects.feature.phoneDirectory.phoneDirectoryDomain)
+
             implementation(projects.common.commonComponent)
             implementation(projects.common.commonDomain)
             implementation(projects.common.commonUi)

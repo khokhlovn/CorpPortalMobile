@@ -1,52 +1,80 @@
 package ru.kama_diesel.corp_portal_mobile.feature.main.ui.screen.menu
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Newspaper
-import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.kama_diesel.corp_portal_mobile.resources.Res
-import ru.kama_diesel.corp_portal_mobile.resources.news
-import ru.kama_diesel.corp_portal_mobile.resources.shop
+import ru.kama_diesel.corp_portal_mobile.resources.*
 
 @Composable
 internal fun MenuComponent(
     selectedIndex: Int,
     onArticlesClick: () -> Unit,
     onShopClick: () -> Unit,
+    onPhoneDirectoryClick: () -> Unit,
 ) {
     ModalDrawerSheet(
         modifier = Modifier.requiredWidth(200.dp),
         drawerShape = RectangleShape,
-        drawerContainerColor = MaterialTheme.colorScheme.primary
+        drawerContainerColor = MaterialTheme.colorScheme.primary,
     ) {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = stringResource(Res.string.menu),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+        )
 
         NavigationDrawerItem(
             label = {
                 Text(text = stringResource(Res.string.news))
             },
             icon = {
-                Icon(imageVector = Icons.Default.Newspaper, contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.newspaper_24px),
+                    contentDescription = null,
+                )
             },
             shape = RectangleShape,
             selected = selectedIndex == 0,
             onClick = onArticlesClick,
         )
+
         NavigationDrawerItem(
             label = {
                 Text(text = stringResource(Res.string.shop))
             },
             icon = {
-                Icon(imageVector = Icons.Default.Storefront, contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.storefront_24px),
+                    contentDescription = null,
+                )
             },
             shape = RectangleShape,
             selected = selectedIndex == 1,
             onClick = onShopClick,
+        )
+
+        NavigationDrawerItem(
+            label = {
+                Text(text = stringResource(Res.string.phone_directory))
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(Res.drawable.call_log_24px),
+                    contentDescription = null
+                )
+            },
+            shape = RectangleShape,
+            selected = selectedIndex == 2,
+            onClick = onPhoneDirectoryClick,
         )
     }
 }

@@ -206,7 +206,7 @@ class ArticlesListViewModel(
                     dialog = ArticlesListDialog.Details(
                         articleId = articleId,
                         title = title,
-                        imagePaths = List(4) { imagePaths!! }.flatten(),
+                        imagePaths = imagePaths?.let { List(4) { imagePaths }.flatten() },
                         tags = tags,
                         creationDate = creationDate,
                         isLiked = isLiked,

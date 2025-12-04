@@ -8,8 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -68,7 +67,8 @@ fun CartScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = MaterialTheme.colorScheme.inverseSurface)
-                    .padding(vertical = 4.dp, horizontal = 16.dp),
+                    .padding(vertical = 4.dp)
+                    .padding(end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Checkbox(
@@ -235,9 +235,9 @@ fun CartItemContent(
         modifier = Modifier
             .height(140.dp)
             .fillMaxWidth()
-            .padding(all = 16.dp),
+            .padding(end = 16.dp),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Checkbox(
             checked = isChecked,
@@ -247,6 +247,7 @@ fun CartItemContent(
         )
         AsyncImage(
             modifier = Modifier
+                .padding(vertical = 12.dp)
                 .fillMaxHeight()
                 .clip(shape = RoundedCornerShape(8.dp))
                 .aspectRatio(1f),
@@ -257,7 +258,9 @@ fun CartItemContent(
             contentScale = ContentScale.Crop,
         )
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 12.dp),
         ) {
             Column(
                 modifier = Modifier
@@ -287,16 +290,18 @@ fun CartItemContent(
                 modifier = Modifier
                     .height(28.dp)
                     .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .fillMaxWidth()
                         .weight(1f)
                         .wrapContentHeight(align = Alignment.CenterVertically),
                     text = (shopItemPrice * cartItem.quantity).toString(),
                     textAlign = TextAlign.End,
-                    fontSize = 20.sp,
+                    autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),
+                    maxLines = 1,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
@@ -317,7 +322,7 @@ fun CartItemContent(
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .clickable(onClick = onDeleteClick),
-                            imageVector = Icons.Default.Delete,
+                            painter = painterResource(Res.drawable.delete_24px),
                             tint = MaterialTheme.colorScheme.inverseOnSurface,
                             contentDescription = null,
                         )

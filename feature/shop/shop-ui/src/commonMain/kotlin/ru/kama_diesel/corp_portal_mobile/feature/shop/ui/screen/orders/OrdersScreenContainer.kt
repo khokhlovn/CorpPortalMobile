@@ -13,5 +13,6 @@ fun OrdersScreenContainer(viewModel: OrdersViewModel) {
         viewState = viewState,
         onRefresh = viewModel::getData,
         onBackClick = viewModel::back,
+        onSorterChange = viewModel::onSorterChange,
     )
 }

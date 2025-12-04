@@ -23,7 +23,6 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.components.resources)
-            implementation(compose.materialIconsExtended)
             implementation(libs.kotlin.inject.runtime)
         }
         commonTest.dependencies {

@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +24,7 @@ import androidx.compose.ui.window.DialogProperties
 import kotlinx.datetime.*
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.TagItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.*
@@ -36,7 +35,7 @@ import kotlin.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersContent(
-    expanded: Boolean,
+    modifier: Modifier = Modifier,
     tagItems: List<TagItemUIModel>,
     fromDate: Long?,
     toDate: Long?,
@@ -47,79 +46,74 @@ fun FiltersContent(
     onHideFilters: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
+            .requiredWidth(260.dp)
             .background(color = MaterialTheme.colorScheme.inverseSurface)
-            .animateContentSize()
-            .then(
-                if (expanded) {
-                    Modifier.fillMaxWidth()
-                } else {
-                    Modifier.width(0.dp)
-                }
-            )
-            .fillMaxHeight(),
+            .animateContentSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         var showModal by remember { mutableStateOf(false) }
 
-        if (expanded) {
+        Text(
+            modifier = Modifier.padding(top = 12.dp, start = 12.dp),
+            text = stringResource(Res.string.filters),
+            fontSize = 24.sp
+        )
+        Spacer(modifier = Modifier.height(height = 12.dp))
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                modifier = Modifier.padding(top = 12.dp, start = 12.dp),
-                text = stringResource(Res.string.filters),
-                fontSize = 24.sp
+                modifier = Modifier.padding(start = 12.dp),
+                fontSize = 16.sp,
+                text = stringResource(Res.string.tags)
             )
-            Spacer(modifier = Modifier.height(height = 12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    modifier = Modifier.padding(start = 12.dp),
-                    fontSize = 16.sp,
-                    text = stringResource(Res.string.tags)
-                )
-                Spacer(modifier = Modifier.height(height = 8.dp))
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp),
-                    contentPadding = PaddingValues(end = 12.dp),
-                ) {
-                    items(items = tagItems) { tagItem ->
-                        TagItemContent(
-                            item = tagItem,
-                            onCheckedChange = onCheckedChange,
-                        )
-                    }
+            Spacer(modifier = Modifier.height(height = 8.dp))
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp),
+                contentPadding = PaddingValues(end = 12.dp),
+            ) {
+                items(items = tagItems) { tagItem ->
+                    TagItemContent(
+                        item = tagItem,
+                        onCheckedChange = onCheckedChange,
+                    )
                 }
-                Spacer(modifier = Modifier.height(height = 12.dp))
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp, end = 12.dp)
-                        .pointerInput(Pair(fromDate, toDate)) {
-                            awaitEachGesture {
-                                awaitFirstDown(pass = PointerEventPass.Initial)
-                                val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                                if (upEvent != null) {
-                                    showModal = true
-                                }
-                            }
-                        },
-                    value = convertMillisToDateRange(fromDate, toDate),
-                    onValueChange = { },
-                    label = {
-                        Text(
-                            text = stringResource(Res.string.date),
-                        )
-                    },
-                    textStyle = TextStyle(fontSize = 14.sp),
-                    readOnly = true,
-                    trailingIcon = {
-                        Icon(Icons.Filled.DateRange, contentDescription = null)
-                    },
-                    colors = OutlinedTextFieldDefaults.colors().copy(
-                        focusedTextColor = MaterialTheme.colorScheme.primary,
-                        unfocusedTextColor = MaterialTheme.colorScheme.primary,
-                    ),
-                )
             }
+            Spacer(modifier = Modifier.height(height = 12.dp))
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, end = 12.dp)
+                    .pointerInput(Pair(fromDate, toDate)) {
+                        awaitEachGesture {
+                            awaitFirstDown(pass = PointerEventPass.Initial)
+                            val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                            if (upEvent != null) {
+                                showModal = true
+                            }
+                        }
+                    },
+                value = convertMillisToDateRange(fromDate, toDate),
+                onValueChange = { },
+                label = {
+                    Text(
+                        text = stringResource(Res.string.date),
+                    )
+                },
+                textStyle = TextStyle(fontSize = 14.sp),
+                readOnly = true,
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(Res.drawable.date_range_24px),
+                        contentDescription = null,
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors().copy(
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                ),
+            )
+
             Spacer(modifier = Modifier.height(height = 12.dp))
             Button(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
@@ -141,6 +135,7 @@ fun FiltersContent(
             }
             Spacer(modifier = Modifier.height(height = 12.dp))
         }
+
         if (showModal) {
             val dateRangePickerState = rememberDateRangePickerState(
                 initialSelectedStartDateMillis = fromDate,

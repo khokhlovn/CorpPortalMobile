@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowLeft
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,8 +27,7 @@ import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import ru.kama_diesel.corp_portal_mobile.resources.Res
-import ru.kama_diesel.corp_portal_mobile.resources.placeholder
+import ru.kama_diesel.corp_portal_mobile.resources.*
 
 @Composable
 fun FullScreenImageViewer(
@@ -87,7 +82,7 @@ fun FullScreenImageViewer(
             ) {
                 Icon(
                     modifier = Modifier.fillMaxSize(),
-                    imageVector = Icons.Outlined.Close,
+                    painter = painterResource(Res.drawable.close_24px),
                     tint = MaterialTheme.colorScheme.onPrimary,
                     contentDescription = null,
                 )
@@ -153,7 +148,7 @@ fun FullScreenImageViewer(
                     ) {
                         Icon(
                             modifier = Modifier.fillMaxSize(),
-                            imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
+                            painter = painterResource(Res.drawable.arrow_left_24px),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             contentDescription = null,
                         )
@@ -186,7 +181,7 @@ fun FullScreenImageViewer(
                     ) {
                         Icon(
                             modifier = Modifier.fillMaxSize(),
-                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            painter = painterResource(Res.drawable.arrow_right_24px),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             contentDescription = null,
                         )

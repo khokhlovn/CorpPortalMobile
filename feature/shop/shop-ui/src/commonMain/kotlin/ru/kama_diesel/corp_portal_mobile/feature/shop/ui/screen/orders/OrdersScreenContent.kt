@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
@@ -22,20 +23,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderStatus
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.model.OrderItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrdersScreenContent(
-    orderItems: List<OrderItem>,
+    orderItems: List<OrderItemUIModel>,
     shopItems: List<ShopItem>,
+    selectedSorter: Sorter,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
+    onSorterChange: (Sorter) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
@@ -44,6 +49,23 @@ fun OrdersScreenContent(
             .background(color = Color(red = 243, green = 243, blue = 243))
             .fillMaxSize(),
     ) {
+        OrdersFilterPanel(
+            selectedSorter = selectedSorter,
+            onSorterChange = onSorterChange,
+        )
+        Spacer(
+            modifier = Modifier
+                .height(4.dp)
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.15f),
+                            Color.Transparent,
+                        )
+                    )
+                )
+        )
         PullToRefreshBox(
             modifier = Modifier.fillMaxSize().weight(1f),
             state = state,
@@ -77,7 +99,7 @@ fun OrdersScreenContent(
 
 @Composable
 fun OrderItemContent(
-    orderItem: OrderItem,
+    orderItem: OrderItemUIModel,
     shopItems: List<ShopItem>,
 ) {
     Card(
@@ -178,4 +200,12 @@ fun OrderItemContent(
             }
         }
     }
+}
+
+@Serializable
+enum class Sorter(val stringResourceId: StringResource) {
+    DateIncreasing(stringResourceId = Res.string.by_date_increasing),
+    DateDecreasing(stringResourceId = Res.string.by_date_decreasing),
+    SumIncreasing(stringResourceId = Res.string.by_sum_increasing),
+    SumDecreasing(stringResourceId = Res.string.by_sum_decreasing),
 }

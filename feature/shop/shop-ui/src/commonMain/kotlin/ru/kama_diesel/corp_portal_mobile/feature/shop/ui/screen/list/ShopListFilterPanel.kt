@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.runtime.*
@@ -15,8 +13,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.check_24px
 import ru.kama_diesel.corp_portal_mobile.resources.reset
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,7 +91,7 @@ internal fun ShopListFilterPanel(
                             if (item == selectedSorter) {
                                 Icon(
                                     modifier = Modifier.size(16.dp),
-                                    imageVector = Icons.Default.Check,
+                                    painter = painterResource(Res.drawable.check_24px),
                                     tint = MaterialTheme.colorScheme.inverseOnSurface,
                                     contentDescription = null,
                                 )
@@ -159,7 +159,7 @@ internal fun ShopListFilterPanel(
                             if (item == selectedFilter) {
                                 Icon(
                                     modifier = Modifier.size(16.dp),
-                                    imageVector = Icons.Default.Check,
+                                    painter = painterResource(Res.drawable.check_24px),
                                     tint = MaterialTheme.colorScheme.inverseOnSurface,
                                     contentDescription = null,
                                 )

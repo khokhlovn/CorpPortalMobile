@@ -31,7 +31,6 @@ import ru.kama_diesel.corp_portal_mobile.resources.placeholder
 fun ArticlesListScreenContent(
     articleItems: List<ArticleItem>,
     isRefreshing: Boolean,
-    scrollEnabled: Boolean,
     onRefresh: () -> Unit,
     onArticleClick: (String, String, List<String>?, List<String>?, String, Boolean, Int) -> Unit,
 ) {
@@ -54,14 +53,12 @@ fun ArticlesListScreenContent(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            userScrollEnabled = scrollEnabled,
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 16.dp, horizontal = 20.dp)
         ) {
             items(items = articleItems) { articleItem ->
                 ArticleItemContent(
                     item = articleItem,
-                    scrollEnabled = scrollEnabled,
                     onArticleClick = onArticleClick,
                 )
             }
@@ -72,30 +69,23 @@ fun ArticlesListScreenContent(
 @Composable
 fun ArticleItemContent(
     item: ArticleItem,
-    scrollEnabled: Boolean,
     onArticleClick: (String, String, List<String>?, List<String>?, String, Boolean, Int) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(160.dp)
             .clip(shape = RoundedCornerShape(size = 12.dp))
-            .then(
-                if (scrollEnabled) {
-                    Modifier.clickable {
-                        onArticleClick(
-                            item.id,
-                            item.title,
-                            item.imagePaths,
-                            item.tags,
-                            item.creationDate,
-                            item.isLiked,
-                            item.likesAmount
-                        )
-                    }
-                } else {
-                    Modifier
-                }
-            ),
+            .clickable {
+                onArticleClick(
+                    item.id,
+                    item.title,
+                    item.imagePaths,
+                    item.tags,
+                    item.creationDate,
+                    item.isLiked,
+                    item.likesAmount
+                )
+            },
         contentAlignment = Alignment.BottomStart,
     ) {
         AsyncImage(

@@ -1,15 +1,19 @@
 package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.LoadingDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.dialog.details.ArticleDetailsDialog
@@ -33,52 +37,74 @@ fun ArticlesListScreen(
     onHideSnackbar: () -> Unit,
     onLikeClick: () -> Unit,
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        ArticlesListScreenContent(
-            articleItems = viewState.articleItems,
-            isRefreshing = viewState.isLoading,
-            scrollEnabled = !expanded,
-            onRefresh = onRefresh,
-            onArticleClick = onArticleClick,
-        )
-        Row(modifier = Modifier.fillMaxHeight().align(alignment = Alignment.CenterEnd)) {
-            if (!viewState.isLoading) {
-                Button(
-                    modifier = Modifier
-                        .offset(x = 40.dp)
-                        .rotate(-90f)
-                        .focusable(true)
-                        .align(alignment = Alignment.CenterVertically),
-                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
-                    onClick = {
-                        expanded = !expanded
-                    },
-                ) {
-                    Text(
-                        modifier = Modifier,
-                        text = stringResource(Res.string.filters),
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
-                }
-                if (expanded) {
-                    VerticalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
-                }
-                FiltersContent(
-                    expanded = expanded,
-                    tagItems = viewState.tagItems,
-                    fromDate = viewState.fromDate,
-                    toDate = viewState.toDate,
-                    onCheckedChange = onCheckedChange,
-                    onDateChange = onDateChange,
-                    onResetFilters = onResetFilters,
-                    onApplyFilters = onRefresh,
-                    onHideFilters = { expanded = false },
-                )
-            }
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .requiredWidth(260.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            if (!viewState.isLoading) {
+                                Button(
+                                    modifier = Modifier.rotate(-90f).offset(y = (-75).dp),
+                                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp),
+                                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
+                                    onClick = {
+                                        scope.launch {
+                                            if (drawerState.isOpen) {
+                                                drawerState.close()
+                                            } else {
+                                                drawerState.open()
+                                            }
+                                        }
+                                    },
+                                ) {
+                                    Text(
+                                        text = stringResource(Res.string.filters),
+                                        fontSize = 16.sp,
+                                        color = MaterialTheme.colorScheme.onPrimary,
+                                    )
+                                }
+                                FiltersContent(
+                                    modifier = Modifier.fillMaxHeight().offset(x = (-56).dp),
+                                    tagItems = viewState.tagItems,
+                                    fromDate = viewState.fromDate,
+                                    toDate = viewState.toDate,
+                                    onCheckedChange = onCheckedChange,
+                                    onDateChange = onDateChange,
+                                    onResetFilters = onResetFilters,
+                                    onApplyFilters = onRefresh,
+                                    onHideFilters = {
+                                        scope.launch {
+                                            drawerState.close()
+                                        }
+                                    },
+                                )
+                            }
+                        }
+                    }
+                },
+                content = {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            ArticlesListScreenContent(
+                                articleItems = viewState.articleItems,
+                                isRefreshing = viewState.isLoading,
+                                onRefresh = onRefresh,
+                                onArticleClick = onArticleClick,
+                            )
+                        }
+                    }
+                },
+            )
         }
 
         when (val dialog = viewState.dialog) {

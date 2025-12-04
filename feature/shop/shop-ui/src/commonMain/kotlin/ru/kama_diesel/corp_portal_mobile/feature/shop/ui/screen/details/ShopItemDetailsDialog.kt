@@ -3,8 +3,6 @@ package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,12 +11,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.component.ShopItemQuantityComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.add_cart
+import ru.kama_diesel.corp_portal_mobile.resources.close_24px
 import ru.kama_diesel.corp_portal_mobile.resources.order
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +56,7 @@ fun ShopItemDetailsDialog(
                             onClick = onCloseClick,
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Close,
+                                painter = painterResource(Res.drawable.close_24px),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 contentDescription = null,
                             )

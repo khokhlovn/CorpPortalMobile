@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.ktor.client.auth)
             implementation(libs.napier)
             implementation(libs.kotlin.inject.runtime)
+            implementation(libs.kotlinx.datetime)
             implementation(projects.data.preferences)
         }
         androidMain.dependencies {
