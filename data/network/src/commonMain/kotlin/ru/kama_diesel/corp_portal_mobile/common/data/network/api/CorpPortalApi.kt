@@ -102,4 +102,21 @@ class CorpPortalApi(
     suspend fun getOrders(): OrdersListResponseData {
         return httpClient.get("orders_list").body()
     }
+
+    suspend fun getPhoneBook(): PhoneDirectoryResponseData {
+        return httpClient.get("phone_book").body()
+    }
+
+    suspend fun getReservationList(start: Long?, finish: Long?): ReservationListResponseData {
+        return httpClient.get("reservation_list") {
+            url {
+                start?.let {
+                    parameters.append("start", it.toString())
+                }
+                finish?.let {
+                    parameters.append("finish", it.toString())
+                }
+            }
+        }.body()
+    }
 }

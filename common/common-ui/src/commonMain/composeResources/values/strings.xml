@@ -6,6 +6,8 @@
     <string name="name">Логин</string>
     <string name="password">Пароль</string>
 
+    <string name="menu">Меню</string>
+
     <string name="news">Новости</string>
     <string name="filters">Фильтры</string>
     <string name="tags">Тэги:</string>
@@ -46,8 +48,21 @@
     <string name="make_order">Оформить заказ</string>
 
     <string name="orders">Заказы</string>
+    <string name="by_sum_increasing">Сумма (по возрастанию)</string>
+    <string name="by_sum_decreasing">Сумма (по убыванию)</string>
+    <string name="by_date_increasing">Сначала старые</string>
+    <string name="by_date_decreasing">Сначала новые</string>
     <string name="order_number">Заказ №%1$s</string>
     <string name="price_quantity">%1$s × %2$s</string>
     <string name="ordered_at">Оформлен: %1$s</string>
     <string name="cancelled_at">Отменен: %1$s</string>
+
+    <string name="phone_directory">Телефонный справочник</string>
+    <string name="empty_result">Ничего не найдено. Попробуйте изменить запрос</string>
+    <string name="work_place">Раб. место:</string>
+    <string name="fio">ФИО</string>
+    <string name="department">Отдел</string>
+    <string name="service">Служба</string>
+    <string name="work_place_sorter">Раб. место</string>
+    <string name="position">Должность</string>
 </resources>

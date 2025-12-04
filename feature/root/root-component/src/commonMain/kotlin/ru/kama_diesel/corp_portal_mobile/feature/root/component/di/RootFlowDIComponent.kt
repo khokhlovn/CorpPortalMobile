@@ -4,8 +4,10 @@ import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 import ru.kama_diesel.corp_portal_mobile.common.data.repository.AuthorizedUserRepository
+import ru.kama_diesel.corp_portal_mobile.common.data.repository.ReservationListRepository
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IAuthorizedUserRepository
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
+import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IReservationListRepository
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.auth.component.api.IAuthComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.auth.domain.interfaces.IAuthCompletionUseCase
@@ -46,6 +48,9 @@ internal abstract class RootFlowDIComponent(
 
     @Provides
     protected fun bind(it: AuthorizedUserRepository): IAuthorizedUserRepository = it
+
+    @Provides
+    protected fun bind(it: ReservationListRepository): IReservationListRepository = it
 
     @Provides
     protected fun bind(it: AuthCompletionUseCase): IAuthCompletionUseCase = it

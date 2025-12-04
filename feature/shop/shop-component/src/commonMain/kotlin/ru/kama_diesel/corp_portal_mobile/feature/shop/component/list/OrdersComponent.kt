@@ -6,6 +6,7 @@ import ru.kama_diesel.corp_portal_mobile.common.component.registerAndGetSavedSta
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.di.ShopFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.OrdersDiComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.list.di.create
+import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.Sorter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.model.OrdersViewState
 
 class OrdersComponent(
@@ -17,7 +18,9 @@ class OrdersComponent(
         key = ORDERS_SAVED_STATE,
         initialValue = OrdersViewState(
             orderItems = listOf(),
+            sortedOrderItems = listOf(),
             shopItems = listOf(),
+            selectedSorter = Sorter.DateDecreasing,
             isLoading = true,
         ),
         deserialization = OrdersViewState.serializer(),

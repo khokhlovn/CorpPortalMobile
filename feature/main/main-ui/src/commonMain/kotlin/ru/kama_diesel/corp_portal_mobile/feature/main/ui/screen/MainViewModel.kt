@@ -24,6 +24,10 @@ class MainViewModel(
         router.toShop()
     }
 
+    fun onPhoneDirectoryClick() {
+        router.toPhoneDirectory()
+    }
+
     fun onLogoutClick() {
         logoutUseCase()
     }

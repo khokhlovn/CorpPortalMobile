@@ -7,4 +7,9 @@ expect object DateTimeMapper {
         iso8601Timestamp: String,
         format: String,
     ): String
+
+    fun getFormattedDate(
+        millis: Long,
+        format: String,
+    ): String
 }

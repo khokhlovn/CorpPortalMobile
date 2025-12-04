@@ -1,9 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -12,12 +9,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details.ShopItemDetailsDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
 import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.logout_24px
+import ru.kama_diesel.corp_portal_mobile.resources.menu_24px
 import ru.kama_diesel.corp_portal_mobile.resources.shop
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +57,7 @@ fun ShopListScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Menu,
+                            painter = painterResource(Res.drawable.menu_24px),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             contentDescription = null,
                         )
@@ -79,7 +79,7 @@ fun ShopListScreen(
                         onClick = onLogoutClick,
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            painter = painterResource(Res.drawable.logout_24px),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             contentDescription = null,
                         )

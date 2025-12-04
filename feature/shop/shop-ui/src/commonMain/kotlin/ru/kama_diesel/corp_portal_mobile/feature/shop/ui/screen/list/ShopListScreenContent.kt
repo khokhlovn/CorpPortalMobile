@@ -13,9 +13,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ListAlt
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -26,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +31,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberConstraintsSizeResolver
+import coil3.request.ImageRequest
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -66,6 +67,11 @@ fun ShopListScreenContent(
     onDeleteClick: (Int) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
+    val percentCacheWindow = LazyLayoutCacheWindow(
+        aheadFraction = 1f,
+        behindFraction = 0.5f,
+    )
+    val gridState = rememberLazyGridState(cacheWindow = percentCacheWindow)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -110,14 +116,9 @@ fun ShopListScreenContent(
                 },
                 onRefresh = onRefresh,
             ) {
-                val percentCacheWindow = LazyLayoutCacheWindow(
-                    aheadFraction = 0.5f,
-                    behindFraction = 0.3f
-                )
-                val state = rememberLazyGridState(cacheWindow = percentCacheWindow)
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
-                    state = state,
+                    state = gridState,
                     columns = GridCells.Fixed(count = 2),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -171,8 +172,8 @@ fun ShopListScreenContent(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ListAlt,
-                            contentDescription = null
+                            painter = painterResource(Res.drawable.list_alt_24px),
+                            contentDescription = null,
                         )
                     }
                 }
@@ -193,7 +194,7 @@ fun ShopListScreenContent(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ShoppingCart,
+                            painter = painterResource(Res.drawable.shopping_cart_24px),
                             contentDescription = null
                         )
                     }
@@ -213,12 +214,19 @@ fun ShopItemContent(
     onRemoveClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
+    val pagerState = rememberPagerState(pageCount = { item.imagePaths?.size ?: 1 })
+    val sizeResolver = rememberConstraintsSizeResolver()
+
+
     Card(
         modifier = Modifier.fillMaxWidth()
             .height(244.dp)
             .clickable {
                 onShopItemClick()
             },
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp,
+        ),
         shape = RoundedCornerShape(size = 12.dp),
         colors = CardDefaults.cardColors().copy(containerColor = MaterialTheme.colorScheme.inverseSurface)
     ) {
@@ -228,8 +236,6 @@ fun ShopItemContent(
                 .padding(top = 8.dp)
                 .weight(1f),
         ) {
-            val pagerState = rememberPagerState(pageCount = { item.imagePaths?.size ?: 1 })
-
             HorizontalPager(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -241,13 +247,18 @@ fun ShopItemContent(
                     modifier = Modifier
                         .height(120.dp)
                         .fillMaxWidth(),
-                    model = item.imagePaths?.get(page),
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(item.imagePaths?.get(page))
+                        .size(sizeResolver)
+                        .build(),
                     placeholder = painterResource(Res.drawable.placeholder),
                     error = painterResource(Res.drawable.placeholder),
                     contentDescription = null,
+                    filterQuality = FilterQuality.None,
                     contentScale = ContentScale.Crop,
                 )
             }
+
 
             if (!item.imagePaths.isNullOrEmpty() && item.imagePaths.size > 1) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -255,6 +266,7 @@ fun ShopItemContent(
             } else {
                 Spacer(modifier = Modifier.height(10.dp))
             }
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier
@@ -299,9 +311,11 @@ fun ShopItemContent(
                 Text(
                     modifier = Modifier
                         .weight(1f)
+                        .wrapContentHeight(align = Alignment.CenterVertically)
                         .fillMaxWidth(),
                     text = item.price.toString(),
                     fontSize = 16.sp,
+                    lineHeight = 18.sp,
                     maxLines = 1,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
@@ -321,6 +335,7 @@ fun ShopItemContent(
                     } else if (quantity > 0) {
                         ShopItemQuantityComponent(
                             modifier = Modifier
+                                .fillMaxSize()
                                 .padding(vertical = 4.dp),
                             quantity = quantity,
                             onAddClick = onAddClick,
@@ -329,7 +344,7 @@ fun ShopItemContent(
                         )
                     } else {
                         Button(
-                            modifier = Modifier,
+                            modifier = Modifier.fillMaxSize(),
                             shape = ShapeDefaults.Small,
                             contentPadding = PaddingValues(all = 4.dp),
                             onClick = {

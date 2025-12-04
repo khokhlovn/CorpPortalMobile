@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import ru.kama_diesel.corp_portal_mobile.feature.articles.component.ArticlesFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.screen.MainScreenContainer
+import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.PhoneDirectoryFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.root.component.MainFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowScreenComponent
 
@@ -20,6 +21,7 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
         selectedIndex = when (childPages.items.first().instance) {
             is MainFlowRouter.PagesChild.ArticlesFlow -> 0
             is MainFlowRouter.PagesChild.ShopFlow -> 1
+            is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> 2
             null -> 0
         },
         tab = {
@@ -27,6 +29,10 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
                 is MainFlowRouter.PagesChild.ArticlesFlow -> ArticlesFlowScreenComponent(articlesFlowComponent = page.component)
                 is MainFlowRouter.PagesChild.ShopFlow -> ShopFlowScreenComponent(
                     drawerState = drawerState,
+                    shopFlowComponent = page.component,
+                )
+
+                is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> PhoneDirectoryFlowScreenComponent(
                     shopFlowComponent = page.component,
                 )
 

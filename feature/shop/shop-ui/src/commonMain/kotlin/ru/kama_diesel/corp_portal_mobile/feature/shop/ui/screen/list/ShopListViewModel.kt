@@ -1,5 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
@@ -29,6 +31,7 @@ class ShopListViewModel(
 ) : BaseStateViewModel<ShopListViewState>() {
 
     private val router by routerHolder
+    private var itemQuantityChangeDebounceJob: Job? = null
 
     init {
         getData()
@@ -130,18 +133,35 @@ class ShopListViewModel(
         with(currentState.cartItems.first { cartItem -> cartItem.inCartItemId == inCartItemId }) {
             setState {
                 copy(
-                    sortedShopItems = sortedShopItems.map {
-                        if (it.id != itemId) {
+                    cartItems = cartItems.map {
+                        if (it.inCartItemId != inCartItemId) {
                             it
                         } else {
                             it.copy(
-                                cartAddingState = CartAddingState.Adding,
+                                quantity = quantity,
                             )
                         }
                     }
                 )
             }
-            coroutineScope.launch {
+            itemQuantityChangeDebounceJob?.cancel()
+            itemQuantityChangeDebounceJob = coroutineScope.launch {
+                if (quantity > 0) {
+                    delay(500)
+                }
+                setState {
+                    copy(
+                        sortedShopItems = sortedShopItems.map {
+                            if (it.id != itemId) {
+                                it
+                            } else {
+                                it.copy(
+                                    cartAddingState = CartAddingState.Adding,
+                                )
+                            }
+                        }
+                    )
+                }
                 updateCartItemUseCase(inCartItemId = inCartItemId, quantity = quantity)
                 getCartAndOrdersData()
             }

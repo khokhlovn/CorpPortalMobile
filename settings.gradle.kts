@@ -63,3 +63,8 @@ include("feature:shop:shop-component")
 include("feature:shop:shop-data")
 include("feature:shop:shop-domain")
 include("feature:shop:shop-ui")
+
+include("feature:phone-directory:phone-directory-component")
+include("feature:phone-directory:phone-directory-data")
+include("feature:phone-directory:phone-directory-domain")
+include("feature:phone-directory:phone-directory-ui")

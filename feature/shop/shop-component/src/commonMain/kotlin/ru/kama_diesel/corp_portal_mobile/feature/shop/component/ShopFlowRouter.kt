@@ -79,10 +79,7 @@ class ShopFlowRouter(
     }
 
     override fun back() {
-        stackNavigation.pop(
-            onComplete = {
-                (childStack.active.instance as Child.ShopList).component.viewModel.getData()
-            }
-        )
+        stackNavigation.pop()
+        (childStack.active.instance as Child.ShopList).component.viewModel.getData()
     }
 }

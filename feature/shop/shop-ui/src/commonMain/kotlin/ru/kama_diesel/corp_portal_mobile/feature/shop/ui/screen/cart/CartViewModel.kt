@@ -1,5 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
@@ -26,6 +28,7 @@ class CartViewModel(
 ) : BaseStateViewModel<CartViewState>() {
 
     private val router by routerHolder
+    private var itemQuantityChangeDebounceJob: Job? = null
 
     init {
         getData()
@@ -41,20 +44,42 @@ class CartViewModel(
     }
 
     fun onUpdateCartItemQuantityClick(inCartItemId: Int, quantity: Int) {
+        val newCartItems = currentState.cartItems.map {
+            if (it.inCartItemId != inCartItemId) {
+                it
+            } else {
+                it.copy(
+                    quantity = quantity,
+                )
+            }
+        }
         setState {
             copy(
-                cartItems = cartItems.map {
-                    if (it.inCartItemId != inCartItemId) {
-                        it
-                    } else {
-                        it.copy(
-                            cartAddingState = CartAddingState.Adding,
-                        )
-                    }
-                }
+                cartItems = newCartItems,
+                totalSum = newCartItems.sumOf { cartItem ->
+                    shopItems.find { shopItem -> shopItem.id == cartItem.itemId }?.price?.times(cartItem.quantity)
+                        ?: 0
+                },
             )
         }
-        coroutineScope.launch {
+        itemQuantityChangeDebounceJob?.cancel()
+        itemQuantityChangeDebounceJob = coroutineScope.launch {
+            if (quantity > 0) {
+                delay(500)
+            }
+            setState {
+                copy(
+                    cartItems = cartItems.map {
+                        if (it.inCartItemId != inCartItemId) {
+                            it
+                        } else {
+                            it.copy(
+                                cartAddingState = CartAddingState.Adding,
+                            )
+                        }
+                    }
+                )
+            }
             updateCartItemUseCase(inCartItemId = inCartItemId, quantity = quantity)
             getCartData()
         }

@@ -8,9 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -193,7 +190,7 @@ internal fun ArticleDetailsContent(
                 val interactionSource = remember { MutableInteractionSource() }
                 if (isLiked) {
                     Icon(
-                        imageVector = Icons.Filled.Favorite,
+                        painter = painterResource(Res.drawable.favorite_filled_24px),
                         tint = MaterialTheme.colorScheme.error,
                         contentDescription = null,
                     )
@@ -205,7 +202,7 @@ internal fun ArticleDetailsContent(
                                 indication = null,
                                 onClick = onLikeClick,
                             ),
-                        imageVector = Icons.Outlined.FavoriteBorder,
+                        painter = painterResource(Res.drawable.favorite_24px),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         contentDescription = null,
                     )

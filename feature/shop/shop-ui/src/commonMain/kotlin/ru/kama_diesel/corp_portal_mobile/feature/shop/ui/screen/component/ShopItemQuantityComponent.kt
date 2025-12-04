@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.add_24px
+import ru.kama_diesel.corp_portal_mobile.resources.remove_24px
 
 @Composable
 internal fun ShopItemQuantityComponent(
@@ -41,7 +42,7 @@ internal fun ShopItemQuantityComponent(
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
                 .clickable(onClick = onRemoveClick),
-            imageVector = Icons.Filled.Remove,
+            painter = painterResource(Res.drawable.remove_24px),
             tint = MaterialTheme.colorScheme.onPrimary,
             contentDescription = null,
         )
@@ -65,7 +66,7 @@ internal fun ShopItemQuantityComponent(
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
                 .clickable(onClick = onAddClick),
-            imageVector = Icons.Filled.Add,
+            painter = painterResource(Res.drawable.add_24px),
             tint = MaterialTheme.colorScheme.onPrimary,
             contentDescription = null,
         )
