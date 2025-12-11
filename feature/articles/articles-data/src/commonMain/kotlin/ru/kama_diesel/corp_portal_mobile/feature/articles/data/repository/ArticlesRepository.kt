@@ -20,12 +20,14 @@ class ArticlesRepository(
 ) : IArticlesRepository {
 
     override suspend fun getArticlesList(
+        page: Int,
         fromDate: Long?,
         toDate: Long?,
-        selectedTagsIds: List<String>
+        selectedTagsIds: List<String>,
     ): List<ArticleItem> {
         return withContext(Dispatchers.IO) {
             corpPortalApi.getArticles(
+                page = page,
                 fromDate = fromDate,
                 toDate = toDate,
                 selectedTagsIds = selectedTagsIds,
@@ -69,6 +71,7 @@ class ArticlesRepository(
                         CommentItem(
                             commentId = comment.commentId,
                             userId = comment.userId,
+                            replyTo = comment.replyTo,
                             text = comment.text.replace("new_string", "\n"),
                             creationDate = DateTimeMapper.getFormattedDate(
                                 iso8601Timestamp = comment.creationDate,
@@ -79,18 +82,19 @@ class ArticlesRepository(
                             department = comment.department,
                             imagePath = comment.imagePath,
                         )
-                    }
+                    } ?: listOf()
                 )
             }
         }
     }
 
-    override suspend fun sendComment(postId: String, comment: String) {
+    override suspend fun sendComment(postId: String, comment: String, replyTo: Int?) {
         withContext(Dispatchers.IO) {
             corpPortalApi.sendComment(
                 sendCommentRequestData = SendCommentRequestData(
                     postId = postId.toInt(),
                     text = comment,
+                    replyTo = replyTo,
                 )
             )
         }
@@ -103,6 +107,12 @@ class ArticlesRepository(
                     postId = postId.toInt(),
                 )
             )
+        }
+    }
+
+    override suspend fun getMyUserId(): Int {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getMyInfo().user.userId
         }
     }
 }

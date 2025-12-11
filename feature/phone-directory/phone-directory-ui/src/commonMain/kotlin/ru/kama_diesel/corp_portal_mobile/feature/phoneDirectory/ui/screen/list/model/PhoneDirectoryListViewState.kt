@@ -34,7 +34,7 @@ sealed class PhoneDirectoryListDialog {
     data object No : PhoneDirectoryListDialog()
 
     @Serializable
-    data class Details(val shopItem: ShopItemUIModel) : PhoneDirectoryListDialog()
+    data class Details(val employeeItemUIModel: EmployeeItemUIModel) : PhoneDirectoryListDialog()
 }
 
 @Serializable

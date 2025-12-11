@@ -1,8 +1,8 @@
 package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model
 
 import kotlinx.serialization.Serializable
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleDetailsItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.CommentItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.TagItem
 
 @Serializable
@@ -34,7 +34,9 @@ sealed class ArticlesListDialog {
         val creationDate: String,
         val isLiked: Boolean,
         val likesAmount: Int,
-        val articleDetailsItem: ArticleDetailsItem,
+        val articleDetailsItem: ArticleDetailsUIModel,
+        val myUserId: Int,
+        val replyTo: Int?,
         val comment: String,
         val commentSendingState: CommentSendingState,
     ) : ArticlesListDialog()
@@ -57,3 +59,24 @@ data class TagItemUIModel(
     val isChecked: Boolean,
     val tagItem: TagItem,
 )
+
+@Serializable
+data class ArticleDetailsUIModel(
+    val text: String,
+    val originalComments: List<CommentItem>,
+    val comments: Map<CommentUIModel, List<CommentItem>>,
+)
+
+@Serializable
+data class CommentUIModel(
+    val commentId: Int,
+    val userId: Int,
+    val text: String,
+    val creationDate: String,
+    val fullName: String,
+    val position: String,
+    val department: String,
+    val imagePath: String?,
+    val isExpanded: Boolean,
+)
+

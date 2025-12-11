@@ -14,5 +14,6 @@ fun OrdersScreenContainer(viewModel: OrdersViewModel) {
         onRefresh = viewModel::getData,
         onBackClick = viewModel::back,
         onSorterChange = viewModel::onSorterChange,
+        onCancelOrderClick = viewModel::onCancelOrderClick,
     )
 }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -20,7 +19,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
@@ -41,6 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.CartItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderStatus
+import ru.kama_diesel.corp_portal_mobile.common.ui.component.PagerIndicator
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.component.ShopItemQuantityComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
@@ -367,30 +366,6 @@ fun ShopItemContent(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun PagerIndicator(pageCount: Int, currentPageIndex: Int, modifier: Modifier = Modifier) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement
-            .spacedBy(
-                space = 2.dp,
-                alignment = Alignment.CenterHorizontally
-            ),
-    ) {
-        repeat(pageCount) { iteration ->
-            val color =
-                if (currentPageIndex == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-            Box(
-                modifier = modifier
-                    .clip(CircleShape)
-                    .background(color)
-                    .size(6.dp)
-            )
         }
     }
 }

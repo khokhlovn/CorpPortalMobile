@@ -8,6 +8,7 @@ import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.data.network.api.CorpPortalApi
 import ru.kama_diesel.corp_portal_mobile.common.data.network.mapper.DateTimeMapper
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.AddToCartRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.CancelOrderRequestData
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.DropCartItemRequestData
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.UpdateCartItemRequestData
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IShopRepository
@@ -110,6 +111,16 @@ class ShopRepository(
                     }
                 )
             } ?: listOf()
+        }
+    }
+
+    override suspend fun cancelOrder(cartId: Int) {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.cancelOrder(
+                cancelOrderRequestData = CancelOrderRequestData(
+                    cartId = cartId,
+                )
+            )
         }
     }
 }

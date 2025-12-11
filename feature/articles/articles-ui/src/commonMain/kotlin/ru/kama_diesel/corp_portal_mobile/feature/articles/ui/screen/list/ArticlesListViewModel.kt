@@ -1,14 +1,18 @@
 package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 
+import io.github.ahmad_hamwi.compose.pagination.PaginationState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
 import me.tatarka.inject.annotations.Inject
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.CommentItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.di.ArticlesListScope
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.*
-import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
-import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListViewState
-import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentSendingState
-import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.TagItemUIModel
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.*
 
 @ArticlesListScope
 @Inject
@@ -18,24 +22,46 @@ class ArticlesListViewModel(
     private val getArticleDetailsUseCase: GetArticleDetailsUseCase,
     private val sendCommentUseCase: SendCommentUseCase,
     private val likeUseCase: LikeUseCase,
+    private val getMyUserIdUseCase: GetMyUserIdUseCase,
     private val initialState: ArticlesListViewState,
 ) : BaseStateViewModel<ArticlesListViewState>() {
 
+    lateinit var job: Job
+
+    val paginationState = PaginationState<Int, ArticleItem>(
+        initialPageKey = 1,
+        onRequestPage = { pageNumber ->
+            if (::job.isInitialized) {
+                job.cancel()
+            }
+            job = coroutineScope.launch {
+                try {
+                    val page = onRequestPage(pageNumber)
+                    appendPage(
+                        items = page.first,
+                        nextPageKey = page.second,
+                    )
+                } catch (e: Exception) {
+                    setError(e)
+                    appendPage(
+                        items = listOf(),
+                        nextPageKey = pageNumber + 1,
+                        isLastPage = true,
+                    )
+                }
+            }
+        }
+    )
+
     init {
-        getData()
+        getData(needListRefresh = false)
     }
 
-    fun getData() {
+    fun getData(needListRefresh: Boolean) {
         coroutineScope.launch {
-            val articleItems = getArticlesListUseCase(
-                fromDate = currentState.fromDate,
-                toDate = currentState.toDate,
-                selectedTagsIds = currentState.tagItems.filter { it.isChecked }.map { it.tagItem.id },
-            )
             val tagItems = getTagsUseCase()
             setState {
                 copy(
-                    articleItems = articleItems,
                     tagItems = tagItems.map { tagItem ->
                         TagItemUIModel(
                             tagItem = tagItem,
@@ -43,9 +69,12 @@ class ArticlesListViewModel(
                                 ?: false
                         )
                     },
-                    isLoading = false,
+                    isLoading = needListRefresh,
                     dialog = ArticlesListDialog.No,
                 )
+            }
+            if (needListRefresh) {
+                paginationState.refresh(initialPageKey = 1)
             }
         }
     }
@@ -84,7 +113,7 @@ class ArticlesListViewModel(
                 dialog = ArticlesListDialog.Loading,
             )
         }
-        getData()
+        getData(needListRefresh = true)
     }
 
     fun onArticleClick(
@@ -137,12 +166,13 @@ class ArticlesListViewModel(
                 )
             }
             coroutineScope.launch {
-                val isSendCommentSuccess = sendCommentUseCase(postId = articleId, comment = comment.trim())
+                val isSendCommentSuccess = sendCommentUseCase(postId = articleId, comment = comment.trim(), replyTo = replyTo)
                 if (isSendCommentSuccess) {
                     setState {
                         copy(
                             dialog = copy(
                                 comment = "",
+                                replyTo = null,
                                 commentSendingState = CommentSendingState.Success,
                             ),
                         )
@@ -190,6 +220,79 @@ class ArticlesListViewModel(
         }
     }
 
+    fun onChangeRepliesVisibility(commentId: Int) {
+        with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+            setState {
+                copy(
+                    dialog = copy(
+                        articleDetailsItem = articleDetailsItem.copy(
+                            comments = articleDetailsItem.comments.mapKeys {
+                                if (it.key.commentId == commentId) {
+                                    it.key.copy(
+                                        isExpanded = !it.key.isExpanded,
+                                    )
+                                } else {
+                                    it.key
+                                }
+                            }
+                        )
+                    ),
+                )
+            }
+        }
+    }
+
+    fun onReplyClick(commentId: Int) {
+        with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+            setState {
+                copy(
+                    dialog = copy(
+                        replyTo = commentId,
+                        comment = articleDetailsItem.originalComments.find { it.commentId == commentId }?.fullName?.split(" ")[1]?.let {
+                            "$it, "
+                        } ?: ""
+                    ),
+                )
+            }
+        }
+    }
+
+    fun onCancelReplyClick() {
+        with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+            setState {
+                copy(
+                    dialog = copy(
+                        replyTo = null,
+                    ),
+                )
+            }
+        }
+    }
+
+    suspend fun onRequestPage(page: Int): Pair<List<ArticleItem>, Int> {
+        if (page == 1) {
+            setState {
+                copy(
+                    isLoading = true,
+                )
+            }
+        }
+        val pageWithData = getArticlesListUseCase(
+            page = page,
+            fromDate = currentState.fromDate,
+            toDate = currentState.toDate,
+            selectedTagsIds = currentState.tagItems.filter { it.isChecked }.map { it.tagItem.id },
+        ) to page + 1
+        if (page == 1) {
+            setState {
+                copy(
+                    isLoading = false,
+                )
+            }
+        }
+        return pageWithData
+    }
+
     private fun loadArticleDetails(
         articleId: String,
         title: String,
@@ -201,6 +304,7 @@ class ArticlesListViewModel(
     ) {
         coroutineScope.launch {
             val articleDetailsItem = getArticleDetailsUseCase(articleId = articleId)
+            val myUserId = getMyUserIdUseCase()
             setState {
                 copy(
                     dialog = ArticlesListDialog.Details(
@@ -211,8 +315,47 @@ class ArticlesListViewModel(
                         creationDate = creationDate,
                         isLiked = isLiked,
                         likesAmount = likesAmount,
-                        articleDetailsItem = articleDetailsItem,
+                        articleDetailsItem = with(articleDetailsItem) {
+                            val commentsWithReplies = mutableMapOf<CommentUIModel, List<CommentItem>>()
+                            comments.sortedBy {
+                                val dateTimeFormatter = LocalDateTime.Format {
+                                    @OptIn(FormatStringsInDatetimeFormats::class)
+                                    byUnicodePattern("dd.MM.yyyy HH:mm")
+                                }
+                                LocalDateTime.parse(it.creationDate, dateTimeFormatter)
+                            }.forEach { comment ->
+                                if (comment.replyTo == null) {
+                                    val rootComment = CommentUIModel(
+                                        commentId = comment.commentId,
+                                        userId = comment.userId,
+                                        text = comment.text,
+                                        creationDate = comment.creationDate,
+                                        fullName = comment.fullName,
+                                        position = comment.position,
+                                        department = comment.department,
+                                        imagePath = comment.imagePath,
+                                        isExpanded = false,
+                                    )
+                                    commentsWithReplies[rootComment] = listOf()
+                                } else {
+                                    commentsWithReplies.keys.firstOrNull { existingComment ->
+                                        existingComment.commentId == comment.replyTo
+                                                || commentsWithReplies[existingComment]?.any { it.commentId == comment.replyTo } ?: false
+                                    }?.let {
+                                        commentsWithReplies[it] =
+                                            commentsWithReplies[it]?.plus(comment) ?: listOf(comment)
+                                    }
+                                }
+                            }
+                            ArticleDetailsUIModel(
+                                text = text,
+                                originalComments = comments,
+                                comments = commentsWithReplies,
+                            )
+                        },
                         comment = "",
+                        replyTo = null,
+                        myUserId = myUserId,
                         commentSendingState = CommentSendingState.No,
                     ),
                 )

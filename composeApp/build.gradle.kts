@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.appmetrica)
+            implementation(libs.splash.screen)
         }
 
         jvmMain.dependencies {

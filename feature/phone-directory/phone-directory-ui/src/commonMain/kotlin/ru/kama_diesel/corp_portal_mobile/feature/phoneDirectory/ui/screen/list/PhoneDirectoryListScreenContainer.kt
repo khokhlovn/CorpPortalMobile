@@ -20,5 +20,6 @@ fun PhoneDirectoryListScreenContainer(
         onPinChange = viewModel::onPinChange,
         onSorterChange = viewModel::onSorterChange,
         onDirectionChange = viewModel::onDirectionChange,
+        onEmployeeItemClick = viewModel::onEmployeeItemClick,
     )
 }

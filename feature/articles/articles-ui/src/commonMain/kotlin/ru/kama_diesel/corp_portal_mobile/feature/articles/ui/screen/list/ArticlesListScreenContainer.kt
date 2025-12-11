@@ -11,7 +11,8 @@ fun ArticlesListScreenContainer(viewModel: ArticlesListViewModel) {
 
     ArticlesListScreen(
         viewState = viewState,
-        onRefresh = viewModel::getData,
+        paginationState = viewModel.paginationState,
+        onRefresh = { viewModel.getData(needListRefresh = true) },
         onCheckedChange = viewModel::checkTag,
         onDateChange = viewModel::onDateChange,
         onResetFilters = viewModel::onResetFilters,
@@ -21,5 +22,8 @@ fun ArticlesListScreenContainer(viewModel: ArticlesListViewModel) {
         onSendComment = viewModel::onSendComment,
         onHideSnackbar = viewModel::onHideCommentSentSnackbar,
         onLikeClick = viewModel::onLikeClick,
+        onChangeRepliesVisibility = viewModel::onChangeRepliesVisibility,
+        onReplyClick = viewModel::onReplyClick,
+        onCancelReplyClick = viewModel::onCancelReplyClick,
     )
 }

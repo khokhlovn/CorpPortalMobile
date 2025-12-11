@@ -14,6 +14,7 @@ data class OrderItem(
 enum class OrderStatus(val value: String) {
     Ordered("ordered"),
     Cancelled("cancelled"),
+    Completed("completed"),
 }
 
 @Serializable

@@ -20,9 +20,12 @@ class CorpPortalApi(
         }
     }
 
-    suspend fun getArticles(fromDate: Long?, toDate: Long?, selectedTagsIds: List<String>): ArticlesResponseData {
+    suspend fun getArticles(page: Int, fromDate: Long?, toDate: Long?, selectedTagsIds: List<String>): ArticlesResponseData {
         return httpClient.get("articles") {
             url {
+                page.let {
+                    parameters.append("page", it.toString())
+                }
                 fromDate?.let {
                     parameters.append("start", it.toString())
                 }
@@ -101,6 +104,13 @@ class CorpPortalApi(
 
     suspend fun getOrders(): OrdersListResponseData {
         return httpClient.get("orders_list").body()
+    }
+
+    suspend fun cancelOrder(cancelOrderRequestData: CancelOrderRequestData): HttpResponse {
+        return httpClient.post("cart/cancel") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = cancelOrderRequestData)
+        }
     }
 
     suspend fun getPhoneBook(): PhoneDirectoryResponseData {

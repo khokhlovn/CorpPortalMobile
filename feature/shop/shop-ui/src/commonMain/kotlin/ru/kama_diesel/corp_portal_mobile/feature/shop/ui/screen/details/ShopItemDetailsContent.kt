@@ -22,7 +22,7 @@ import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.FullScreenImageViewer
-import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.PagerIndicator
+import ru.kama_diesel.corp_portal_mobile.common.ui.component.PagerIndicator
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.characteristics

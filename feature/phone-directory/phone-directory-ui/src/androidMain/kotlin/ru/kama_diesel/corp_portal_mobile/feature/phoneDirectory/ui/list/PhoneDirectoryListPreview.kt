@@ -32,6 +32,7 @@ private fun PhoneDirectoryListScreenPreview() {
             onPinChange = { _, _ -> },
             onSorterChange = {},
             onDirectionChange = {},
+            onEmployeeItemClick = {},
         )
     }
 }
@@ -53,6 +54,7 @@ private fun PhoneDirectoryListScreenContentPreview() {
             onPinChange = { _, _ -> },
             onSorterChange = {},
             onDirectionChange = {},
+            onEmployeeItemClick = {},
         )
     }
 }

@@ -64,6 +64,7 @@ fun PhoneDirectoryListScreenContent(
     onPinChange: (String, Boolean) -> Unit,
     onSorterChange: (Sorter) -> Unit,
     onDirectionChange: (Direction) -> Unit,
+    onEmployeeItemClick: (EmployeeItemUIModel) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
     val percentCacheWindow = LazyLayoutCacheWindow(
@@ -216,7 +217,7 @@ fun PhoneDirectoryListScreenContent(
                             EmployeeItemContent(
                                 item = employeeItem,
                                 onEmployeeItemClick = {
-
+                                    onEmployeeItemClick(employeeItem)
                                 },
                                 onPinChange = onPinChange,
                             )
@@ -415,7 +416,7 @@ enum class Sorter(val stringResourceId: StringResource) {
 }
 
 @Serializable
-enum class Direction() {
+enum class Direction {
     Increasing,
     Decreasing,
 }

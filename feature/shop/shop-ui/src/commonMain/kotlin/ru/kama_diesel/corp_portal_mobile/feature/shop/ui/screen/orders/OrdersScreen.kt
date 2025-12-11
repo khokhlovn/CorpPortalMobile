@@ -20,6 +20,7 @@ fun OrdersScreen(
     onRefresh: () -> Unit,
     onBackClick: () -> Unit,
     onSorterChange: (Sorter) -> Unit,
+    onCancelOrderClick: (Int) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -53,6 +54,7 @@ fun OrdersScreen(
                 isRefreshing = viewState.isLoading,
                 onRefresh = onRefresh,
                 onSorterChange = onSorterChange,
+                onCancelOrderClick = onCancelOrderClick,
             )
         }
     }

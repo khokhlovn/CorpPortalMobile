@@ -13,8 +13,10 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.ahmad_hamwi.compose.pagination.PaginationState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.LoadingDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.dialog.details.ArticleDetailsDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
@@ -26,6 +28,7 @@ import ru.kama_diesel.corp_portal_mobile.resources.filters
 @Composable
 fun ArticlesListScreen(
     viewState: ArticlesListViewState,
+    paginationState: PaginationState<Int, ArticleItem>,
     onCheckedChange: (String, Boolean) -> Unit,
     onDateChange: (Long?, Long?) -> Unit,
     onRefresh: () -> Unit,
@@ -36,6 +39,9 @@ fun ArticlesListScreen(
     onSendComment: () -> Unit,
     onHideSnackbar: () -> Unit,
     onLikeClick: () -> Unit,
+    onChangeRepliesVisibility: (Int) -> Unit,
+    onReplyClick: (Int) -> Unit,
+    onCancelReplyClick: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -44,6 +50,7 @@ fun ArticlesListScreen(
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
             ModalNavigationDrawer(
                 drawerState = drawerState,
+                gesturesEnabled = !viewState.isLoading,
                 drawerContent = {
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         Row(
@@ -96,9 +103,8 @@ fun ArticlesListScreen(
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             ArticlesListScreenContent(
-                                articleItems = viewState.articleItems,
+                                paginationState = paginationState,
                                 isRefreshing = viewState.isLoading,
-                                onRefresh = onRefresh,
                                 onArticleClick = onArticleClick,
                             )
                         }
@@ -109,6 +115,7 @@ fun ArticlesListScreen(
 
         when (val dialog = viewState.dialog) {
             is ArticlesListDialog.Details -> ArticleDetailsDialog(
+                myUserId = dialog.myUserId,
                 title = dialog.title,
                 imagePaths = dialog.imagePaths,
                 tags = dialog.tags,
@@ -117,12 +124,16 @@ fun ArticlesListScreen(
                 likesAmount = dialog.likesAmount,
                 articleDetailsItem = dialog.articleDetailsItem,
                 comment = dialog.comment,
+                replyTo = dialog.replyTo,
                 commentSendingState = dialog.commentSendingState,
                 onCloseClick = onCloseDetailsClick,
                 onCommentChange = onCommentChange,
                 onSendComment = onSendComment,
                 onHideSnackbar = onHideSnackbar,
                 onLikeClick = onLikeClick,
+                onChangeRepliesVisibility = onChangeRepliesVisibility,
+                onReplyClick = onReplyClick,
+                onCancelClick = onCancelReplyClick,
             )
 
             ArticlesListDialog.Loading -> LoadingDialog()

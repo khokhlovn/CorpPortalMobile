@@ -5,13 +5,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ArticleDetailsItem(
     val text: String,
-    val comments: List<CommentItem>?
+    val comments: List<CommentItem>,
 )
 
 @Serializable
 data class CommentItem(
     val commentId: Int,
     val userId: Int,
+    val replyTo: Int?,
     val text: String,
     val creationDate: String,
     val fullName: String,

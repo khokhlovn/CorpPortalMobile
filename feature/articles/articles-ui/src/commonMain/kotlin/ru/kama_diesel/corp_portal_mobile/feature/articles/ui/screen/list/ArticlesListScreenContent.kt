@@ -3,9 +3,9 @@ package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import io.github.ahmad_hamwi.compose.pagination.PaginatedLazyColumn
+import io.github.ahmad_hamwi.compose.pagination.PaginationState
 import org.jetbrains.compose.resources.painterResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 import ru.kama_diesel.corp_portal_mobile.resources.Res
@@ -29,9 +31,8 @@ import ru.kama_diesel.corp_portal_mobile.resources.placeholder
 
 @Composable
 fun ArticlesListScreenContent(
-    articleItems: List<ArticleItem>,
+    paginationState: PaginationState<Int, ArticleItem>,
     isRefreshing: Boolean,
-    onRefresh: () -> Unit,
     onArticleClick: (String, String, List<String>?, List<String>?, String, Boolean, Int) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
@@ -49,14 +50,22 @@ fun ArticlesListScreenContent(
                 state = state,
             )
         },
-        onRefresh = onRefresh,
+        onRefresh = { paginationState.refresh(initialPageKey = 1) },
     ) {
-        LazyColumn(
+        PaginatedLazyColumn(
             modifier = Modifier.fillMaxSize(),
+            paginationState = paginationState,
+            newPageProgressIndicator = {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                    trackColor = MaterialTheme.colorScheme.inverseSurface,
+                )
+            },
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 16.dp, horizontal = 20.dp)
         ) {
-            items(items = articleItems) { articleItem ->
+            items(items = paginationState.allItems!!) { articleItem ->
                 ArticleItemContent(
                     item = articleItem,
                     onArticleClick = onArticleClick,
@@ -89,11 +98,12 @@ fun ArticleItemContent(
         contentAlignment = Alignment.BottomStart,
     ) {
         AsyncImage(
+            modifier = Modifier.fillMaxSize(),
             model = item.imagePaths?.firstOrNull(),
             placeholder = painterResource(Res.drawable.placeholder),
             error = painterResource(Res.drawable.placeholder),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillWidth,
         )
         Column(
             modifier = Modifier
