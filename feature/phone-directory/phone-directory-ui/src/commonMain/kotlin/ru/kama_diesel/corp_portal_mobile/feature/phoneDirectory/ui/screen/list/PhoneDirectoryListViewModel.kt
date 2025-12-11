@@ -115,6 +115,16 @@ class PhoneDirectoryListViewModel(
         filterAndSortItems()
     }
 
+    fun onEmployeeItemClick(employeeItem: EmployeeItemUIModel) {
+        setState {
+            copy(
+                dialog = PhoneDirectoryListDialog.Details(
+                    employeeItemUIModel = employeeItem,
+                ),
+            )
+        }
+    }
+
     fun onCloseDialogClick() {
         setState {
             copy(

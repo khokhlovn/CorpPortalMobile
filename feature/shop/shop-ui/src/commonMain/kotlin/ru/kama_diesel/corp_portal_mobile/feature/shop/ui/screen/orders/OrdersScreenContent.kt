@@ -1,6 +1,8 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +12,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +44,7 @@ fun OrdersScreenContent(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onSorterChange: (Sorter) -> Unit,
+    onCancelOrderClick: (Int) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
@@ -90,6 +94,8 @@ fun OrdersScreenContent(
                     OrderItemContent(
                         orderItem = orderItem,
                         shopItems = shopItems,
+                        isRefreshing = isRefreshing,
+                        onCancelOrderClick = onCancelOrderClick,
                     )
                 }
             }
@@ -101,6 +107,8 @@ fun OrdersScreenContent(
 fun OrderItemContent(
     orderItem: OrderItemUIModel,
     shopItems: List<ShopItem>,
+    isRefreshing: Boolean,
+    onCancelOrderClick: (Int) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -113,13 +121,42 @@ fun OrderItemContent(
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .fillMaxSize(),
         ) {
-            Text(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(Res.string.order_number, orderItem.id.toString()),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.scrim,
-            )
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(Res.string.order_number, orderItem.id.toString()),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.scrim,
+                )
+                if (orderItem.status == OrderStatus.Ordered && !isRefreshing) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    )
+                    val interactionSource = remember { MutableInteractionSource() }
+                    Text(
+                        modifier = Modifier
+                            .padding(vertical = 2.dp)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                            ) {
+                                if (!isRefreshing) {
+                                    onCancelOrderClick(orderItem.id)
+                                }
+                            },
+                        text = stringResource(Res.string.cancel),
+                        fontSize = 12.sp,
+                        lineHeight = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
             orderItem.items.forEach { orderPositionItem ->
                 val shopItem = shopItems.find { shopItem -> shopItem.id == orderPositionItem.id }
@@ -178,6 +215,7 @@ fun OrderItemContent(
                         resource = when (orderItem.status) {
                             OrderStatus.Ordered -> Res.string.ordered_at
                             OrderStatus.Cancelled -> Res.string.cancelled_at
+                            OrderStatus.Completed -> Res.string.completed_at
                         },
                         orderItem.date,
                     ),

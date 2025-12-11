@@ -10,9 +10,9 @@ class SendCommentUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val articlesRepository: IArticlesRepository,
 ) {
-    suspend operator fun invoke(postId: String, comment: String): Boolean {
+    suspend operator fun invoke(postId: String, comment: String, replyTo: Int?): Boolean {
         return try {
-            articlesRepository.sendComment(postId = postId, comment = comment)
+            articlesRepository.sendComment(postId = postId, comment = comment, replyTo = replyTo)
             true
         } catch (_: ClientRequestException) {
             logoutUseCase.invoke()

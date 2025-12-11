@@ -10,4 +10,7 @@ data class SendCommentRequestData(
 
     @SerialName("text")
     val text: String,
+
+    @SerialName("reply_to")
+    val replyTo: Int?,
 )

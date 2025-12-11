@@ -13,4 +13,5 @@ interface IShopRepository {
     suspend fun getBalance(): Int
     suspend fun makeOrder()
     suspend fun getOrders(): List<OrderItem>
+    suspend fun cancelOrder(cartId: Int)
 }

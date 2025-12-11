@@ -2,6 +2,7 @@ package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.list
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.ahmad_hamwi.compose.pagination.rememberPaginationState
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.theme.AppTheme
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.ArticlesListScreen
@@ -24,6 +25,9 @@ private fun ArticlesListScreenPreview() {
                 openedImagesPaths = listOf(),
                 selectedImageIndex = 0,
             ),
+            paginationState = rememberPaginationState<Int, ArticleItem>(initialPageKey = 1) { }.apply {
+                allItems?.plus(articleItemsPreviewData)
+            },
             onRefresh = {},
             onCheckedChange = { _, _ -> },
             onDateChange = { _, _ -> },
@@ -34,6 +38,9 @@ private fun ArticlesListScreenPreview() {
             onSendComment = {},
             onHideSnackbar = {},
             onLikeClick = {},
+            onChangeRepliesVisibility = {},
+            onReplyClick = {},
+            onCancelReplyClick = {},
         )
     }
 }
@@ -43,9 +50,10 @@ private fun ArticlesListScreenPreview() {
 private fun ArticlesListScreenContentPreview() {
     AppTheme {
         ArticlesListScreenContent(
-            articleItems = articleItemsPreviewData,
+            paginationState = rememberPaginationState<Int, ArticleItem>(initialPageKey = 1) { }.apply {
+                allItems?.plus(articleItemsPreviewData)
+            },
             isRefreshing = false,
-            onRefresh = {},
             onArticleClick = { _, _, _, _, _, _, _ -> },
         )
     }

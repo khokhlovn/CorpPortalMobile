@@ -1,4 +1,4 @@
-import com.google.devtools.ksp.gradle.KspTaskMetadata
+import com.google.devtools.ksp.gradle.KspAATask
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -15,6 +15,9 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
+        commonMain {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+        }
         commonMain.dependencies {
             implementation(projects.feature.phoneDirectory.phoneDirectoryUi)
             implementation(projects.feature.phoneDirectory.phoneDirectoryDomain)
@@ -44,4 +47,8 @@ dependencies {
     kspCommonMainMetadata(libs.kotlin.inject.compiler)
 }
 
-kotlin.sourceSets.commonMain { tasks.withType<KspTaskMetadata> { kotlin.srcDir(destinationDirectory) } }
+tasks.withType<KspAATask>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ArticleDetailsResponseData(
     @SerialName("article")
-    val article: ArticleDetailsData
+    val article: ArticleDetailsData,
 )
 
 @Serializable
@@ -14,7 +14,7 @@ data class ArticleDetailsData(
     @SerialName("text")
     val text: String,
     @SerialName("comments")
-    val comments: List<CommentData>? = null
+    val comments: List<CommentData>? = null,
 )
 
 @Serializable
@@ -23,6 +23,8 @@ data class CommentData(
     val commentId: Int,
     @SerialName("user_id")
     val userId: Int,
+    @SerialName("reply_to")
+    val replyTo: Int? = null,
     @SerialName("text")
     val text: String,
     @SerialName("creation_date")

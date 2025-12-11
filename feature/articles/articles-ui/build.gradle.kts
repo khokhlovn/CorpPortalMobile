@@ -29,6 +29,7 @@ kotlin {
             implementation(libs.coil)
             implementation(libs.coil.network)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.lazyPaginationCompose)
         }
         commonTest.dependencies {
             // implementation(libs.kotlin.test)
