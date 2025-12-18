@@ -9,6 +9,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.articles.component.ArticlesFlow
 import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.MainFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.api.IMainFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.PhoneDirectoryFlowComponent
+import ru.kama_diesel.corp_portal_mobile.feature.profile.component.ProfileFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowComponent
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -50,6 +51,13 @@ internal class MainFlowRouter(
                     mainFlowDIComponent.phoneDirectoryComponentDependencies
                 )
             )
+
+            Configuration.Profile -> PagesChild.ProfileFlow(
+                component = ProfileFlowComponent(
+                    componentContext,
+                    mainFlowDIComponent.profileComponentDependencies
+                )
+            )
         }
     }
 
@@ -57,6 +65,8 @@ internal class MainFlowRouter(
         data class ArticlesFlow(val component: ArticlesFlowComponent) : PagesChild
         data class ShopFlow(val component: ShopFlowComponent) : PagesChild
         data class PhoneDirectoryFlow(val component: PhoneDirectoryFlowComponent) : PagesChild
+
+        data class ProfileFlow(val component: ProfileFlowComponent) : PagesChild
     }
 
     @Serializable
@@ -70,6 +80,9 @@ internal class MainFlowRouter(
 
         @Serializable
         data object PhoneDirectory : Configuration()
+
+        @Serializable
+        data object Profile : Configuration()
     }
 
     override fun toArticles() {
@@ -87,6 +100,12 @@ internal class MainFlowRouter(
     override fun toPhoneDirectory() {
         pagesNavigation.clear()
         pagesNavigation.setItems { items -> items.plus(Configuration.PhoneDirectory) }
+        pagesNavigation.selectFirst()
+    }
+
+    override fun toProfile() {
+        pagesNavigation.clear()
+        pagesNavigation.setItems { items -> items.plus(Configuration.Profile) }
         pagesNavigation.selectFirst()
     }
 }

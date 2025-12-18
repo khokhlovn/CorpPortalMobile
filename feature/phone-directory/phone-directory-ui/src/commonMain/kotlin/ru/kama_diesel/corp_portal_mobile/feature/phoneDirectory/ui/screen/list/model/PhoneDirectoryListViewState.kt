@@ -24,6 +24,7 @@ data class EmployeeItemUIModel(
     val service: String,
     val mail: String,
     val mobile: String?,
+    val phone: String?,
     val workPlace: String?,
     val isPinned: Boolean,
 )

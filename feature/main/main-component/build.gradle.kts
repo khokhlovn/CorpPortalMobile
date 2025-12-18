@@ -31,6 +31,9 @@ kotlin {
             implementation(projects.feature.phoneDirectory.phoneDirectoryComponent)
             implementation(projects.feature.phoneDirectory.phoneDirectoryDomain)
 
+            implementation(projects.feature.profile.profileComponent)
+            implementation(projects.feature.profile.profileDomain)
+
             implementation(projects.common.commonComponent)
             implementation(projects.common.commonDomain)
             implementation(projects.common.commonUi)

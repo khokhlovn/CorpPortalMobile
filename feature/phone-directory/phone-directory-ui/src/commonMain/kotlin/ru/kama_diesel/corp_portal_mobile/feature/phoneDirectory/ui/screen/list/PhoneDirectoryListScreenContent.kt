@@ -239,7 +239,7 @@ fun EmployeeItemContent(
 
     Card(
         modifier = Modifier.fillMaxWidth()
-            .height(260.dp)
+            .height(320.dp)
             .clickable {
                 onEmployeeItemClick()
             },
@@ -305,21 +305,7 @@ fun EmployeeItemContent(
                         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.inverseOnSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        text = item.service,
-                        fontSize = 12.sp,
-                        lineHeight = 12.sp,
-                        style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.scrim,
-                        maxLines = 2,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Spacer(modifier = Modifier.height(2.dp))
@@ -333,13 +319,24 @@ fun EmployeeItemContent(
                         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = if (item.workPlace.isNullOrBlank()) {
-                            2
-                        } else {
-                            1
-                        },
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                     )
+                    if (!item.phone.isNullOrBlank()) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            text = item.phone,
+                            fontSize = 12.sp,
+                            lineHeight = 12.sp,
+                            style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.scrim,
+                            maxLines = 1
+                        )
+                    }
                 }
                 if (!item.workPlace.isNullOrBlank()) {
                     Spacer(modifier = Modifier.height(2.dp))
@@ -410,7 +407,6 @@ fun EmployeeItemContent(
 enum class Sorter(val stringResourceId: StringResource) {
     Name(stringResourceId = Res.string.fio),
     Department(stringResourceId = Res.string.department),
-    Service(stringResourceId = Res.string.service),
     Position(stringResourceId = Res.string.position),
     Workplace(stringResourceId = Res.string.work_place_sorter),
 }

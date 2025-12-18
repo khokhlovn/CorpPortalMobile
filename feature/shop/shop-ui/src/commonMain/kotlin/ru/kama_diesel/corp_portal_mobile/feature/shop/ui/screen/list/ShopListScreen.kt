@@ -16,7 +16,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartA
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
 import ru.kama_diesel.corp_portal_mobile.resources.Res
-import ru.kama_diesel.corp_portal_mobile.resources.logout_24px
+import ru.kama_diesel.corp_portal_mobile.resources.account_circle_24px
 import ru.kama_diesel.corp_portal_mobile.resources.menu_24px
 import ru.kama_diesel.corp_portal_mobile.resources.shop
 
@@ -25,7 +25,7 @@ import ru.kama_diesel.corp_portal_mobile.resources.shop
 fun ShopListScreen(
     viewState: ShopListViewState,
     drawerState: DrawerState,
-    onLogoutClick: () -> Unit,
+    onToProfileClick: () -> Unit,
     onRefresh: () -> Unit,
     onSorterChange: (Sorter) -> Unit,
     onFilterChange: (Filter) -> Unit,
@@ -76,10 +76,10 @@ fun ShopListScreen(
                         Spacer(modifier = Modifier.width(16.dp))
                     }
                     IconButton(
-                        onClick = onLogoutClick,
+                        onClick = onToProfileClick,
                     ) {
                         Icon(
-                            painter = painterResource(Res.drawable.logout_24px),
+                            painter = painterResource(Res.drawable.account_circle_24px),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             contentDescription = null,
                         )

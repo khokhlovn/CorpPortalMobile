@@ -32,7 +32,7 @@ private fun ShopListScreenPreview() {
                 isLoading = false,
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            onLogoutClick = {},
+            onToProfileClick = {},
             onRefresh = {},
             onSorterChange = {},
             onFilterChange = {},

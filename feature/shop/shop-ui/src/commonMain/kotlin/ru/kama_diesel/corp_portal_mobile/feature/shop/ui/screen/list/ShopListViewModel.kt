@@ -48,10 +48,6 @@ class ShopListViewModel(
         getCartAndOrdersData()
     }
 
-    fun onLogoutClick() {
-        logoutUseCase()
-    }
-
     fun onShopItemClick(shopItemIndex: Int) {
         setState {
             copy(

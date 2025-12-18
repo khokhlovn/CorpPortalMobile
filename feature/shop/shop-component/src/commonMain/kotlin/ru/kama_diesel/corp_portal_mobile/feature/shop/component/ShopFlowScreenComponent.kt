@@ -14,7 +14,8 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.OrdersScr
 @Composable
 fun ShopFlowScreenComponent(
     drawerState: DrawerState,
-    shopFlowComponent: ShopFlowComponent
+    shopFlowComponent: ShopFlowComponent,
+    onToProfileClick: () -> Unit,
 ) {
     val childStack by shopFlowComponent.router.childStack.subscribeAsState()
 
@@ -27,6 +28,7 @@ fun ShopFlowScreenComponent(
                 ShopListScreenContainer(
                     drawerState = drawerState,
                     viewModel = child.component.viewModel,
+                    onToProfileClick = onToProfileClick,
                 )
             }
 

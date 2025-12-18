@@ -68,3 +68,8 @@ include("feature:phone-directory:phone-directory-component")
 include("feature:phone-directory:phone-directory-data")
 include("feature:phone-directory:phone-directory-domain")
 include("feature:phone-directory:phone-directory-ui")
+
+include("feature:profile:profile-component")
+include("feature:profile:profile-data")
+include("feature:profile:profile-domain")
+include("feature:profile:profile-ui")

@@ -6,4 +6,5 @@ interface IMainFlowRouter : IRouter {
     fun toArticles()
     fun toShop()
     fun toPhoneDirectory()
+    fun toProfile()
 }

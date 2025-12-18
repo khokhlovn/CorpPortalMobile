@@ -42,6 +42,7 @@ class ReservationListRepository(
                     department = it.department,
                     mail = it.mail,
                     mobile = it.mobile,
+                    phone = it.phone,
                     imagePath = it.imagePath,
                 )
             } ?: listOf()
