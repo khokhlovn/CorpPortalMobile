@@ -156,6 +156,7 @@ class PhoneDirectoryListViewModel(
                             service = employeeItem.service,
                             mail = employeeItem.mail,
                             mobile = employeeItem.mobile,
+                            phone = reservationItem?.phone,
                             workPlace = reservationItem?.name,
                             isPinned = pinnedEmployeeIds.contains(employeeItem.fullName),
                         )
@@ -179,6 +180,7 @@ class PhoneDirectoryListViewModel(
                                     || employeeItem.service.lowercase().contains(query.lowercase())
                                     || employeeItem.position.lowercase().contains(query.lowercase())
                                     || employeeItem.workPlace?.lowercase()?.contains(query.lowercase()) == true
+                                    || employeeItem.phone?.lowercase()?.contains(query.lowercase()) == true
                         }
                     }
                         .sortedWith(
@@ -187,8 +189,6 @@ class PhoneDirectoryListViewModel(
                                 Sorter.Name if selectedDirection == Direction.Decreasing -> compareByDescending { it.fullName }
                                 Sorter.Department if selectedDirection == Direction.Increasing -> compareBy { it.department }
                                 Sorter.Department if selectedDirection == Direction.Decreasing -> compareByDescending { it.department }
-                                Sorter.Service if selectedDirection == Direction.Increasing -> compareBy { it.service }
-                                Sorter.Service if selectedDirection == Direction.Decreasing -> compareByDescending { it.service }
                                 Sorter.Position if selectedDirection == Direction.Increasing -> compareBy { it.position }
                                 Sorter.Position if selectedDirection == Direction.Decreasing -> compareByDescending { it.position }
                                 Sorter.Workplace if selectedDirection == Direction.Increasing -> compareBy { it.workPlace }

@@ -129,4 +129,8 @@ class CorpPortalApi(
             }
         }.body()
     }
+
+    suspend fun getProfile(): ProfileResponseData {
+        return httpClient.get("profile").body()
+    }
 }

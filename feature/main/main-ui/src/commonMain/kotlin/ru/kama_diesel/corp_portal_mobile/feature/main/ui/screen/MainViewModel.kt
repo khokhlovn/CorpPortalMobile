@@ -28,6 +28,10 @@ class MainViewModel(
         router.toPhoneDirectory()
     }
 
+    fun onProfileClick() {
+        router.toProfile()
+    }
+
     fun onLogoutClick() {
         logoutUseCase()
     }

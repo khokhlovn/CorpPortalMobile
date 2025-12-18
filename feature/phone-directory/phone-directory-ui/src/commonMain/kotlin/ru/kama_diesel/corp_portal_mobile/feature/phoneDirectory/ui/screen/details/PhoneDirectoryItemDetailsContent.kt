@@ -193,6 +193,26 @@ internal fun PhoneDirectoryItemDetailsContent(
                     )
                 }
             }
+            if (!employeeItemUIModel.phone.isNullOrEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        modifier = Modifier.widthIn(min = 100.dp),
+                        text = stringResource(Res.string.phone_details),
+                        fontSize = 14.sp,
+                        style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                        color = MaterialTheme.colorScheme.scrim,
+                    )
+                    Text(
+                        text = employeeItemUIModel.phone,
+                        fontSize = 14.sp,
+                        style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                }
+            }
             if (!employeeItemUIModel.mobile.isNullOrEmpty()) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

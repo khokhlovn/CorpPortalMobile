@@ -74,5 +74,10 @@
     <string name="service_details">Служба:</string>
     <string name="position_details">Должность:</string>
     <string name="mail_details">Раб. почта:</string>
+    <string name="phone_details">Стац. телефон:</string>
     <string name="mobile_details">Моб. телефон:</string>
+
+    <string name="profile">Профиль</string>
+    <string name="balance">Баланс:</string>
+    <string name="in_cart_count">Товаров в корзине:</string>
 </resources>

@@ -33,6 +33,8 @@ data class ReservationItemData(
     var mail: String,
     @SerialName("mobile")
     var mobile: String? = null,
+    @SerialName("phone")
+    var phone: String? = null,
     @SerialName("image_path")
     var imagePath: String? = null,
 )

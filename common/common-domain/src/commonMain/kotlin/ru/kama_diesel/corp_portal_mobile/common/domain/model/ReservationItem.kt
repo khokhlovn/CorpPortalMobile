@@ -15,5 +15,6 @@ data class ReservationItem(
     val department: String,
     val mail: String,
     val mobile: String?,
+    val phone: String?,
     val imagePath: String?,
 )

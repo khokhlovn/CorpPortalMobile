@@ -25,7 +25,7 @@ fun MainScreen(
     onArticlesClick: () -> Unit,
     onShopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onProfileClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -61,7 +61,7 @@ fun MainScreen(
         },
         scrimColor = Color.Transparent,
     ) {
-        if (selectedIndex != 1) {
+        if (selectedIndex != 1 && selectedIndex != 999) {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -97,10 +97,10 @@ fun MainScreen(
                         },
                         actions = {
                             IconButton(
-                                onClick = onLogoutClick,
+                                onClick = onProfileClick,
                             ) {
                                 Icon(
-                                    painter = painterResource(Res.drawable.logout_24px),
+                                    painter = painterResource(Res.drawable.account_circle_24px),
                                     tint = MaterialTheme.colorScheme.onPrimary,
                                     contentDescription = null,
                                 )

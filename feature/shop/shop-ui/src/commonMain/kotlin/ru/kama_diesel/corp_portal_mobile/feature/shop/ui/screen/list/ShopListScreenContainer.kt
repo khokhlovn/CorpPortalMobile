@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 fun ShopListScreenContainer(
     drawerState: DrawerState,
     viewModel: ShopListViewModel,
+    onToProfileClick: () -> Unit,
 ) {
 
     val viewState by viewModel.viewState.collectAsState()
@@ -16,7 +17,7 @@ fun ShopListScreenContainer(
     ShopListScreen(
         viewState = viewState,
         drawerState = drawerState,
-        onLogoutClick = viewModel::onLogoutClick,
+        onToProfileClick = onToProfileClick,
         onRefresh = viewModel::getData,
         onSorterChange = viewModel::onSorterChange,
         onFilterChange = viewModel::onFilterChange,
