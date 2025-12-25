@@ -18,7 +18,6 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopL
 @ShopListScope
 @Inject
 class ShopListViewModel(
-    private val logoutUseCase: ILogoutUseCase,
     private val getShopListUseCase: GetShopListUseCase,
     private val getCartDataUseCase: GetCartDataUseCase,
     private val getOrdersUseCase: GetOrdersUseCase,

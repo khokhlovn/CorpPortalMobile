@@ -11,6 +11,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.PhoneD
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.ProfileFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.root.component.MainFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowScreenComponent
+import ru.kama_diesel.corp_portal_mobile.feature.top.component.TopFlowScreenComponent
 
 @Composable
 fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
@@ -22,7 +23,8 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
         selectedIndex = when (childPages.items.first().instance) {
             is MainFlowRouter.PagesChild.ArticlesFlow -> 0
             is MainFlowRouter.PagesChild.ShopFlow -> 1
-            is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> 2
+            is MainFlowRouter.PagesChild.TopFlow -> 2
+            is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> 3
             is MainFlowRouter.PagesChild.ProfileFlow -> 999
             null -> 0
         },
@@ -39,9 +41,15 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
                     shopFlowComponent = page.component,
                 )
 
+                is MainFlowRouter.PagesChild.TopFlow -> TopFlowScreenComponent(
+                    topFlowComponent = page.component,
+                )
+
                 is MainFlowRouter.PagesChild.ProfileFlow -> ProfileFlowScreenComponent(
                     drawerState = drawerState,
                     profileFlowComponent = page.component,
+                    toCart = mainFlowComponent.router::toCart,
+                    toOrdersHistory = mainFlowComponent.router::toOrdersHistory,
                 )
 
                 null -> Unit

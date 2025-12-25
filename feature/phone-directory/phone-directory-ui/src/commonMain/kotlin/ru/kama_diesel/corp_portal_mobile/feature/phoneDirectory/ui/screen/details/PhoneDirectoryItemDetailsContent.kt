@@ -1,27 +1,26 @@
 package ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.ui.screen.details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.FullScreenImageViewer
@@ -58,26 +57,47 @@ internal fun PhoneDirectoryItemDetailsContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .padding(start = 4.dp, top = 8.dp)
-                    .clip(shape = CircleShape)
-                    .size(80.dp)
-                    .background(Color.Black)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = {
-                            selectedImageIndex = 0
-                            isImageOpened = true
-                        }
+            if (employeeItemUIModel.imagePath.isNullOrEmpty()) {
+                Image(
+                    modifier = Modifier
+                        .padding(start = 4.dp, top = 8.dp)
+                        .clip(shape = CircleShape)
+                        .size(80.dp),
+                    painter = painterResource(Res.drawable.person_placeholder),
+                    contentDescription = null,
+                )
+            } else {
+                CoilImage(
+                    modifier = Modifier
+                        .padding(start = 4.dp, top = 8.dp)
+                        .clip(shape = CircleShape)
+                        .size(80.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = {
+                                selectedImageIndex = 0
+                                isImageOpened = true
+                            }
+                        ),
+                    imageModel = { employeeItemUIModel.imagePath },
+                    previewPlaceholder = painterResource(Res.drawable.person_placeholder),
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                        requestSize = IntSize(800, 800),
                     ),
-                model = employeeItemUIModel.imagePath,
-                placeholder = painterResource(Res.drawable.person_placeholder),
-                error = painterResource(Res.drawable.person_placeholder),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
+                    loading = {
+                        Box(modifier = Modifier.matchParentSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    },
+                    failure = {
+                        painterResource(resource = Res.drawable.person_placeholder)
+                    },
+                )
+            }
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp)

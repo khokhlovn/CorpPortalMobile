@@ -31,6 +31,7 @@ class ProfileComponent(
             imagePath = null,
             balance = 0,
             cartItemsCount = 0,
+            ordersCount = 0,
             isFirstLoading = true,
             isLoading = true,
         ),

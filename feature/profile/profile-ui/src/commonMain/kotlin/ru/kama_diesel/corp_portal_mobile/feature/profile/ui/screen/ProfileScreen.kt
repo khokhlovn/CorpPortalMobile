@@ -23,6 +23,8 @@ fun ProfileScreen(
     viewState: ProfileViewState,
     onLogoutClick: () -> Unit,
     onRefresh: () -> Unit,
+    onCartClick: () -> Unit,
+    onOrdersHistoryClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -73,9 +75,12 @@ fun ProfileScreen(
                 imagePath = viewState.imagePath,
                 balance = viewState.balance,
                 cartItemsCount = viewState.cartItemsCount,
+                ordersCount = viewState.ordersCount,
                 isRefreshing = viewState.isLoading,
                 isFirstLoading = viewState.isFirstLoading,
                 onRefresh = onRefresh,
+                onCartClick = onCartClick,
+                onOrdersHistoryClick = onOrdersHistoryClick,
             )
         }
     }

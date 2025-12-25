@@ -26,8 +26,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.kotlin.inject.runtime)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.coil)
-            implementation(libs.coil.network)
+            implementation(libs.landscapist.coil)
             implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {

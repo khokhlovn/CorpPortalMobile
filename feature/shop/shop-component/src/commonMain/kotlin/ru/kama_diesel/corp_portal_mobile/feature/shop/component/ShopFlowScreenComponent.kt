@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.stack.items
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.CartScreenContainer
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.ShopListScreenContainer
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.OrdersScreenContainer
@@ -33,11 +34,19 @@ fun ShopFlowScreenComponent(
             }
 
             is ShopFlowRouter.Child.Cart -> {
-                CartScreenContainer(child.component.viewModel)
+                CartScreenContainer(
+                    child.component.viewModel,
+                    wasNavigatedFromProfile = shopFlowComponent.router.childStack.items.size < 2,
+                    onToProfileClick = onToProfileClick,
+                )
             }
 
             is ShopFlowRouter.Child.Orders -> {
-                OrdersScreenContainer(child.component.viewModel)
+                OrdersScreenContainer(
+                    child.component.viewModel,
+                    wasNavigatedFromProfile = shopFlowComponent.router.childStack.items.size < 2,
+                    onToProfileClick = onToProfileClick,
+                )
             }
         }
     }

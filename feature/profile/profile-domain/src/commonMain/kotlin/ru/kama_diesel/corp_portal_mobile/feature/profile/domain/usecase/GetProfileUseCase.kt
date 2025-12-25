@@ -12,14 +12,14 @@ GetProfileUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val profileRepository: IProfileRepository,
 ) {
-    suspend operator fun invoke(): ProfileItem {
+    suspend operator fun invoke(): ProfileItem? {
         return try {
             profileRepository.getProfile()
-        } catch (clientRequestException: ClientRequestException) {
+        } catch (_: ClientRequestException) {
             logoutUseCase.invoke()
-            throw clientRequestException
-        } catch (e: Exception) {
-            throw e
+            null
+        } catch (_: Exception) {
+            null
         }
     }
 }

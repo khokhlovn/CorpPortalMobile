@@ -1,6 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.dialog.details
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,11 +28,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import androidx.compose.ui.unit.*
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.CommentItem
@@ -73,7 +73,7 @@ internal fun ArticleDetailsContent(
     ) {
         imagePaths?.let {
             item {
-                AsyncImage(
+                CoilImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(220.dp)
@@ -83,11 +83,20 @@ internal fun ArticleDetailsContent(
                             selectedImageIndex = 0
                             isImageOpened = true
                         },
-                    model = imagePaths.first(),
-                    placeholder = painterResource(Res.drawable.placeholder),
-                    error = painterResource(Res.drawable.placeholder),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    imageModel = { imagePaths.first() },
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                    ),
+                    loading = {
+                        Box(modifier = Modifier.matchParentSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    },
+                    failure = {
+                        painterResource(resource = Res.drawable.placeholder)
+                    },
                 )
             }
 
@@ -96,7 +105,7 @@ internal fun ArticleDetailsContent(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        AsyncImage(
+                        CoilImage(
                             modifier = Modifier
                                 .height(48.dp)
                                 .width(72.dp)
@@ -105,15 +114,24 @@ internal fun ArticleDetailsContent(
                                     selectedImageIndex = 1
                                     isImageOpened = true
                                 },
-                            model = imagePaths[1],
-                            placeholder = painterResource(Res.drawable.placeholder),
-                            error = painterResource(Res.drawable.placeholder),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
+                            imageModel = { imagePaths[1] },
+                            imageOptions = ImageOptions(
+                                contentScale = ContentScale.Crop,
+                            ),
+                            loading = {
+                                Box(modifier = Modifier.matchParentSize()) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
+                                }
+                            },
+                            failure = {
+                                painterResource(resource = Res.drawable.placeholder)
+                            },
                         )
                         if (imagePaths.size > 2) {
                             Spacer(modifier = Modifier.width(8.dp))
-                            AsyncImage(
+                            CoilImage(
                                 modifier = Modifier
                                     .height(48.dp)
                                     .width(72.dp)
@@ -122,11 +140,20 @@ internal fun ArticleDetailsContent(
                                         selectedImageIndex = 2
                                         isImageOpened = true
                                     },
-                                model = imagePaths[2],
-                                placeholder = painterResource(Res.drawable.placeholder),
-                                error = painterResource(Res.drawable.placeholder),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
+                                imageModel = { imagePaths[2] },
+                                imageOptions = ImageOptions(
+                                    contentScale = ContentScale.Crop,
+                                ),
+                                loading = {
+                                    Box(modifier = Modifier.matchParentSize()) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.align(Alignment.Center)
+                                        )
+                                    }
+                                },
+                                failure = {
+                                    painterResource(resource = Res.drawable.placeholder)
+                                },
                             )
                         }
                         if (imagePaths.size > 3) {
@@ -321,14 +348,33 @@ private fun CommentListItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
     ) {
-        AsyncImage(
-            modifier = Modifier.clip(shape = CircleShape).size(48.dp).background(Color.Black),
-            model = commentUIModel.imagePath,
-            placeholder = painterResource(Res.drawable.person_placeholder),
-            error = painterResource(Res.drawable.person_placeholder),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-        )
+        if (commentUIModel.imagePath.isNullOrEmpty()) {
+            Image(
+                modifier = Modifier.clip(shape = CircleShape).size(48.dp),
+                painter = painterResource(Res.drawable.person_placeholder),
+                contentDescription = null,
+            )
+        } else {
+            CoilImage(
+                modifier = Modifier.clip(shape = CircleShape).size(48.dp),
+                imageModel = { commentUIModel.imagePath },
+                imageOptions = ImageOptions(
+                    alignment = Alignment.TopCenter,
+                    contentScale = ContentScale.Crop,
+                    requestSize = IntSize(300, 300),
+                ),
+                loading = {
+                    Box(modifier = Modifier.matchParentSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                },
+                failure = {
+                    painterResource(resource = Res.drawable.person_placeholder)
+                },
+            )
+        }
         Spacer(modifier = Modifier.width(8.dp))
         Column(
             modifier = Modifier.fillMaxHeight().weight(1f)
@@ -461,14 +507,33 @@ private fun SubcommentListItem(
                 style = Stroke(width = 2f)
             )
         }
-        AsyncImage(
-            modifier = Modifier.clip(shape = CircleShape).size(40.dp).background(Color.Black),
-            model = commentItem.imagePath,
-            placeholder = painterResource(Res.drawable.person_placeholder),
-            error = painterResource(Res.drawable.person_placeholder),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-        )
+        if (commentItem.imagePath.isNullOrEmpty()) {
+            Image(
+                modifier = Modifier.clip(shape = CircleShape).size(40.dp),
+                painter = painterResource(Res.drawable.person_placeholder),
+                contentDescription = null,
+            )
+        } else {
+            CoilImage(
+                modifier = Modifier.clip(shape = CircleShape).size(40.dp),
+                imageModel = { commentItem.imagePath },
+                imageOptions = ImageOptions(
+                    alignment = Alignment.TopCenter,
+                    contentScale = ContentScale.Crop,
+                    requestSize = IntSize(300, 300),
+                ),
+                loading = {
+                    Box(modifier = Modifier.matchParentSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                },
+                failure = {
+                    painterResource(resource = Res.drawable.person_placeholder)
+                },
+            )
+        }
         Spacer(modifier = Modifier.width(8.dp))
         Column(
             modifier = Modifier.fillMaxHeight().weight(1f)

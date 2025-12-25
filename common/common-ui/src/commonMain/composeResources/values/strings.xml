@@ -79,5 +79,19 @@
 
     <string name="profile">Профиль</string>
     <string name="balance">Баланс:</string>
+    <string name="notifications">Уведомления:</string>
+    <string name="reservations">Бронирования:</string>
+    <string name="events">Мероприятия:</string>
+    <string name="orders_history">История заказов</string>
     <string name="in_cart_count">Товаров в корзине:</string>
+    <string name="documents">Документы</string>
+    <string name="documents_for_familiarization">Документы на ознакомление</string>
+    <string name="billing_sheets">Расчетные листы</string>
+    <string name="vacation_calculation">Расчет отпуска</string>
+    <string name="submit_application">Подать заявление</string>
+    <string name="declare_absence">Заявить об отсутствии</string>
+    <string name="contact_ceo">Обратиться к генеральному директору</string>
+
+    <string name="top_workers">Стена почета и славы</string>
+    <string name="more">Подробнее</string>
 </resources>

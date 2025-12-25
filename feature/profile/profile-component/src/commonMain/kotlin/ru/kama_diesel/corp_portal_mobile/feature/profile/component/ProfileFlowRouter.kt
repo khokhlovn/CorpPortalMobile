@@ -22,12 +22,12 @@ class ProfileFlowRouter(
         serializer = Configuration.serializer(),
         handleBackButton = true,
         childFactory = ::childFactory,
-        initialStack = { listOf(Configuration.PhoneDirectoryList) }
+        initialStack = { listOf(Configuration.Profile) }
     )
 
     private fun childFactory(config: Configuration, componentContext: ComponentContext): Child {
         return when (config) {
-            is Configuration.PhoneDirectoryList -> Child.Profile(
+            is Configuration.Profile -> Child.Profile(
                 component = ProfileComponent(
                     componentContext = componentContext,
                     profileFlowDIComponent = profileFlowDIComponent,
@@ -43,7 +43,7 @@ class ProfileFlowRouter(
     @Serializable
     internal sealed class Configuration {
         @Serializable
-        data object PhoneDirectoryList : Configuration()
+        data object Profile : Configuration()
     }
 
     override fun back() {

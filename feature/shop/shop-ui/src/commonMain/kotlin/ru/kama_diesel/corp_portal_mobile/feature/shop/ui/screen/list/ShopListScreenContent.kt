@@ -21,17 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberConstraintsSizeResolver
-import coil3.request.ImageRequest
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
+import com.skydoves.landscapist.components.rememberImageComponent
+import com.skydoves.landscapist.crossfade.CrossfadePlugin
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -214,7 +214,6 @@ fun ShopItemContent(
     onDeleteClick: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { item.imagePaths?.size ?: 1 })
-    val sizeResolver = rememberConstraintsSizeResolver()
 
 
     Card(
@@ -242,19 +241,30 @@ fun ShopItemContent(
                     .height(120.dp),
                 state = pagerState,
             ) { page ->
-                AsyncImage(
+                CoilImage(
                     modifier = Modifier
                         .height(120.dp)
                         .fillMaxWidth(),
-                    model = ImageRequest.Builder(LocalPlatformContext.current)
-                        .data(item.imagePaths?.get(page))
-                        .size(sizeResolver)
-                        .build(),
-                    placeholder = painterResource(Res.drawable.placeholder),
-                    error = painterResource(Res.drawable.placeholder),
-                    contentDescription = null,
-                    filterQuality = FilterQuality.None,
-                    contentScale = ContentScale.Crop,
+                    imageModel = { item.imagePaths?.get(page) },
+                    component = rememberImageComponent {
+                        +CrossfadePlugin(
+                            duration = 550
+                        )
+                    },
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                        requestSize = IntSize(500, 500),
+                    ),
+                    loading = {
+                        Box(modifier = Modifier.matchParentSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    },
+                    failure = {
+                        painterResource(resource = Res.drawable.placeholder)
+                    },
                 )
             }
 

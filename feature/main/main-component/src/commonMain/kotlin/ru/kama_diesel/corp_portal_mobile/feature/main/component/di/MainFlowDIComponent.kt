@@ -6,16 +6,14 @@ import me.tatarka.inject.annotations.Provides
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.articles.component.api.IArticlesComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.main.component.api.IMainComponentDependencies
-import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.dependencies.ArticlesComponentDependencies
-import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.dependencies.PhoneDirectoryComponentDependencies
-import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.dependencies.ProfileComponentDependencies
-import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.dependencies.ShopComponentDependencies
+import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.dependencies.*
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.api.IMainFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.screen.MainViewModel
 import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.api.IPhoneDirectoryComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.api.IProfileComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.root.domain.di.MainFlowScope
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.api.IShopComponentDependencies
+import ru.kama_diesel.corp_portal_mobile.feature.top.component.api.ITopComponentDependencies
 
 @MainFlowScope
 @Component
@@ -35,6 +33,8 @@ internal abstract class MainFlowDIComponent(
 
     abstract val profileComponentDependencies: IProfileComponentDependencies
 
+    abstract val topComponentDependencies: ITopComponentDependencies
+
     @Provides
     fun getRouterHolder(): RouterHolder<IMainFlowRouter> = routerHolder
 
@@ -49,6 +49,9 @@ internal abstract class MainFlowDIComponent(
 
     @Provides
     protected fun bind(it: ProfileComponentDependencies): IProfileComponentDependencies = it
+
+    @Provides
+    protected fun bind(it: TopComponentDependencies): ITopComponentDependencies = it
 
     override fun onDestroy() {
         viewModel.onDestroy()
