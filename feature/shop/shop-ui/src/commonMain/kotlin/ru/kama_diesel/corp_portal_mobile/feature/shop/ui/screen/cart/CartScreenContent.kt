@@ -28,7 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
@@ -245,17 +246,26 @@ fun CartItemContent(
                 onCheckedChange(cartItem.inCartItemId, isChecked)
             },
         )
-        AsyncImage(
+        CoilImage(
             modifier = Modifier
                 .padding(vertical = 12.dp)
                 .fillMaxHeight()
                 .clip(shape = RoundedCornerShape(8.dp))
                 .aspectRatio(1f),
-            model = shopItemImagePath,
-            placeholder = painterResource(Res.drawable.placeholder),
-            error = painterResource(Res.drawable.placeholder),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+            imageModel = { shopItemImagePath },
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.Crop,
+            ),
+            loading = {
+                Box(modifier = Modifier.matchParentSize()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            },
+            failure = {
+                painterResource(resource = Res.drawable.placeholder)
+            },
         )
         Column(
             modifier = Modifier

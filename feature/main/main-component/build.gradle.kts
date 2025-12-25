@@ -34,6 +34,9 @@ kotlin {
             implementation(projects.feature.profile.profileComponent)
             implementation(projects.feature.profile.profileDomain)
 
+            implementation(projects.feature.top.topComponent)
+            implementation(projects.feature.top.topDomain)
+
             implementation(projects.common.commonComponent)
             implementation(projects.common.commonDomain)
             implementation(projects.common.commonUi)

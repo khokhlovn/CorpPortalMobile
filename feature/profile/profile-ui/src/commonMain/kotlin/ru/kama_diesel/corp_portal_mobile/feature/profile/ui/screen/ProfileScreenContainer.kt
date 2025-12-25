@@ -9,6 +9,8 @@ import androidx.compose.runtime.getValue
 fun ProfileScreenContainer(
     drawerState: DrawerState,
     viewModel: ProfileViewModel,
+    toCart: () -> Unit,
+    toOrdersHistory: () -> Unit,
 ) {
     val viewState by viewModel.viewState.collectAsState()
 
@@ -17,5 +19,7 @@ fun ProfileScreenContainer(
         viewState = viewState,
         onRefresh = viewModel::getData,
         onLogoutClick = viewModel::onLogoutClick,
+        onCartClick = toCart,
+        onOrdersHistoryClick = toOrdersHistory,
     )
 }

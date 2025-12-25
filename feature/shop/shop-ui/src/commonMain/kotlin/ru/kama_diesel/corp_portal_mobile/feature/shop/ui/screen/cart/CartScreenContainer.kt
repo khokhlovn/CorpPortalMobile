@@ -5,14 +5,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 
 @Composable
-fun CartScreenContainer(viewModel: CartViewModel) {
+fun CartScreenContainer(
+    viewModel: CartViewModel,
+    wasNavigatedFromProfile: Boolean,
+    onToProfileClick: () -> Unit,
+) {
 
     val viewState by viewModel.viewState.collectAsState()
 
     CartScreen(
         viewState = viewState,
         onRefresh = viewModel::getData,
-        onBackClick = viewModel::back,
+        onBackClick = if (wasNavigatedFromProfile) {
+            onToProfileClick
+        } else {
+            viewModel::back
+        },
         onUpdateQuantityClick = viewModel::onUpdateCartItemQuantityClick,
         onDeleteClick = viewModel::onDeleteCartItemClick,
         onOrderClick = viewModel::onMakeOrderClick,

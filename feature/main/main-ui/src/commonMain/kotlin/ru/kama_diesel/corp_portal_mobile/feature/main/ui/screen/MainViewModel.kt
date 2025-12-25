@@ -24,6 +24,10 @@ class MainViewModel(
         router.toShop()
     }
 
+    fun onTopClick() {
+        router.toTop()
+    }
+
     fun onPhoneDirectoryClick() {
         router.toPhoneDirectory()
     }

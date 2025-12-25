@@ -25,7 +25,8 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -167,16 +168,25 @@ fun OrderItemContent(
                         .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    AsyncImage(
+                    CoilImage(
                         modifier = Modifier
                             .fillMaxHeight()
                             .clip(shape = RoundedCornerShape(8.dp))
                             .aspectRatio(1f),
-                        model = shopItem?.imagePaths?.firstOrNull(),
-                        placeholder = painterResource(Res.drawable.placeholder),
-                        error = painterResource(Res.drawable.placeholder),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
+                        imageModel = { shopItem?.imagePaths?.firstOrNull() },
+                        imageOptions = ImageOptions(
+                            contentScale = ContentScale.Crop,
+                        ),
+                        loading = {
+                            Box(modifier = Modifier.matchParentSize()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        },
+                        failure = {
+                            painterResource(resource = Res.drawable.placeholder)
+                        },
                     )
                     Text(
                         modifier = Modifier

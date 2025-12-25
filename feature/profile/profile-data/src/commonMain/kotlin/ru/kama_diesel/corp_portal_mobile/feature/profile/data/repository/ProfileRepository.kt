@@ -48,4 +48,10 @@ class ProfileRepository(
             corpPortalApi.getCartData().cartItems?.sumOf { it.quantity }
         } ?: 0
     }
+
+    override suspend fun getOrdersCount(): Int {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getOrders().carts?.size
+        } ?: 0
+    }
 }

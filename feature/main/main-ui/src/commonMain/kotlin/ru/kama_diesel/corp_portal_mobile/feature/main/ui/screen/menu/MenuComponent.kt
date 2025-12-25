@@ -18,6 +18,7 @@ internal fun MenuComponent(
     selectedIndex: Int,
     onArticlesClick: () -> Unit,
     onShopClick: () -> Unit,
+    onTopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
 ) {
     ModalDrawerSheet(
@@ -64,6 +65,21 @@ internal fun MenuComponent(
 
         NavigationDrawerItem(
             label = {
+                Text(text = stringResource(Res.string.top_workers))
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(Res.drawable.rewarded_ads_24px),
+                    contentDescription = null,
+                )
+            },
+            shape = RectangleShape,
+            selected = selectedIndex == 2,
+            onClick = onTopClick,
+        )
+
+        NavigationDrawerItem(
+            label = {
                 Text(text = stringResource(Res.string.phone_directory))
             },
             icon = {
@@ -73,7 +89,7 @@ internal fun MenuComponent(
                 )
             },
             shape = RectangleShape,
-            selected = selectedIndex == 2,
+            selected = selectedIndex == 3,
             onClick = onPhoneDirectoryClick,
         )
     }

@@ -9,6 +9,7 @@ data class ProfileViewState(
     val imagePath: String?,
     val balance: Int,
     val cartItemsCount: Int,
+    val ordersCount: Int,
     val isFirstLoading: Boolean,
     val isLoading: Boolean,
 )

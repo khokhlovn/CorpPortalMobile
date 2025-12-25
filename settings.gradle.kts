@@ -73,3 +73,8 @@ include("feature:profile:profile-component")
 include("feature:profile:profile-data")
 include("feature:profile:profile-domain")
 include("feature:profile:profile-ui")
+
+include("feature:top:top-component")
+include("feature:top:top-data")
+include("feature:top:top-domain")
+include("feature:top:top-ui")

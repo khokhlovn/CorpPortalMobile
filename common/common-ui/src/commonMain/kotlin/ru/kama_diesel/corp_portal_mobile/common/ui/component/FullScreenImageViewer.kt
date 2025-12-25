@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
-import coil3.compose.AsyncImage
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
+import com.skydoves.landscapist.components.rememberImageComponent
+import com.skydoves.landscapist.crossfade.CrossfadePlugin
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import ru.kama_diesel.corp_portal_mobile.resources.*
@@ -91,7 +95,7 @@ fun FullScreenImageViewer(
             HorizontalPager(
                 state = pagerState,
             ) { index ->
-                AsyncImage(
+                CoilImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .transformable(state = transformState)
@@ -115,10 +119,25 @@ fun FullScreenImageViewer(
                                     offset.value.y
                                 }
                         ),
-                    model = imagePaths[index],
-                    error = painterResource(Res.drawable.placeholder),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = null,
+                    imageModel = { imagePaths[index] },
+                    component = rememberImageComponent {
+                        +CrossfadePlugin(
+                            duration = 550
+                        )
+                    },
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Fit,
+                    ),
+                    loading = {
+                        Box(modifier = Modifier.matchParentSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    },
+                    failure = {
+                        painterResource(resource = Res.drawable.placeholder)
+                    }
                 )
             }
 

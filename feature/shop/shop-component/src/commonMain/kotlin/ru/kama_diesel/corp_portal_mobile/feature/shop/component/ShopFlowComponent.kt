@@ -8,6 +8,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.component.di.create
 
 class ShopFlowComponent(
     componentContext: ComponentContext,
+    initialConfiguration: ShopFlowRouter.Configuration,
     componentDependencies: IShopComponentDependencies
 ) : ComponentContext by componentContext {
 
@@ -15,7 +16,7 @@ class ShopFlowComponent(
         ShopFlowDIComponent::class.create(componentDependencies)
     }
 
-    val router = ShopFlowRouter(componentContext, diComponent)
+    val router = ShopFlowRouter(componentContext = componentContext, initialConfiguration = initialConfiguration, shopFlowDIComponent = diComponent)
 
     init {
         diComponent.getRouterHolder().updateInstance(router)

@@ -133,4 +133,8 @@ class CorpPortalApi(
     suspend fun getProfile(): ProfileResponseData {
         return httpClient.get("profile").body()
     }
+
+    suspend fun getTopWorkers(): TopWorkersListResponseData {
+        return httpClient.get("top_workers").body()
+    }
 }

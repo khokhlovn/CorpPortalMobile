@@ -27,14 +27,17 @@ private fun ProfileScreenPreview() {
                     personalMail = ""
                 ),
                 imagePath = null,
-                balance = 0,
+                balance = 116,
                 cartItemsCount = 0,
+                ordersCount = 0,
                 isFirstLoading = false,
                 isLoading = false,
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onRefresh = {},
             onLogoutClick = {},
+            onCartClick = {},
+            onOrdersHistoryClick = {},
         )
     }
 }

@@ -1,6 +1,6 @@
 [versions]
 
-app-versionCode = "9"
+app-versionCode = "10"
 app-versionName = "1.0.0"
 kotlin = "2.2.20"
 compose = "1.9.1"
@@ -27,7 +27,7 @@ buildkonfig = "0.17.1"
 napier = "2.7.1"
 uuid = "0.8.4"
 jetbrainsKotlinJvm = "2.2.21"
-coil = "3.3.0"
+landscapist = "2.6.2"
 appmetrica = "7.14.0"
 kotlinx-datetime = "0.7.1"
 desugaring = "2.1.5"
@@ -67,8 +67,8 @@ napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
-coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+landscapist-coil = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapist" }
+landscapist-animation = { module = "com.github.skydoves:landscapist-animation", version.ref = "landscapist" }
 
 appmetrica = { module = "io.appmetrica.analytics:analytics", version.ref = "appmetrica" }
 

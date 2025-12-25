@@ -12,7 +12,9 @@ import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.ProfileScreen
 @Composable
 fun ProfileFlowScreenComponent(
     drawerState: DrawerState,
-    profileFlowComponent: ProfileFlowComponent
+    profileFlowComponent: ProfileFlowComponent,
+    toCart: () -> Unit,
+    toOrdersHistory: () -> Unit,
 ) {
     val childStack by profileFlowComponent.router.childStack.subscribeAsState()
 
@@ -25,6 +27,8 @@ fun ProfileFlowScreenComponent(
                 ProfileScreenContainer(
                     viewModel = child.component.viewModel,
                     drawerState = drawerState,
+                    toCart = toCart,
+                    toOrdersHistory = toOrdersHistory,
                 )
             }
         }

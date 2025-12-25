@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
@@ -18,7 +20,10 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
+import com.skydoves.landscapist.components.rememberImageComponent
+import com.skydoves.landscapist.crossfade.CrossfadePlugin
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.FullScreenImageViewer
@@ -59,7 +64,7 @@ internal fun ShopItemDetailsContent(
                 .fillMaxWidth(),
             state = pagerState,
         ) { page ->
-            AsyncImage(
+            CoilImage(
                 modifier = Modifier
                     .height(240.dp)
                     .fillMaxWidth()
@@ -71,11 +76,25 @@ internal fun ShopItemDetailsContent(
                             isImageOpened = true
                         }
                     ),
-                model = shopItem.imagePaths?.get(page),
-                placeholder = painterResource(Res.drawable.placeholder),
-                error = painterResource(Res.drawable.placeholder),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+                imageModel = { shopItem.imagePaths?.get(page) },
+                component = rememberImageComponent {
+                    +CrossfadePlugin(
+                        duration = 550
+                    )
+                },
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.Crop,
+                ),
+                loading = {
+                    Box(modifier = Modifier.matchParentSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                },
+                failure = {
+                    painterResource(resource = Res.drawable.placeholder)
+                },
             )
         }
 

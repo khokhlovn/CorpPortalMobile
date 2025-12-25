@@ -1,6 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.ui.screen.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.isTraversalGroup
@@ -36,12 +36,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberConstraintsSizeResolver
-import coil3.request.ImageRequest
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -235,8 +234,6 @@ fun EmployeeItemContent(
     onEmployeeItemClick: () -> Unit,
     onPinChange: (String, Boolean) -> Unit,
 ) {
-    val sizeResolver = rememberConstraintsSizeResolver()
-
     Card(
         modifier = Modifier.fillMaxWidth()
             .height(320.dp)
@@ -259,20 +256,37 @@ fun EmployeeItemContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                AsyncImage(
-                    modifier = Modifier
-                        .clip(shape = CircleShape)
-                        .size(100.dp),
-                    model = ImageRequest.Builder(LocalPlatformContext.current)
-                        .data(item.imagePath)
-                        .size(sizeResolver)
-                        .build(),
-                    placeholder = painterResource(Res.drawable.person_placeholder),
-                    error = painterResource(Res.drawable.person_placeholder),
-                    contentDescription = null,
-                    filterQuality = FilterQuality.None,
-                    contentScale = ContentScale.Crop,
-                )
+                if (item.imagePath.isNullOrEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .clip(shape = CircleShape)
+                            .size(100.dp),
+                        painter = painterResource(Res.drawable.person_placeholder),
+                        contentDescription = null,
+                    )
+                } else {
+                    CoilImage(
+                        modifier = Modifier
+                            .clip(shape = CircleShape)
+                            .size(100.dp),
+                        imageModel = { item.imagePath },
+                        imageOptions = ImageOptions(
+                            alignment = Alignment.TopCenter,
+                            contentScale = ContentScale.Crop,
+                            requestSize = IntSize(600, 600),
+                        ),
+                        loading = {
+                            Box(modifier = Modifier.matchParentSize()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        },
+                        failure = {
+                            painterResource(resource = Res.drawable.person_placeholder)
+                        },
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     modifier = Modifier

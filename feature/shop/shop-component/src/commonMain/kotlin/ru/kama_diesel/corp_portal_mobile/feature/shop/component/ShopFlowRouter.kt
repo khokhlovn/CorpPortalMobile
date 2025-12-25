@@ -14,6 +14,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 @OptIn(DelicateDecomposeApi::class)
 class ShopFlowRouter(
     componentContext: ComponentContext,
+    private val initialConfiguration: Configuration,
     private val shopFlowDIComponent: ShopFlowDIComponent
 ) : IShopFlowRouter {
 
@@ -24,7 +25,7 @@ class ShopFlowRouter(
         serializer = Configuration.serializer(),
         handleBackButton = true,
         childFactory = ::childFactory,
-        initialStack = { listOf(Configuration.ShopList) }
+        initialStack = { listOf(initialConfiguration) }
     )
 
     private fun childFactory(config: Configuration, componentContext: ComponentContext): Child {
@@ -59,7 +60,7 @@ class ShopFlowRouter(
     }
 
     @Serializable
-    internal sealed class Configuration {
+    sealed class Configuration {
         @Serializable
         data object ShopList : Configuration()
 

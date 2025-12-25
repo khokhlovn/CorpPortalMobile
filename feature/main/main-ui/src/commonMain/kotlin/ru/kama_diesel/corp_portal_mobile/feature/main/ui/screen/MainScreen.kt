@@ -24,6 +24,7 @@ fun MainScreen(
     tab: @Composable () -> Unit,
     onArticlesClick: () -> Unit,
     onShopClick: () -> Unit,
+    onTopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
     onProfileClick: () -> Unit,
 ) {
@@ -43,6 +44,14 @@ fun MainScreen(
                 },
                 onShopClick = {
                     onShopClick()
+                    scope.launch {
+                        drawerState.apply {
+                            close()
+                        }
+                    }
+                },
+                onTopClick = {
+                    onTopClick()
                     scope.launch {
                         drawerState.apply {
                             close()
@@ -71,7 +80,8 @@ fun MainScreen(
                                     when (selectedIndex) {
                                         0 -> stringResource(Res.string.news)
                                         1 -> stringResource(Res.string.shop)
-                                        2 -> stringResource(Res.string.phone_directory)
+                                        2 -> stringResource(Res.string.top_workers)
+                                        3 -> stringResource(Res.string.phone_directory)
                                         else -> ""
                                     },
                                 autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),

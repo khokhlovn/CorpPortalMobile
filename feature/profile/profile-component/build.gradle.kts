@@ -23,6 +23,8 @@ kotlin {
             implementation(projects.feature.profile.profileDomain)
             implementation(projects.feature.profile.profileData)
 
+            implementation(projects.feature.shop.shopComponent)
+
             implementation(projects.common.commonComponent)
             implementation(projects.common.commonDomain)
             implementation(projects.common.commonUi)
