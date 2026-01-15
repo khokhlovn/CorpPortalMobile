@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
@@ -37,6 +38,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.TopWorkerItem
 import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.logo
 import ru.kama_diesel.corp_portal_mobile.resources.more
 import ru.kama_diesel.corp_portal_mobile.resources.person_placeholder
 
@@ -56,8 +58,10 @@ fun TopScreenContent(
     val gridState = rememberLazyGridState(cacheWindow = percentCacheWindow)
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(color = Color(red = 243, green = 243, blue = 243))
+            .paint(painter = painterResource(Res.drawable.logo)),
     ) {
         PullToRefreshBox(
             modifier = Modifier.weight(1f).fillMaxSize(),

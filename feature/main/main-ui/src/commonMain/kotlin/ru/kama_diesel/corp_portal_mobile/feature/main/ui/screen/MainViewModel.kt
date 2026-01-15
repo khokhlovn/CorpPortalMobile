@@ -20,6 +20,10 @@ class MainViewModel(
         router.toArticles()
     }
 
+    fun onReservationClick() {
+        router.toReservation()
+    }
+
     fun onShopClick() {
         router.toShop()
     }

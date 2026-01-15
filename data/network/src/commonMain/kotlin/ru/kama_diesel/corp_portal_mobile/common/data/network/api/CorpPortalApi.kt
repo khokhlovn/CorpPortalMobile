@@ -137,4 +137,8 @@ class CorpPortalApi(
     suspend fun getTopWorkers(): TopWorkersListResponseData {
         return httpClient.get("top_workers").body()
     }
+
+    suspend fun getMap(row: Int, col: Int, zoomLvl: Int): ByteArray{
+        return httpClient.get("https://pub-1c60c6f4879744098a61fc53966d561a.r2.dev/map/${zoomLvl}/${col}/${row}.jpg").readRawBytes()
+    }
 }

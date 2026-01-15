@@ -11,6 +11,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.main.ui.api.IMainFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.screen.MainViewModel
 import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.api.IPhoneDirectoryComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.api.IProfileComponentDependencies
+import ru.kama_diesel.corp_portal_mobile.feature.reservation.component.api.IReservationComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.root.domain.di.MainFlowScope
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.api.IShopComponentDependencies
 import ru.kama_diesel.corp_portal_mobile.feature.top.component.api.ITopComponentDependencies
@@ -27,6 +28,8 @@ internal abstract class MainFlowDIComponent(
 
     abstract val articlesComponentDependencies: IArticlesComponentDependencies
 
+    abstract val reservationComponentDependencies: IReservationComponentDependencies
+
     abstract val shopComponentDependencies: IShopComponentDependencies
 
     abstract val phoneDirectoryComponentDependencies: IPhoneDirectoryComponentDependencies
@@ -40,6 +43,9 @@ internal abstract class MainFlowDIComponent(
 
     @Provides
     protected fun bind(it: ArticlesComponentDependencies): IArticlesComponentDependencies = it
+
+    @Provides
+    protected fun bind(it: ReservationComponentDependencies): IReservationComponentDependencies = it
 
     @Provides
     protected fun bind(it: ShopComponentDependencies): IShopComponentDependencies = it
