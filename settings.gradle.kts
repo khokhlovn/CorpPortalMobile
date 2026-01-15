@@ -31,6 +31,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
         maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 include(":composeApp")
@@ -78,3 +79,8 @@ include("feature:top:top-component")
 include("feature:top:top-data")
 include("feature:top:top-domain")
 include("feature:top:top-ui")
+
+include("feature:reservation:reservation-component")
+include("feature:reservation:reservation-data")
+include("feature:reservation:reservation-domain")
+include("feature:reservation:reservation-ui")

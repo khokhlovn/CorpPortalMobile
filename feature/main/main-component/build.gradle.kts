@@ -37,6 +37,9 @@ kotlin {
             implementation(projects.feature.top.topComponent)
             implementation(projects.feature.top.topDomain)
 
+            implementation(projects.feature.reservation.reservationComponent)
+            implementation(projects.feature.reservation.reservationDomain)
+
             implementation(projects.common.commonComponent)
             implementation(projects.common.commonDomain)
             implementation(projects.common.commonUi)

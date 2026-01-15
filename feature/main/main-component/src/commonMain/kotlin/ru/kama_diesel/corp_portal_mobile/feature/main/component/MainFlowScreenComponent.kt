@@ -9,6 +9,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.articles.component.ArticlesFlow
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.screen.MainScreenContainer
 import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.PhoneDirectoryFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.ProfileFlowScreenComponent
+import ru.kama_diesel.corp_portal_mobile.feature.reservation.component.ReservationFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.root.component.MainFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.top.component.TopFlowScreenComponent
@@ -22,15 +23,17 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
         drawerState = drawerState,
         selectedIndex = when (childPages.items.first().instance) {
             is MainFlowRouter.PagesChild.ArticlesFlow -> 0
-            is MainFlowRouter.PagesChild.ShopFlow -> 1
-            is MainFlowRouter.PagesChild.TopFlow -> 2
-            is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> 3
+            is MainFlowRouter.PagesChild.ReservationFlow -> 1
+            is MainFlowRouter.PagesChild.ShopFlow -> 2
+            is MainFlowRouter.PagesChild.TopFlow -> 3
+            is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> 4
             is MainFlowRouter.PagesChild.ProfileFlow -> 999
             null -> 0
         },
         tab = {
             when (val page = childPages.items[childPages.selectedIndex].instance) {
                 is MainFlowRouter.PagesChild.ArticlesFlow -> ArticlesFlowScreenComponent(articlesFlowComponent = page.component)
+                is MainFlowRouter.PagesChild.ReservationFlow -> ReservationFlowScreenComponent(reservationFlowComponent = page.component)
                 is MainFlowRouter.PagesChild.ShopFlow -> ShopFlowScreenComponent(
                     drawerState = drawerState,
                     shopFlowComponent = page.component,

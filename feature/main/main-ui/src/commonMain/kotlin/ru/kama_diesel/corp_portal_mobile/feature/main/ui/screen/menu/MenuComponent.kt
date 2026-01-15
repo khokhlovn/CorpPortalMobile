@@ -17,6 +17,7 @@ import ru.kama_diesel.corp_portal_mobile.resources.*
 internal fun MenuComponent(
     selectedIndex: Int,
     onArticlesClick: () -> Unit,
+    onReservationClick: () -> Unit,
     onShopClick: () -> Unit,
     onTopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
@@ -50,6 +51,21 @@ internal fun MenuComponent(
 
         NavigationDrawerItem(
             label = {
+                Text(text = stringResource(Res.string.reservation))
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(Res.drawable.table_restaurant_24px),
+                    contentDescription = null,
+                )
+            },
+            shape = RectangleShape,
+            selected = selectedIndex == 1,
+            onClick = onReservationClick,
+        )
+
+        NavigationDrawerItem(
+            label = {
                 Text(text = stringResource(Res.string.shop))
             },
             icon = {
@@ -59,7 +75,7 @@ internal fun MenuComponent(
                 )
             },
             shape = RectangleShape,
-            selected = selectedIndex == 1,
+            selected = selectedIndex == 2,
             onClick = onShopClick,
         )
 
@@ -74,7 +90,7 @@ internal fun MenuComponent(
                 )
             },
             shape = RectangleShape,
-            selected = selectedIndex == 2,
+            selected = selectedIndex == 3,
             onClick = onTopClick,
         )
 
@@ -89,7 +105,7 @@ internal fun MenuComponent(
                 )
             },
             shape = RectangleShape,
-            selected = selectedIndex == 3,
+            selected = selectedIndex == 4,
             onClick = onPhoneDirectoryClick,
         )
     }

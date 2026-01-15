@@ -1,5 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.top.ui.screen
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
@@ -15,27 +16,30 @@ class TopViewModel(
 ) : BaseStateViewModel<TopViewState>() {
 
     init {
-        getData()
+        coroutineScope.launch {
+            delay(1000)
+            getProfileInfo()
+        }
     }
 
     fun getData() {
-        getProfileInfo()
+        coroutineScope.launch {
+            getProfileInfo()
+        }
     }
 
-    private fun getProfileInfo() {
-        coroutineScope.launch {
-            setState {
-                copy(
-                    isLoading = true,
-                )
-            }
-            val topWorkers = getTopWorkersUseCase()
-            setState {
-                copy(
-                    topWorkers = topWorkers,
-                    isLoading = false,
-                )
-            }
+    private suspend fun getProfileInfo() {
+        setState {
+            copy(
+                isLoading = true,
+            )
+        }
+        val topWorkers = getTopWorkersUseCase()
+        setState {
+            copy(
+                topWorkers = topWorkers,
+                isLoading = false,
+            )
         }
     }
 

@@ -10,6 +10,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.main.component.di.MainFlowDICom
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.api.IMainFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.PhoneDirectoryFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.ProfileFlowComponent
+import ru.kama_diesel.corp_portal_mobile.feature.reservation.component.ReservationFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.component.ShopFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.top.component.TopFlowComponent
@@ -43,6 +44,10 @@ internal class MainFlowRouter(
                 component = ArticlesFlowComponent(componentContext, mainFlowDIComponent.articlesComponentDependencies)
             )
 
+            Configuration.Reservation -> PagesChild.ReservationFlow(
+                component = ReservationFlowComponent(componentContext, mainFlowDIComponent.reservationComponentDependencies)
+            )
+
             is Configuration.Shop -> PagesChild.ShopFlow(
                 component = ShopFlowComponent(componentContext, config.initialConfiguration, mainFlowDIComponent.shopComponentDependencies)
             )
@@ -72,6 +77,7 @@ internal class MainFlowRouter(
 
     internal sealed interface PagesChild {
         data class ArticlesFlow(val component: ArticlesFlowComponent) : PagesChild
+        data class ReservationFlow(val component: ReservationFlowComponent) : PagesChild
         data class ShopFlow(val component: ShopFlowComponent) : PagesChild
         data class PhoneDirectoryFlow(val component: PhoneDirectoryFlowComponent) : PagesChild
         data class TopFlow(val component: TopFlowComponent) : PagesChild
@@ -83,6 +89,9 @@ internal class MainFlowRouter(
 
         @Serializable
         data object Articles : Configuration()
+
+        @Serializable
+        data object Reservation : Configuration()
 
         @Serializable
         data class Shop(val initialConfiguration: ShopFlowRouter.Configuration) : Configuration()
@@ -100,6 +109,12 @@ internal class MainFlowRouter(
     override fun toArticles() {
         pagesNavigation.clear()
         pagesNavigation.setItems { items -> items.plus(Configuration.Articles) }
+        pagesNavigation.selectFirst()
+    }
+
+    override fun toReservation() {
+        pagesNavigation.clear()
+        pagesNavigation.setItems { items -> items.plus(Configuration.Reservation) }
         pagesNavigation.selectFirst()
     }
 

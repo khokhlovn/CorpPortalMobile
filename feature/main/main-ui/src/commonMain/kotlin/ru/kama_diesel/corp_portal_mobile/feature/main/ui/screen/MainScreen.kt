@@ -23,6 +23,7 @@ fun MainScreen(
     selectedIndex: Int,
     tab: @Composable () -> Unit,
     onArticlesClick: () -> Unit,
+    onReservationClick: () -> Unit,
     onShopClick: () -> Unit,
     onTopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
@@ -36,6 +37,14 @@ fun MainScreen(
                 selectedIndex = selectedIndex,
                 onArticlesClick = {
                     onArticlesClick()
+                    scope.launch {
+                        drawerState.apply {
+                            close()
+                        }
+                    }
+                },
+                onReservationClick = {
+                    onReservationClick()
                     scope.launch {
                         drawerState.apply {
                             close()
@@ -70,7 +79,7 @@ fun MainScreen(
         },
         scrimColor = Color.Transparent,
     ) {
-        if (selectedIndex != 1 && selectedIndex != 999) {
+        if (selectedIndex != 2 && selectedIndex != 999) {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -79,9 +88,10 @@ fun MainScreen(
                                 text =
                                     when (selectedIndex) {
                                         0 -> stringResource(Res.string.news)
-                                        1 -> stringResource(Res.string.shop)
-                                        2 -> stringResource(Res.string.top_workers)
-                                        3 -> stringResource(Res.string.phone_directory)
+                                        1 -> stringResource(Res.string.reservation)
+                                        2 -> stringResource(Res.string.shop)
+                                        3 -> stringResource(Res.string.top_workers)
+                                        4 -> stringResource(Res.string.phone_directory)
                                         else -> ""
                                     },
                                 autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),

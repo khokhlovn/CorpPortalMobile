@@ -15,6 +15,7 @@ fun MainScreenContainer(
         selectedIndex = selectedIndex,
         tab = tab,
         onArticlesClick = viewModel::onArticlesClick,
+        onReservationClick = viewModel::onReservationClick,
         onShopClick = viewModel::onShopClick,
         onTopClick = viewModel::onTopClick,
         onPhoneDirectoryClick = viewModel::onPhoneDirectoryClick,
