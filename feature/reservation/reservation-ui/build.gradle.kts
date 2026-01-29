@@ -27,9 +27,9 @@ kotlin {
             implementation(libs.kotlin.inject.runtime)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.landscapist.coil)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.mapcompose)
             implementation(libs.kotlinx.io.core)
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             // implementation(libs.kotlin.test)

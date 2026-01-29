@@ -51,7 +51,7 @@ class ProfileViewModel(
                     isLoading = true,
                 )
             }
-            val profileItem = getProfileUseCase() ?: error("Ожидаем наличие информации о профиле")
+            val profileItem = getProfileUseCase() ?: return@launch
             val imagePath = getProfileImagePathUseCase()
             val balance = getBalanceUseCase()
             val cartItemsCount = getCartItemsCountUseCase()

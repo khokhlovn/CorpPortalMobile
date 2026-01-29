@@ -31,6 +31,7 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
             implementation(libs.kotlin.inject.runtime)
+            implementation(libs.kotlinx.datetime)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

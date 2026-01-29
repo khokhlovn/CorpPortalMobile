@@ -1,6 +1,6 @@
 [versions]
 
-app-versionCode = "11"
+app-versionCode = "12"
 app-versionName = "1.0.0"
 kotlin = "2.2.20"
 compose = "1.9.1"
@@ -27,8 +27,8 @@ buildkonfig = "0.17.1"
 napier = "2.7.1"
 uuid = "0.8.4"
 jetbrainsKotlinJvm = "2.2.21"
-landscapist = "2.6.2"
-mapcompose = "0.11.0"
+landscapist = "2.8.2"
+mapcompose = "0.12.0"
 kotlinx-io-core = "0.8.2"
 appmetrica = "7.14.0"
 kotlinx-datetime = "0.7.1"
@@ -71,6 +71,7 @@ uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
 landscapist-coil = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapist" }
 landscapist-animation = { module = "com.github.skydoves:landscapist-animation", version.ref = "landscapist" }
+landscapist-zoomable = { module = "com.github.skydoves:landscapist-zoomable", version.ref = "landscapist" }
 
 mapcompose = { module = "ovh.plrapps:mapcompose-mp", version.ref = "mapcompose" }
 kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io-core" }
