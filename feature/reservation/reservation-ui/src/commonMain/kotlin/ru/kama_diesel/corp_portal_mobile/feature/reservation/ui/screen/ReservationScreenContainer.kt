@@ -13,6 +13,11 @@ fun ReservationScreenContainer(
     ReservationScreen(
         viewState = viewState,
         mapState = viewModel.mapState,
-        onRefresh = viewModel::getData,
+        onOfficeChange = viewModel::onOfficeChange,
+        onDateChange = viewModel::onDateChange,
+        onSelectedPlaceChange = viewModel::onSelectedPlaceChange,
+        onReserveClick = viewModel::onReserveClick,
+        onConfirmReservationClick = viewModel::onConfirmReservationClick,
+        onCloseConfirmationClick = viewModel::onCloseConfirmationClick,
     )
 }

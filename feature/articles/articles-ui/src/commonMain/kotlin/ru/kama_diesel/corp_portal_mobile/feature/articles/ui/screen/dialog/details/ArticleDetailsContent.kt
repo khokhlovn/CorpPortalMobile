@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,13 +22,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.*
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
@@ -187,13 +194,9 @@ internal fun ArticleDetailsContent(
 
         item {
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
+            LinkifiedText(
                 modifier = Modifier.fillMaxWidth(),
                 text = articleDetailsItem.text,
-                fontSize = 16.sp,
-                letterSpacing = TextUnit(0.01F, TextUnitType.Sp),
-                color = MaterialTheme.colorScheme.scrim,
-                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
             )
         }
         item {
@@ -606,3 +609,75 @@ private fun SubcommentListItem(
         }
     }
 }
+
+@Composable
+fun LinkifiedText(text: String, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
+    val layoutResult = remember {
+        mutableStateOf<TextLayoutResult?>(null)
+    }
+    val linksList = extractUrls(text)
+    val annotatedString = buildAnnotatedString {
+        append(text)
+        linksList.forEach {
+            addStyle(
+                style = SpanStyle(
+                    color = Color.Blue,
+                    textDecoration = TextDecoration.Underline
+                ),
+                start = it.start,
+                end = it.end + 1,
+            )
+            addStringAnnotation(
+                tag = "URL",
+                annotation = it.url,
+                start = it.start,
+                end = it.end,
+            )
+        }
+    }
+
+    Text(
+        modifier = modifier.pointerInput(Unit) {
+            detectTapGestures { offsetPosition ->
+                layoutResult.value?.let {
+                    val position = it.getOffsetForPosition(offsetPosition)
+                    annotatedString.getStringAnnotations(position, position).firstOrNull()
+                        ?.let { result ->
+                            if (result.tag == "URL") {
+                                uriHandler.openUri(result.item)
+                            }
+                        }
+                }
+            }
+        },
+        text = annotatedString,
+        onTextLayout = { layoutResult.value = it },
+        fontSize = 16.sp,
+        letterSpacing = TextUnit(0.01F, TextUnitType.Sp),
+        color = MaterialTheme.colorScheme.scrim,
+        style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+    )
+}
+
+val urlRegex = Regex("(?:https?|ftp)://\\S+")
+
+fun extractUrls(text: String): List<LinkInfo> {
+    val links = arrayListOf<LinkInfo>()
+    urlRegex.findAll(text).forEach {
+        links.add(
+            LinkInfo(
+                url = it.value,
+                start = it.range.first,
+                end = it.range.last,
+            )
+        )
+    }
+    return links
+}
+
+data class LinkInfo(
+    val url: String,
+    val start: Int,
+    val end: Int
+)

@@ -21,6 +21,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.landscapist.coil)
             implementation(libs.landscapist.animation)
+            implementation(libs.landscapist.zoomable)
         }
         commonTest.dependencies {
             // implementation(libs.kotlin.test)

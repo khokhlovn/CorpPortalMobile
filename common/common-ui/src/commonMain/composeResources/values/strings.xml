@@ -96,4 +96,19 @@
     <string name="more">Подробнее</string>
 
     <string name="reservation">Бронь рабочего места</string>
+    <string name="first_left">1 этаж, левое крыло</string>
+    <string name="second_left">2 этаж, левое крыло</string>
+    <string name="second_right">2 этаж, правое крыло</string>
+    <string name="first_left_short">1 эт., лев. кр.</string>
+    <string name="second_left_short">2 эт., лев. кр.</string>
+    <string name="second_right_short">2 эт., пр. кр.</string>
+    <string name="olimp">Олимп</string>
+    <string name="free">Свободно (%1$d)</string>
+    <string name="reserved">Занято (%1$d)</string>
+    <string name="unavailable">Недоступно (%1$d)</string>
+    <string name="total">Всего мест (%1$d)</string>
+    <string name="selected_place">Выбранное место:</string>
+    <string name="reserve">Забронировать</string>
+    <string name="from_to_reserve">С %1$s по %2$s</string>
+    <string name="confirm">Подтвердить</string>
 </resources>
