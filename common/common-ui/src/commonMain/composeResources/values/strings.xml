@@ -92,6 +92,20 @@
     <string name="declare_absence">Заявить об отсутствии</string>
     <string name="contact_ceo">Обратиться к генеральному директору</string>
 
+    <string name="transfer_thx">Подарить рахматики</string>
+    <string name="available_thx">Доступно для передачи:</string>
+    <string name="select_user">Выберите пользователя</string>
+    <string name="select_amount_thx">Выберите количество рахматиков</string>
+    <string name="amount_thx_one">Рахмат - 1</string>
+    <string name="amount_thx_two">Зур рахмат - 2</string>
+    <string name="amount_thx_three">Бик зур рахмат - 3</string>
+    <string name="transfer">Подарить</string>
+    <string name="user_not_selected">Пользователь не выбран</string>
+    <string name="amount_not_selected">Количество не выбрано</string>
+    <string name="amount_is_more">Не хватает рахматиков</string>
+    <string name="transfer_success">Рахматики успешно подарены</string>
+
+
     <string name="top_workers">Стена почета и славы</string>
     <string name="more">Подробнее</string>
 

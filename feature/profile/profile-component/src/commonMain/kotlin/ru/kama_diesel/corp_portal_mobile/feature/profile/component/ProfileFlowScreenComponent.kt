@@ -7,7 +7,9 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.ProfileScreenContainer
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.ProfileScreenContainer
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer.TransferScreenContainer
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer.TransferScreenContent
 
 @Composable
 fun ProfileFlowScreenComponent(
@@ -29,6 +31,11 @@ fun ProfileFlowScreenComponent(
                     drawerState = drawerState,
                     toCart = toCart,
                     toOrdersHistory = toOrdersHistory,
+                )
+            }
+            is ProfileFlowRouter.Child.Transfer -> {
+                TransferScreenContainer(
+                    viewModel = child.component.viewModel,
                 )
             }
         }

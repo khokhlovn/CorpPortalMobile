@@ -138,7 +138,14 @@ class CorpPortalApi(
         return httpClient.get("top_workers").body()
     }
 
-    suspend fun getMap(row: Int, col: Int, zoomLvl: Int): ByteArray{
-        return httpClient.get("https://pub-1c60c6f4879744098a61fc53966d561a.r2.dev/map/${zoomLvl}/${col}/${row}.jpg").readRawBytes()
+    suspend fun getUserIds(): UserIdsResponseData {
+        return httpClient.get("user_ids").body()
+    }
+
+    suspend fun transferThx(transferThxRequestData: TransferThxRequestData): HttpResponse {
+        return httpClient.post("transfer_thx") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = transferThxRequestData)
+        }
     }
 }

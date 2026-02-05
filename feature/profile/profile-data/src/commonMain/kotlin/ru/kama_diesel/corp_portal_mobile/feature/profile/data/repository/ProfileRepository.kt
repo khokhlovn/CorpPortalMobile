@@ -5,8 +5,10 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.data.network.api.CorpPortalApi
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.TransferThxRequestData
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IProfileRepository
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ProfileItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.UserIdWithNameItem
 
 @Inject
 class ProfileRepository(
@@ -53,5 +55,31 @@ class ProfileRepository(
         return withContext(Dispatchers.IO) {
             corpPortalApi.getOrders().carts?.size
         } ?: 0
+    }
+
+    override suspend fun getUserIdsWithNames(): List<UserIdWithNameItem> {
+        return corpPortalApi.getUserIds().users?.map {
+            UserIdWithNameItem(
+                userId = it.userId,
+                fullName = it.fullName,
+            )
+        } ?: listOf()
+    }
+
+    override suspend fun getGiftBalance(): Int {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getMyInfo().user.giftBalance
+        }
+    }
+
+    override suspend fun transferThx(userId: Int, amount: Int) {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.transferThx(
+                TransferThxRequestData(
+                    userId = userId,
+                    amount = amount,
+                )
+            )
+        }
     }
 }

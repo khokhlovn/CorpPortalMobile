@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen
+package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile
 
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
@@ -19,6 +19,7 @@ fun ProfileScreenContainer(
         viewState = viewState,
         onRefresh = viewModel::getData,
         onLogoutClick = viewModel::onLogoutClick,
+        onBalanceClick = viewModel::onBalanceClick,
         onCartClick = toCart,
         onOrdersHistoryClick = toOrdersHistory,
     )
