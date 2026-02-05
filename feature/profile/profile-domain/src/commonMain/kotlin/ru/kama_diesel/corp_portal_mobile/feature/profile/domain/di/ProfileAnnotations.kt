@@ -4,3 +4,6 @@ import me.tatarka.inject.annotations.Scope
 
 @Scope
 annotation class ProfileScope
+
+@Scope
+annotation class TransferScope

@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen
+package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.ImageOptions
@@ -43,6 +44,7 @@ fun ProfileScreenContent(
     isRefreshing: Boolean,
     isFirstLoading: Boolean,
     onRefresh: () -> Unit,
+    onBalanceClick: () -> Unit,
     onCartClick: () -> Unit,
     onOrdersHistoryClick: () -> Unit,
 ) {
@@ -84,6 +86,7 @@ fun ProfileScreenContent(
                             balance = balance,
                             cartItemsCount = cartItemsCount,
                             ordersCount = ordersCount,
+                            onBalanceClick = onBalanceClick,
                             onCartClick = onCartClick,
                             onOrdersHistoryClick = onOrdersHistoryClick,
                         )
@@ -275,6 +278,7 @@ private fun BalanceAndShopCards(
     balance: Int,
     cartItemsCount: Int,
     ordersCount: Int,
+    onBalanceClick: () -> Unit,
     onCartClick: () -> Unit,
     onOrdersHistoryClick: () -> Unit,
 ) {
@@ -294,6 +298,7 @@ private fun BalanceAndShopCards(
         BalanceCard(
             modifier = Modifier.weight(1f),
             balance = balance,
+            onBalanceClick = onBalanceClick,
         )
     }
 }
@@ -302,6 +307,7 @@ private fun BalanceAndShopCards(
 private fun BalanceCard(
     modifier: Modifier = Modifier,
     balance: Int,
+    onBalanceClick: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -330,15 +336,17 @@ private fun BalanceCard(
                     modifier = Modifier.widthIn(min = 90.dp),
                     text = stringResource(Res.string.balance),
                     fontWeight = FontWeight.Medium,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.scrim,
                 )
                 Text(
+                    modifier = Modifier.clickable {
+                        onBalanceClick()
+                    },
                     text = balance.toString(),
                     fontSize = 12.sp,
                     maxLines = 1,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                    style = TextStyle.Default.copy(textDecoration = TextDecoration.Underline),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
             }
@@ -357,7 +365,6 @@ private fun BalanceCard(
                     modifier = Modifier.widthIn(min = 90.dp),
                     text = stringResource(Res.string.notifications),
                     fontWeight = FontWeight.Medium,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.scrim,
                 )
@@ -365,7 +372,6 @@ private fun BalanceCard(
                     text = balance.toString(),
                     fontSize = 12.sp,
                     maxLines = 1,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
             }
@@ -384,7 +390,6 @@ private fun BalanceCard(
                     modifier = Modifier.widthIn(min = 90.dp),
                     text = stringResource(Res.string.reservations),
                     fontWeight = FontWeight.Medium,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.scrim,
                 )
@@ -392,7 +397,6 @@ private fun BalanceCard(
                     text = balance.toString(),
                     fontSize = 12.sp,
                     maxLines = 1,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
             }
@@ -411,7 +415,6 @@ private fun BalanceCard(
                     modifier = Modifier.widthIn(min = 90.dp),
                     text = stringResource(Res.string.events),
                     fontWeight = FontWeight.Medium,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.scrim,
                 )
@@ -419,7 +422,6 @@ private fun BalanceCard(
                     text = balance.toString(),
                     fontSize = 12.sp,
                     maxLines = 1,
-                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
             }

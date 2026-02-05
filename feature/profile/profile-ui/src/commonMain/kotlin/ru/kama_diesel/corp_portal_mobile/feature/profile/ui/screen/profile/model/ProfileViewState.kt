@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.model
+package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.model
 
 import kotlinx.serialization.Serializable
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ProfileItem

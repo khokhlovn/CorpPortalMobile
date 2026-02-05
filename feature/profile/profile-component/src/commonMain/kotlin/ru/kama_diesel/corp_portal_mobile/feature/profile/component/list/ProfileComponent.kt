@@ -7,7 +7,7 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.model.ProfileItem
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.di.ProfileFlowDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.list.di.ProfileDIComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.list.di.create
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.model.ProfileViewState
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.model.ProfileViewState
 
 class ProfileComponent(
     componentContext: ComponentContext,

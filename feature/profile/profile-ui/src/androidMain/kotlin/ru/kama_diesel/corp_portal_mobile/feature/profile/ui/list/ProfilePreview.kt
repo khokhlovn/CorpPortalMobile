@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ProfileItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.theme.AppTheme
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.ProfileScreen
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.model.ProfileViewState
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.ProfileScreen
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.model.ProfileViewState
 
 @Preview
 @Composable
@@ -36,6 +36,7 @@ private fun ProfileScreenPreview() {
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onRefresh = {},
             onLogoutClick = {},
+            onBalanceClick = {},
             onCartClick = {},
             onOrdersHistoryClick = {},
         )

@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen
+package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.model.ProfileViewState
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.model.ProfileViewState
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.logout_24px
 import ru.kama_diesel.corp_portal_mobile.resources.menu_24px
@@ -23,6 +23,7 @@ fun ProfileScreen(
     viewState: ProfileViewState,
     onLogoutClick: () -> Unit,
     onRefresh: () -> Unit,
+    onBalanceClick: () -> Unit,
     onCartClick: () -> Unit,
     onOrdersHistoryClick: () -> Unit,
 ) {
@@ -79,6 +80,7 @@ fun ProfileScreen(
                 isRefreshing = viewState.isLoading,
                 isFirstLoading = viewState.isFirstLoading,
                 onRefresh = onRefresh,
+                onBalanceClick = onBalanceClick,
                 onCartClick = onCartClick,
                 onOrdersHistoryClick = onOrdersHistoryClick,
             )

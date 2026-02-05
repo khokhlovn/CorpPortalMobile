@@ -1,16 +1,18 @@
-package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen
+package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile
 
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
+import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.di.ProfileScope
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetBalanceUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetCartItemsCountUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetOrdersCountUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetProfileImagePathUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetProfileUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.model.ProfileViewState
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.api.IProfileFlowRouter
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile.model.ProfileViewState
 
 @ProfileScope
 @Inject
@@ -22,7 +24,10 @@ class ProfileViewModel(
     private val getProfileImagePathUseCase: GetProfileImagePathUseCase,
     private val getOrdersCountUseCase: GetOrdersCountUseCase,
     private val initialState: ProfileViewState,
+    routerHolder: RouterHolder<IProfileFlowRouter>,
 ) : BaseStateViewModel<ProfileViewState>() {
+
+    private val router by routerHolder
 
     init {
         getData()
@@ -36,12 +41,8 @@ class ProfileViewModel(
         logoutUseCase()
     }
 
-    fun onCartClick() {
-
-    }
-
-    fun onOrdersHistoryClick() {
-
+    fun onBalanceClick() {
+        router.toTransfer()
     }
 
     private fun getProfileInfo() {
