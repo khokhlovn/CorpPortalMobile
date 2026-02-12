@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.di.ProfileFlowDIComponent
+import ru.kama_diesel.corp_portal_mobile.feature.profile.component.list.BalanceComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.list.ProfileComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.list.TransferComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.api.IProfileFlowRouter
@@ -34,6 +35,12 @@ class ProfileFlowRouter(
                     profileFlowDIComponent = profileFlowDIComponent,
                 )
             )
+            is Configuration.Balance -> Child.Balance(
+                component = BalanceComponent(
+                    componentContext = componentContext,
+                    profileFlowDIComponent = profileFlowDIComponent,
+                )
+            )
             is Configuration.Transfer -> Child.Transfer(
                 component = TransferComponent(
                     componentContext = componentContext,
@@ -45,6 +52,7 @@ class ProfileFlowRouter(
 
     internal sealed interface Child {
         class Profile(val component: ProfileComponent) : Child
+        class Balance(val component: BalanceComponent) : Child
         class Transfer(val component: TransferComponent) : Child
     }
 
@@ -54,7 +62,14 @@ class ProfileFlowRouter(
         data object Profile : Configuration()
 
         @Serializable
+        data object Balance : Configuration()
+
+        @Serializable
         data object Transfer : Configuration()
+    }
+
+    override fun toBalance() {
+        stackNavigation.push(Configuration.Balance)
     }
 
     override fun toTransfer() {
@@ -63,6 +78,10 @@ class ProfileFlowRouter(
 
     override fun back() {
         stackNavigation.pop()
-        (childStack.active.instance as Child.Profile).component.viewModel.getData()
+        when (val instance = childStack.active.instance) {
+            is Child.Balance -> instance.component.viewModel.getData()
+            is Child.Profile -> instance.component.viewModel.getData()
+            is Child.Transfer -> instance.component.viewModel.getData()
+        }
     }
 }

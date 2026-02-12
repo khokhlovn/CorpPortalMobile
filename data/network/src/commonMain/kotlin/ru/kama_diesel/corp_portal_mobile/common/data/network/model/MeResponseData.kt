@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class MeResponseData(
     @SerialName("user")
     var user: UserData,
+    @SerialName("weekly_award")
+    var weeklyAward: Int,
 )
 
 @Serializable

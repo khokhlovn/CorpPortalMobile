@@ -334,7 +334,7 @@ private fun BalanceCard(
                 )
                 Text(
                     modifier = Modifier.widthIn(min = 90.dp),
-                    text = stringResource(Res.string.balance),
+                    text = stringResource(Res.string.balance_count),
                     fontWeight = FontWeight.Medium,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.scrim,

@@ -5,9 +5,12 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.data.network.api.CorpPortalApi
+import ru.kama_diesel.corp_portal_mobile.common.data.network.mapper.DateTimeMapper
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.TransferThxRequestData
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IProfileRepository
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.MeItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ProfileItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.ThxHistoryItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.UserIdWithNameItem
 
 @Inject
@@ -33,18 +36,6 @@ class ProfileRepository(
         }
     }
 
-    override suspend fun getBalance(): Int {
-        return withContext(Dispatchers.IO) {
-            corpPortalApi.getMyInfo().user.balance
-        }
-    }
-
-    override suspend fun getProfileImagePath(): String? {
-        return withContext(Dispatchers.IO) {
-            corpPortalApi.getMyInfo().user.imagePath
-        }
-    }
-
     override suspend fun getCartItemsCount(): Int {
         return withContext(Dispatchers.IO) {
             corpPortalApi.getCartData().cartItems?.sumOf { it.quantity }
@@ -66,12 +57,6 @@ class ProfileRepository(
         } ?: listOf()
     }
 
-    override suspend fun getGiftBalance(): Int {
-        return withContext(Dispatchers.IO) {
-            corpPortalApi.getMyInfo().user.giftBalance
-        }
-    }
-
     override suspend fun transferThx(userId: Int, amount: Int) {
         return withContext(Dispatchers.IO) {
             corpPortalApi.transferThx(
@@ -80,6 +65,46 @@ class ProfileRepository(
                     amount = amount,
                 )
             )
+        }
+    }
+
+    override suspend fun getMyInfo(): MeItem {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getMyInfo().let {
+                MeItem(
+                    userId = it.user.userId,
+                    username = it.user.username,
+                    role = it.user.role,
+                    imagePath = it.user.imagePath,
+                    balance = it.user.balance,
+                    giftBalance = it.user.giftBalance,
+                    weeklyAward = it.weeklyAward,
+                )
+            }
+        }
+    }
+
+    override suspend fun getThxHistory(): List<ThxHistoryItem> {
+        return corpPortalApi.getThxHistory().transactions?.map {
+            ThxHistoryItem(
+                userId = it.userId,
+                transactionId = it.transactionId,
+                description = it.description,
+                date = DateTimeMapper.getFormattedDate(
+                    iso8601Timestamp = it.date,
+                    format = "dd.MM.yyyy HH:mm",
+                ),
+                amount = it.amount,
+                creatorName = it.creatorName,
+                recipientName = it.recipientName,
+                eventId = it.eventId,
+            )
+        } ?: listOf()
+    }
+
+    override suspend fun getWeeklyThx() {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getWeeklyThx()
         }
     }
 }

@@ -6,16 +6,21 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IProfileRepository
 
 @Inject
-class GetProfileImagePathUseCase(
+class TakeAwardUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val profileRepository: IProfileRepository,
 ) {
-    suspend operator fun invoke(): String? {
+    suspend operator fun invoke(): Boolean? {
         return try {
-            profileRepository.getProfileImagePath()
-        } catch (_: ClientRequestException) {
-            logoutUseCase.invoke()
-            null
+            profileRepository.getWeeklyThx()
+            true
+        } catch (e: ClientRequestException) {
+            if (e.response.status.value == 406) {
+                false
+            } else {
+                logoutUseCase.invoke()
+                null
+            }
         } catch (_: Exception) {
             null
         }

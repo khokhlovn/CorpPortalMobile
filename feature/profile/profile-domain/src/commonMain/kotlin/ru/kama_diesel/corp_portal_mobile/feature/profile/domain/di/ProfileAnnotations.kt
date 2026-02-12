@@ -7,3 +7,6 @@ annotation class ProfileScope
 
 @Scope
 annotation class TransferScope
+
+@Scope
+annotation class BalanceScope

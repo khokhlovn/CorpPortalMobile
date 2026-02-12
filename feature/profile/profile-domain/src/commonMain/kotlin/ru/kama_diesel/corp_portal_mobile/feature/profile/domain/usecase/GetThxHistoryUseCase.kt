@@ -4,20 +4,21 @@ import io.ktor.client.plugins.*
 import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IProfileRepository
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.ThxHistoryItem
 
 @Inject
-class GetGiftBalanceUseCase(
+class GetThxHistoryUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val profileRepository: IProfileRepository,
 ) {
-    suspend operator fun invoke(): Int {
+    suspend operator fun invoke(): List<ThxHistoryItem> {
         return try {
-            profileRepository.getGiftBalance()
+            profileRepository.getThxHistory()
         } catch (_: ClientRequestException) {
             logoutUseCase.invoke()
-            0
+            listOf()
         } catch (_: Exception) {
-            0
+            listOf()
         }
     }
 }

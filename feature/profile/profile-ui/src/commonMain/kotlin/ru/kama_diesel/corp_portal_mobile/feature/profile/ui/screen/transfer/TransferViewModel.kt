@@ -2,12 +2,10 @@ package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer
 
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
-import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.di.TransferScope
-import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetGiftBalanceUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetProfileUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetMyInfoUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetUserIdsWithNamesUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.TransferThxUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.api.IProfileFlowRouter
@@ -18,7 +16,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer.mode
 class TransferViewModel(
     private val initialState: TransferViewState,
     private val getUserIdsWithNamesUseCase: GetUserIdsWithNamesUseCase,
-    private val getGiftBalanceUseCase: GetGiftBalanceUseCase,
+    private val getMyInfoUseCase: GetMyInfoUseCase,
     private val transferThxUseCase: TransferThxUseCase,
     routerHolder: RouterHolder<IProfileFlowRouter>,
 ) : BaseStateViewModel<TransferViewState>() {
@@ -110,11 +108,11 @@ class TransferViewModel(
                 )
             }
             val users = getUserIdsWithNamesUseCase().sortedBy { it.fullName }
-            val availableAmount = getGiftBalanceUseCase()
+            val myInfo = getMyInfoUseCase() ?: return@launch
             setState {
                 copy(
                     userName = "",
-                    availableAmount = availableAmount,
+                    availableAmount = myInfo.giftBalance,
                     userIdsWithNames = users,
                     filteredUserIdsWithNames = users,
                     selectedUserId = null,
