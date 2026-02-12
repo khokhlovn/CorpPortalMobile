@@ -78,7 +78,7 @@
     <string name="mobile_details">Моб. телефон:</string>
 
     <string name="profile">Профиль</string>
-    <string name="balance">Баланс:</string>
+    <string name="balance_count">Баланс:</string>
     <string name="notifications">Уведомления:</string>
     <string name="reservations">Бронирования:</string>
     <string name="events">Мероприятия:</string>
@@ -91,6 +91,19 @@
     <string name="submit_application">Подать заявление</string>
     <string name="declare_absence">Заявить об отсутствии</string>
     <string name="contact_ceo">Обратиться к генеральному директору</string>
+
+    <string name="balance">Баланс</string>
+    <string name="gift_count">Доступно для передачи коллегам:</string>
+    <string name="available_count">Доступно для покупок:</string>
+    <string name="weekly_count">Еженедельное начисление:</string>
+    <string name="go_to_shop">Перейти в магазин</string>
+    <string name="transfer_to_balance">Перевести на баланс</string>
+    <string name="till_date">(до %1$s)</string>
+    <string name="recipient_with_name">ФИО адресата:</string>
+    <string name="creator_with_name">ФИО отправителя:</string>
+    <string name="date_with_date">Дата:</string>
+    <string name="weekly_thx_success">Рахматики переведены на баланс</string>
+    <string name="weekly_thx_error">Рахматики уже были забраны</string>
 
     <string name="transfer_thx">Подарить рахматики</string>
     <string name="available_thx">Доступно для передачи:</string>

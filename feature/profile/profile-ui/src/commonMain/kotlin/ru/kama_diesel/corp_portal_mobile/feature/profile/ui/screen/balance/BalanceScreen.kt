@@ -1,4 +1,4 @@
-package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer
+package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.balance
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,27 +8,31 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer.model.TransferViewState
-import ru.kama_diesel.corp_portal_mobile.resources.Res
-import ru.kama_diesel.corp_portal_mobile.resources.arrow_back_24px
-import ru.kama_diesel.corp_portal_mobile.resources.transfer_success
-import ru.kama_diesel.corp_portal_mobile.resources.transfer_thx
+import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.balance.model.BalanceViewState
+import ru.kama_diesel.corp_portal_mobile.resources.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransferScreen(
-    viewState: TransferViewState,
+fun BalanceScreen(
+    viewState: BalanceViewState,
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
-    onUserNameChange: (String) -> Unit,
-    onUserSelect: (Int) -> Unit,
-    onAmountSelect: (Int) -> Unit,
-    onTransferClick: () -> Unit,
+    onQueryChange: (String) -> Unit,
+    onQueryClear: () -> Unit,
+    onSorterChange: (Sorter) -> Unit,
     onHideSnackbar: () -> Unit,
+    onToTransferClick: () -> Unit,
+    onToBalanceClick: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarText = stringResource(Res.string.transfer_success)
-    val isSnackBarShowing by mutableStateOf(viewState.showSuccessSnackbar)
+    val snackbarText = if (viewState.showSuccessSnackbar) {
+        stringResource(Res.string.weekly_thx_success)
+    } else if (viewState.showErrorSnackbar) {
+        stringResource(Res.string.weekly_thx_error)
+    } else {
+        ""
+    }
+    val isSnackBarShowing by mutableStateOf(viewState.showSuccessSnackbar || viewState.showErrorSnackbar)
     if (isSnackBarShowing) {
         LaunchedEffect(isSnackBarShowing) {
             snackbarHostState.showSnackbar(snackbarText)
@@ -40,7 +44,7 @@ fun TransferScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(Res.string.transfer_thx))
+                    Text(text = stringResource(Res.string.balance))
                 },
                 navigationIcon = {
                     IconButton(
@@ -64,18 +68,22 @@ fun TransferScreen(
                 .fillMaxSize()
                 .padding(paddingValues = paddingValues),
         ) {
-            TransferScreenContent(
-                amount = viewState.amount,
-                availableAmount = viewState.availableAmount,
-                selectedUserId = viewState.selectedUserId,
-                userName = viewState.userName,
-                filteredUserIdsWithNames = viewState.filteredUserIdsWithNames,
+            BalanceScreenContent(
+                balance = viewState.balance,
+                giftBalance = viewState.giftBalance,
+                weeklyAward = viewState.weeklyAward,
+                endOfWeekDate = viewState.endOfWeekDate,
+                fullName = viewState.fullName,
+                filteredHistoryEvents = viewState.filteredHistoryEvents,
+                query = viewState.query,
+                selectedSorter = viewState.selectedSorter,
                 isRefreshing = viewState.isLoading,
                 onRefresh = onRefresh,
-                onUserNameChange = onUserNameChange,
-                onUserSelect = onUserSelect,
-                onAmountSelect = onAmountSelect,
-                onTransferClick = onTransferClick,
+                onQueryChange = onQueryChange,
+                onQueryClear = onQueryClear,
+                onSorterChange = onSorterChange,
+                onToTransferClick = onToTransferClick,
+                onToBalanceClick = onToBalanceClick,
             )
         }
     }

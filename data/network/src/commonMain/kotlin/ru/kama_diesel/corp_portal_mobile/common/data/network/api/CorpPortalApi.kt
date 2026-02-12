@@ -148,4 +148,12 @@ class CorpPortalApi(
             setBody(body = transferThxRequestData)
         }
     }
+
+    suspend fun getThxHistory(): ThxHistoryResponseData {
+        return httpClient.get("thx_history").body()
+    }
+
+    suspend fun getWeeklyThx(): HttpResponse {
+        return httpClient.post("get_weekly_thx")
+    }
 }
