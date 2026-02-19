@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 @Composable
 fun BalanceScreenContainer(
     viewModel: BalanceViewModel,
+    toShop: () -> Unit,
 ) {
     val viewState by viewModel.viewState.collectAsState()
 
@@ -20,5 +21,6 @@ fun BalanceScreenContainer(
         onHideSnackbar = viewModel::onHideSnackbar,
         onToTransferClick = viewModel::onToTransferClick,
         onToBalanceClick = viewModel::onToBalanceClick,
+        toShop = toShop,
     )
 }

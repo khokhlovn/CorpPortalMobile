@@ -34,6 +34,7 @@ private fun BalanceScreenPreview() {
             onHideSnackbar = {},
             onToTransferClick = {},
             onToBalanceClick = {},
+            toShop = {},
         )
     }
 }

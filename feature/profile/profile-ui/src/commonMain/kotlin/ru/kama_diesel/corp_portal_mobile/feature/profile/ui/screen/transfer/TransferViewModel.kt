@@ -7,6 +7,7 @@ import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.di.TransferScope
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetMyInfoUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.GetUserIdsWithNamesUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.TransferThxCeoUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.domain.usecase.TransferThxUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.api.IProfileFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer.model.TransferViewState
@@ -18,6 +19,7 @@ class TransferViewModel(
     private val getUserIdsWithNamesUseCase: GetUserIdsWithNamesUseCase,
     private val getMyInfoUseCase: GetMyInfoUseCase,
     private val transferThxUseCase: TransferThxUseCase,
+    private val transferThxCeoUseCase: TransferThxCeoUseCase,
     routerHolder: RouterHolder<IProfileFlowRouter>,
 ) : BaseStateViewModel<TransferViewState>() {
 
@@ -63,6 +65,23 @@ class TransferViewModel(
         }
     }
 
+    fun onAmountSelectCeo(amount: String) {
+        if (amount.isEmpty()) {
+            setState {
+                copy(
+                    amount = null,
+                )
+            }
+        } else {
+            val amountInt = amount.toIntOrNull() ?: return
+            setState {
+                copy(
+                    amount = amountInt,
+                )
+            }
+        }
+    }
+
     fun onTransferClick() {
         val userId = currentState.selectedUserId
         val amount = currentState.amount
@@ -75,12 +94,43 @@ class TransferViewModel(
                     )
                 }
 
-                val isTransferThxSuccess = transferThxUseCase(userId = userId, amount = amount)
+                val error = transferThxUseCase(userId = userId, amount = amount)
 
                 setState {
                     copy(
                         isLoading = false,
-                        showSuccessSnackbar = isTransferThxSuccess,
+                        showSuccessSnackbar = error != "",
+                        error = error,
+                        userName = "",
+                        amount = null,
+                        selectedUserId = null,
+                    )
+                }
+            }
+
+            getData()
+        }
+    }
+
+    fun onTransferCeoClick() {
+        val userId = currentState.selectedUserId
+        val amount = currentState.amount
+        val availableAmount = currentState.availableAmount
+        if (userId != null && amount != null && amount <= availableAmount) {
+            coroutineScope.launch {
+                setState {
+                    copy(
+                        isLoading = true,
+                    )
+                }
+
+                val error = transferThxCeoUseCase(userId = userId, amount = amount)
+
+                setState {
+                    copy(
+                        isLoading = false,
+                        showSuccessSnackbar = error != "",
+                        error = error,
                         userName = "",
                         amount = null,
                         selectedUserId = null,
@@ -96,6 +146,7 @@ class TransferViewModel(
         setState {
             copy(
                 showSuccessSnackbar = false,
+                error = "",
             )
         }
     }
@@ -112,6 +163,7 @@ class TransferViewModel(
             setState {
                 copy(
                     userName = "",
+                    role = myInfo.role,
                     availableAmount = myInfo.giftBalance,
                     userIdsWithNames = users,
                     filteredUserIdsWithNames = users,

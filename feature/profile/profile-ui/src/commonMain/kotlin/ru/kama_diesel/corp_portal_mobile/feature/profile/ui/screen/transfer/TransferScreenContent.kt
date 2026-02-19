@@ -31,6 +31,7 @@ import ru.kama_diesel.corp_portal_mobile.resources.*
 fun TransferScreenContent(
     amount: Int?,
     availableAmount: Int,
+    role: Int,
     selectedUserId: Int?,
     userName: String,
     filteredUserIdsWithNames: List<UserIdWithNameItem>,
@@ -39,7 +40,9 @@ fun TransferScreenContent(
     onUserNameChange: (String) -> Unit,
     onUserSelect: (Int) -> Unit,
     onAmountSelect: (Int) -> Unit,
+    onAmountSelectCeo: (String) -> Unit,
     onTransferClick: () -> Unit,
+    onTransferCeoClick: () -> Unit,
 ) {
     val state = rememberPullToRefreshState()
 
@@ -153,107 +156,127 @@ fun TransferScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            var amountExpanded by remember { mutableStateOf(false) }
-            ExposedDropdownMenuBox(
-                modifier = Modifier.fillMaxWidth(),
-                expanded = amountExpanded,
-                onExpandedChange = {
-                    amountExpanded = !amountExpanded
-                    if (!amountExpanded) {
-                        focusManager.clearFocus()
-                    }
-                }
-            ) {
+            if (role == 41 || role == 42) {
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth()
-                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                    value = when (amount) {
-                        1 -> {
-                            stringResource(Res.string.amount_thx_one)
-                        }
-
-                        2 -> {
-                            stringResource(Res.string.amount_thx_two)
-                        }
-
-                        3 -> {
-                            stringResource(Res.string.amount_thx_three)
-                        }
-
-                        else -> {
-                            ""
-                        }
-                    },
-                    onValueChange = onUserNameChange,
-                    trailingIcon = {
-                        TrailingIcon(expanded = userExpanded)
-                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    value = amount?.toString() ?: "",
+                    onValueChange = onAmountSelectCeo,
                     textStyle = TextStyle(fontSize = 14.sp),
                     singleLine = true,
-                    readOnly = true,
                     colors = OutlinedTextFieldDefaults.colors().copy(
                         focusedTextColor = MaterialTheme.colorScheme.scrim,
                         unfocusedTextColor = MaterialTheme.colorScheme.scrim,
                     ),
-                    label = { Text(text = stringResource(Res.string.select_amount_thx), fontSize = 14.sp) },
+                    supportingText = { if (role == 42) Text(text = stringResource(Res.string.amount_limit_hint), fontSize = 12.sp) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done,
+                    ),
+                    label = { Text(text = stringResource(Res.string.enter_amount_thx), fontSize = 14.sp) },
                 )
-
-                ExposedDropdownMenu(
+            } else {
+                var amountExpanded by remember { mutableStateOf(false) }
+                ExposedDropdownMenuBox(
+                    modifier = Modifier.fillMaxWidth(),
                     expanded = amountExpanded,
-                    containerColor = MaterialTheme.colorScheme.inverseSurface,
-                    onDismissRequest = {
-                        amountExpanded = false
-                        focusManager.clearFocus()
+                    onExpandedChange = {
+                        amountExpanded = !amountExpanded
+                        if (!amountExpanded) {
+                            focusManager.clearFocus()
+                        }
                     }
                 ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(Res.string.amount_thx_one),
-                                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.scrim,
-                            )
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth()
+                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                        value = when (amount) {
+                            1 -> {
+                                stringResource(Res.string.amount_thx_one)
+                            }
+
+                            2 -> {
+                                stringResource(Res.string.amount_thx_two)
+                            }
+
+                            3 -> {
+                                stringResource(Res.string.amount_thx_three)
+                            }
+
+                            else -> {
+                                ""
+                            }
                         },
-                        onClick = {
+                        onValueChange = onUserNameChange,
+                        trailingIcon = {
+                            TrailingIcon(expanded = userExpanded)
+                        },
+                        textStyle = TextStyle(fontSize = 14.sp),
+                        singleLine = true,
+                        readOnly = true,
+                        colors = OutlinedTextFieldDefaults.colors().copy(
+                            focusedTextColor = MaterialTheme.colorScheme.scrim,
+                            unfocusedTextColor = MaterialTheme.colorScheme.scrim,
+                        ),
+                        label = { Text(text = stringResource(Res.string.select_amount_thx), fontSize = 14.sp) },
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = amountExpanded,
+                        containerColor = MaterialTheme.colorScheme.inverseSurface,
+                        onDismissRequest = {
                             amountExpanded = false
                             focusManager.clearFocus()
-                            onAmountSelect(1)
-                        },
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(Res.string.amount_thx_two),
-                                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.scrim,
-                            )
-                        },
-                        onClick = {
-                            amountExpanded = false
-                            focusManager.clearFocus()
-                            onAmountSelect(2)
-                        },
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(Res.string.amount_thx_three),
-                                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.scrim,
-                            )
-                        },
-                        onClick = {
-                            amountExpanded = false
-                            focusManager.clearFocus()
-                            onAmountSelect(3)
-                        },
-                    )
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = stringResource(Res.string.amount_thx_one),
+                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.scrim,
+                                )
+                            },
+                            onClick = {
+                                amountExpanded = false
+                                focusManager.clearFocus()
+                                onAmountSelect(1)
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = stringResource(Res.string.amount_thx_two),
+                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.scrim,
+                                )
+                            },
+                            onClick = {
+                                amountExpanded = false
+                                focusManager.clearFocus()
+                                onAmountSelect(2)
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = stringResource(Res.string.amount_thx_three),
+                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.scrim,
+                                )
+                            },
+                            onClick = {
+                                amountExpanded = false
+                                focusManager.clearFocus()
+                                onAmountSelect(3)
+                            },
+                        )
+                    }
                 }
             }
 
@@ -262,8 +285,16 @@ fun TransferScreenContent(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 shape = ShapeDefaults.Medium,
-                enabled = !isRefreshing && amount != null && amount <= availableAmount && selectedUserId != null,
-                onClick = onTransferClick,
+                enabled = !isRefreshing && amount != null && amount <= availableAmount && selectedUserId != null
+                        && (role != 42 || (role == 42 && amount <= 50)),
+                onClick = {
+                    focusManager.clearFocus()
+                    if (role == 41 || role == 42) {
+                        onTransferCeoClick()
+                    } else {
+                        onTransferClick()
+                    }
+                },
             ) {
                 Text(
                     text = if (selectedUserId == null) {
@@ -272,6 +303,8 @@ fun TransferScreenContent(
                         stringResource(Res.string.amount_not_selected)
                     } else if (amount > availableAmount) {
                         stringResource(Res.string.amount_is_more)
+                    } else if (role == 42 && amount > 50) {
+                        stringResource(Res.string.amount_limit)
                     } else {
                         stringResource(Res.string.transfer)
                     }

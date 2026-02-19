@@ -57,14 +57,25 @@ class ProfileRepository(
         } ?: listOf()
     }
 
-    override suspend fun transferThx(userId: Int, amount: Int) {
+    override suspend fun transferThx(userId: Int, amount: Int): String? {
         return withContext(Dispatchers.IO) {
             corpPortalApi.transferThx(
                 TransferThxRequestData(
                     userId = userId,
                     amount = amount,
                 )
-            )
+            ).error
+        }
+    }
+
+    override suspend fun transferThxCeo(userId: Int, amount: Int): String? {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.transferThxCeo(
+                TransferThxRequestData(
+                    userId = userId,
+                    amount = amount,
+                )
+            ).error
         }
     }
 

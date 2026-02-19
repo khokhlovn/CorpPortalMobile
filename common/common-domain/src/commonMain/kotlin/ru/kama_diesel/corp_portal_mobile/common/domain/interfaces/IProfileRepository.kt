@@ -10,7 +10,8 @@ interface IProfileRepository {
     suspend fun getCartItemsCount(): Int
     suspend fun getOrdersCount(): Int
     suspend fun getUserIdsWithNames(): List<UserIdWithNameItem>
-    suspend fun transferThx(userId: Int, amount: Int)
+    suspend fun transferThx(userId: Int, amount: Int): String?
+    suspend fun transferThxCeo(userId: Int, amount: Int): String?
     suspend fun getMyInfo(): MeItem
     suspend fun getThxHistory(): List<ThxHistoryItem>
     suspend fun getWeeklyThx()

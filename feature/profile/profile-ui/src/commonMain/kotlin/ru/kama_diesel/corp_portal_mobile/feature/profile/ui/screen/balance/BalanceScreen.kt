@@ -23,6 +23,7 @@ fun BalanceScreen(
     onHideSnackbar: () -> Unit,
     onToTransferClick: () -> Unit,
     onToBalanceClick: () -> Unit,
+    toShop: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarText = if (viewState.showSuccessSnackbar) {
@@ -38,6 +39,9 @@ fun BalanceScreen(
             snackbarHostState.showSnackbar(snackbarText)
             onHideSnackbar()
         }
+    }
+    var hintsVisible by remember {
+        mutableStateOf(false)
     }
 
     Scaffold(
@@ -59,6 +63,20 @@ fun BalanceScreen(
                 },
             )
         },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { hintsVisible = !hintsVisible },
+            ) {
+                Icon(
+                    painter = if (hintsVisible) {
+                        painterResource(Res.drawable.close_24px)
+                    } else {
+                        painterResource(Res.drawable.info_i_24px)
+                    },
+                    contentDescription = null,
+                )
+            }
+        },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
@@ -78,12 +96,14 @@ fun BalanceScreen(
                 query = viewState.query,
                 selectedSorter = viewState.selectedSorter,
                 isRefreshing = viewState.isLoading,
+                hintsVisible = hintsVisible,
                 onRefresh = onRefresh,
                 onQueryChange = onQueryChange,
                 onQueryClear = onQueryClear,
                 onSorterChange = onSorterChange,
                 onToTransferClick = onToTransferClick,
                 onToBalanceClick = onToBalanceClick,
+                toShop = toShop,
             )
         }
     }
