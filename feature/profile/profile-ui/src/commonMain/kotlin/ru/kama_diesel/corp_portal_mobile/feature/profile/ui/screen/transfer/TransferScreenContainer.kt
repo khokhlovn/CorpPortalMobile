@@ -17,7 +17,9 @@ fun TransferScreenContainer(
         onUserNameChange = viewModel::onUserNameChange,
         onUserSelect = viewModel::onUserSelect,
         onAmountSelect = viewModel::onAmountSelect,
+        onAmountSelectCeo = viewModel::onAmountSelectCeo,
         onTransferClick = viewModel::onTransferClick,
+        onTransferCeoClick = viewModel::onTransferCeoClick,
         onHideSnackbar = viewModel::onHideSnackbar,
     )
 }

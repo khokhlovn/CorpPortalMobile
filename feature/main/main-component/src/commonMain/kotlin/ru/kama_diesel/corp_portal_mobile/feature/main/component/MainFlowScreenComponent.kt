@@ -52,6 +52,7 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
                     drawerState = drawerState,
                     profileFlowComponent = page.component,
                     toCart = mainFlowComponent.router::toCart,
+                    toShop = mainFlowComponent.router::toShop,
                     toOrdersHistory = mainFlowComponent.router::toOrdersHistory,
                 )
 

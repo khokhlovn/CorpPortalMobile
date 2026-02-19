@@ -16,6 +16,7 @@ fun ProfileFlowScreenComponent(
     drawerState: DrawerState,
     profileFlowComponent: ProfileFlowComponent,
     toCart: () -> Unit,
+    toShop: () -> Unit,
     toOrdersHistory: () -> Unit,
 ) {
     val childStack by profileFlowComponent.router.childStack.subscribeAsState()
@@ -36,6 +37,7 @@ fun ProfileFlowScreenComponent(
             is ProfileFlowRouter.Child.Balance -> {
                 BalanceScreenContainer(
                     viewModel = child.component.viewModel,
+                    toShop = toShop,
                 )
             }
             is ProfileFlowRouter.Child.Transfer -> {

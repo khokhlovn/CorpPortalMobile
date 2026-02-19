@@ -23,11 +23,17 @@ fun TransferScreen(
     onUserNameChange: (String) -> Unit,
     onUserSelect: (Int) -> Unit,
     onAmountSelect: (Int) -> Unit,
+    onAmountSelectCeo: (String) -> Unit,
     onTransferClick: () -> Unit,
+    onTransferCeoClick: () -> Unit,
     onHideSnackbar: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarText = stringResource(Res.string.transfer_success)
+    val snackbarText = if (viewState.error == "OK") {
+        stringResource(Res.string.transfer_success)
+    } else {
+        viewState.error
+    }
     val isSnackBarShowing by mutableStateOf(viewState.showSuccessSnackbar)
     if (isSnackBarShowing) {
         LaunchedEffect(isSnackBarShowing) {
@@ -67,6 +73,7 @@ fun TransferScreen(
             TransferScreenContent(
                 amount = viewState.amount,
                 availableAmount = viewState.availableAmount,
+                role = viewState.role,
                 selectedUserId = viewState.selectedUserId,
                 userName = viewState.userName,
                 filteredUserIdsWithNames = viewState.filteredUserIdsWithNames,
@@ -75,7 +82,9 @@ fun TransferScreen(
                 onUserNameChange = onUserNameChange,
                 onUserSelect = onUserSelect,
                 onAmountSelect = onAmountSelect,
+                onAmountSelectCeo = onAmountSelectCeo,
                 onTransferClick = onTransferClick,
+                onTransferCeoClick = onTransferCeoClick,
             )
         }
     }

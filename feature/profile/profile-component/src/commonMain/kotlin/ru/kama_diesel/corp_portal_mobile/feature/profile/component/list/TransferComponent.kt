@@ -19,11 +19,13 @@ class TransferComponent(
             amount = null,
             availableAmount = 0,
             selectedUserId = null,
+            role = 999,
             userName = "",
             userIdsWithNames = listOf(),
             filteredUserIdsWithNames = listOf(),
             isLoading = true,
             showSuccessSnackbar = false,
+            error = "",
         ),
         deserialization = TransferViewState.serializer(),
         serialization = TransferViewState.serializer()

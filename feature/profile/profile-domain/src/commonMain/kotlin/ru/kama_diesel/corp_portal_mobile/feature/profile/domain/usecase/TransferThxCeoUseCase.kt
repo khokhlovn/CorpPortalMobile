@@ -9,16 +9,16 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IProfileRepository
 
 @Inject
-class TransferThxUseCase(
+class TransferThxCeoUseCase(
     private val logoutUseCase: ILogoutUseCase,
     private val profileRepository: IProfileRepository,
 ) {
     suspend operator fun invoke(userId: Int, amount: Int): String {
         return try {
-            val error = profileRepository.transferThx(userId = userId, amount = amount)
+            val error = profileRepository.transferThxCeo(userId = userId, amount = amount)
             error ?: "OK"
         } catch (exception: ClientRequestException) {
-            if (exception.response.status.value == 404) {
+            if (exception.response.status.value == 404 || exception.response.status.value == 403) {
                 val response = exception.response.bodyAsText()
                 val jsonMap = Json.parseToJsonElement(response)
                     .jsonObject

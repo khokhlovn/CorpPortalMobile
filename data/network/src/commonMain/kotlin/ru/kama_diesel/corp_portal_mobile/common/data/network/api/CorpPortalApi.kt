@@ -142,11 +142,18 @@ class CorpPortalApi(
         return httpClient.get("user_ids").body()
     }
 
-    suspend fun transferThx(transferThxRequestData: TransferThxRequestData): HttpResponse {
+    suspend fun transferThx(transferThxRequestData: TransferThxRequestData): TransferThxResponseData {
         return httpClient.post("transfer_thx") {
             contentType(type = ContentType.Application.Json)
             setBody(body = transferThxRequestData)
-        }
+        }.body()
+    }
+
+    suspend fun transferThxCeo(transferThxRequestData: TransferThxRequestData): TransferThxResponseData {
+        return httpClient.post("transfer_thx_by_ceo") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = transferThxRequestData)
+        }.body()
     }
 
     suspend fun getThxHistory(): ThxHistoryResponseData {

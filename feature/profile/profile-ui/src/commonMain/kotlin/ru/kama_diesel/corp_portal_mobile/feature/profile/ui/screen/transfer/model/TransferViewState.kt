@@ -7,10 +7,12 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.model.UserIdWithNameItem
 data class TransferViewState(
     val selectedUserId: Int?,
     val userName: String,
+    val role: Int,
     val amount: Int?,
     val availableAmount: Int,
     val userIdsWithNames: List<UserIdWithNameItem>,
     val filteredUserIdsWithNames: List<UserIdWithNameItem>,
     val isLoading: Boolean,
     val showSuccessSnackbar: Boolean,
+    val error: String,
 )
