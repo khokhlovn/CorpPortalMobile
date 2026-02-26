@@ -28,6 +28,7 @@ fun MainScreen(
     onTopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
     onProfileClick: () -> Unit,
+    onInformationClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -75,6 +76,14 @@ fun MainScreen(
                         }
                     }
                 },
+                onInformationClick = {
+                    onInformationClick()
+                    scope.launch {
+                        drawerState.apply {
+                            close()
+                        }
+                    }
+                },
             )
         },
         scrimColor = Color.Transparent,
@@ -92,6 +101,7 @@ fun MainScreen(
                                         2 -> stringResource(Res.string.shop)
                                         3 -> stringResource(Res.string.top_workers)
                                         4 -> stringResource(Res.string.phone_directory)
+                                        5 -> stringResource(Res.string.information)
                                         else -> ""
                                     },
                                 autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),

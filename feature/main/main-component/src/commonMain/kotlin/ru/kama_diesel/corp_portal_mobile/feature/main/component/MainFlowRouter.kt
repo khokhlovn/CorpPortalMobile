@@ -72,6 +72,8 @@ internal class MainFlowRouter(
                     mainFlowDIComponent.profileComponentDependencies
                 )
             )
+
+            Configuration.Information -> PagesChild.InformationFlow
         }
     }
 
@@ -82,6 +84,7 @@ internal class MainFlowRouter(
         data class PhoneDirectoryFlow(val component: PhoneDirectoryFlowComponent) : PagesChild
         data class TopFlow(val component: TopFlowComponent) : PagesChild
         data class ProfileFlow(val component: ProfileFlowComponent) : PagesChild
+        data object InformationFlow : PagesChild
     }
 
     @Serializable
@@ -104,6 +107,9 @@ internal class MainFlowRouter(
 
         @Serializable
         data object Profile : Configuration()
+
+        @Serializable
+        data object Information : Configuration()
     }
 
     override fun toArticles() {
@@ -145,6 +151,12 @@ internal class MainFlowRouter(
     override fun toTop() {
         pagesNavigation.clear()
         pagesNavigation.setItems { items -> items.plus(Configuration.Top) }
+        pagesNavigation.selectFirst()
+    }
+
+    override fun toInformation() {
+        pagesNavigation.clear()
+        pagesNavigation.setItems { items -> items.plus(Configuration.Information) }
         pagesNavigation.selectFirst()
     }
 

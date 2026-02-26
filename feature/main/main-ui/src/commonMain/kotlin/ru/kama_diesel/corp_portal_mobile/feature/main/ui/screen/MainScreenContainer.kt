@@ -19,6 +19,7 @@ fun MainScreenContainer(
         onShopClick = viewModel::onShopClick,
         onTopClick = viewModel::onTopClick,
         onPhoneDirectoryClick = viewModel::onPhoneDirectoryClick,
-        onProfileClick = viewModel::onProfileClick
+        onProfileClick = viewModel::onProfileClick,
+        onInformationClick = viewModel::onInformationClick,
     )
 }

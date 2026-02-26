@@ -84,3 +84,7 @@ include("feature:reservation:reservation-component")
 include("feature:reservation:reservation-data")
 include("feature:reservation:reservation-domain")
 include("feature:reservation:reservation-ui")
+
+include("feature:information:information-component")
+include("feature:information:information-domain")
+include("feature:information:information-ui")

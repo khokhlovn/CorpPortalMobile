@@ -40,6 +40,10 @@ class MainViewModel(
         router.toProfile()
     }
 
+    fun onInformationClick() {
+        router.toInformation()
+    }
+
     fun onLogoutClick() {
         logoutUseCase()
     }

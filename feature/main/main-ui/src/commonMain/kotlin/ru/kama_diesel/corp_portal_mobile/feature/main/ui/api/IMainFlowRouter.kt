@@ -10,5 +10,6 @@ interface IMainFlowRouter : IRouter {
     fun toOrdersHistory()
     fun toPhoneDirectory()
     fun toTop()
+    fun toInformation()
     fun toProfile()
 }
