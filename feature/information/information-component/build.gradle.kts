@@ -19,28 +19,7 @@ kotlin {
             kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
         commonMain.dependencies {
-            implementation(projects.feature.main.mainUi)
-            implementation(projects.feature.main.mainDomain)
-
-            implementation(projects.feature.articles.articlesComponent)
-            implementation(projects.feature.articles.articlesDomain)
-
-            implementation(projects.feature.shop.shopComponent)
-            implementation(projects.feature.shop.shopDomain)
-
-            implementation(projects.feature.phoneDirectory.phoneDirectoryComponent)
-            implementation(projects.feature.phoneDirectory.phoneDirectoryDomain)
-
-            implementation(projects.feature.profile.profileComponent)
-            implementation(projects.feature.profile.profileDomain)
-
-            implementation(projects.feature.top.topComponent)
-            implementation(projects.feature.top.topDomain)
-
-            implementation(projects.feature.reservation.reservationComponent)
-            implementation(projects.feature.reservation.reservationDomain)
-
-            implementation(projects.feature.information.informationComponent)
+            implementation(projects.feature.information.informationUi)
             implementation(projects.feature.information.informationDomain)
 
             implementation(projects.common.commonComponent)
@@ -51,12 +30,14 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
             implementation(libs.kotlin.inject.runtime)
-            implementation(libs.ktor.client.core)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.components.resources)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
     }
 }

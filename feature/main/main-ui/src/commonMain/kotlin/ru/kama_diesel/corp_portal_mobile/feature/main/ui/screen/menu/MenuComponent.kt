@@ -21,6 +21,7 @@ internal fun MenuComponent(
     onShopClick: () -> Unit,
     onTopClick: () -> Unit,
     onPhoneDirectoryClick: () -> Unit,
+    onInformationClick: () -> Unit,
 ) {
     ModalDrawerSheet(
         modifier = Modifier.requiredWidth(200.dp),
@@ -107,6 +108,21 @@ internal fun MenuComponent(
             shape = RectangleShape,
             selected = selectedIndex == 4,
             onClick = onPhoneDirectoryClick,
+        )
+
+        NavigationDrawerItem(
+            label = {
+                Text(text = stringResource(Res.string.information))
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(Res.drawable.info_24px),
+                    contentDescription = null
+                )
+            },
+            shape = RectangleShape,
+            selected = selectedIndex == 5,
+            onClick = onInformationClick,
         )
     }
 }

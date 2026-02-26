@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import ru.kama_diesel.corp_portal_mobile.feature.articles.component.ArticlesFlowScreenComponent
+import ru.kama_diesel.corp_portal_mobile.feature.information.component.InformationFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.main.ui.screen.MainScreenContainer
 import ru.kama_diesel.corp_portal_mobile.feature.phoneDirectory.component.PhoneDirectoryFlowScreenComponent
 import ru.kama_diesel.corp_portal_mobile.feature.profile.component.ProfileFlowScreenComponent
@@ -27,6 +28,7 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
             is MainFlowRouter.PagesChild.ShopFlow -> 2
             is MainFlowRouter.PagesChild.TopFlow -> 3
             is MainFlowRouter.PagesChild.PhoneDirectoryFlow -> 4
+            is MainFlowRouter.PagesChild.InformationFlow -> 5
             is MainFlowRouter.PagesChild.ProfileFlow -> 999
             null -> 0
         },
@@ -55,6 +57,8 @@ fun MainFlowScreenComponent(mainFlowComponent: MainFlowComponent) {
                     toShop = mainFlowComponent.router::toShop,
                     toOrdersHistory = mainFlowComponent.router::toOrdersHistory,
                 )
+
+                is MainFlowRouter.PagesChild.InformationFlow -> InformationFlowScreenComponent()
 
                 null -> Unit
             }

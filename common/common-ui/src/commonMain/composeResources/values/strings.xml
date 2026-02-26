@@ -185,4 +185,6 @@
     <string name="reserve">Забронировать</string>
     <string name="from_to_reserve">С %1$s по %2$s</string>
     <string name="confirm">Подтвердить</string>
+
+    <string name="information">Информация</string>
 </resources>
