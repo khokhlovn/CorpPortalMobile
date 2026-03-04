@@ -1,5 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,10 +16,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details.ShopItem
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
-import ru.kama_diesel.corp_portal_mobile.resources.Res
-import ru.kama_diesel.corp_portal_mobile.resources.account_circle_24px
-import ru.kama_diesel.corp_portal_mobile.resources.menu_24px
-import ru.kama_diesel.corp_portal_mobile.resources.shop
+import ru.kama_diesel.corp_portal_mobile.resources.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +70,12 @@ fun ShopListScreen(
                             lineHeight = 20.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onPrimary,
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Image(
+                            modifier = Modifier.size(20.dp),
+                            painter = painterResource(Res.drawable.icon_currency),
+                            contentDescription = null,
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                     }

@@ -1,5 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -244,6 +245,12 @@ fun OrderItemContent(
                     lineHeight = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                Image(
+                    modifier = Modifier.size(16.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
                 )
             }
         }

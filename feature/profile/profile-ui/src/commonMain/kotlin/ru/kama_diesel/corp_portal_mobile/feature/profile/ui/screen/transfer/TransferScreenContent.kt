@@ -1,11 +1,8 @@
 package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.transfer
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -22,6 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.UserIdWithNameItem
 import ru.kama_diesel.corp_portal_mobile.resources.*
@@ -87,6 +85,11 @@ fun TransferScreenContent(
                     style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
+                )
+                Image(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
                 )
             }
 

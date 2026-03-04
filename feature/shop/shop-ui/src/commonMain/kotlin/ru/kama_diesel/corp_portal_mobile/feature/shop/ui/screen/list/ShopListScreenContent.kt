@@ -1,6 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -315,20 +316,30 @@ fun ShopItemContent(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Text(
+                Row(
                     modifier = Modifier
                         .weight(1f)
-                        .wrapContentHeight(align = Alignment.CenterVertically)
                         .fillMaxWidth(),
-                    text = item.price.toString(),
-                    fontSize = 16.sp,
-                    lineHeight = 18.sp,
-                    maxLines = 1,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.inverseOnSurface,
-                )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    Text(
+                        modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically),
+                        text = item.price.toString(),
+                        fontSize = 14.sp,
+                        lineHeight = 16.sp,
+                        maxLines = 1,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                    )
+                    Image(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(Res.drawable.icon_currency),
+                        contentDescription = null,
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .height(28.dp)

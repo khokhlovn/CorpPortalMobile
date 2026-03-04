@@ -1,5 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,10 +30,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.FullScreenImageViewer
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.PagerIndicator
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
-import ru.kama_diesel.corp_portal_mobile.resources.Res
-import ru.kama_diesel.corp_portal_mobile.resources.characteristics
-import ru.kama_diesel.corp_portal_mobile.resources.description
-import ru.kama_diesel.corp_portal_mobile.resources.placeholder
+import ru.kama_diesel.corp_portal_mobile.resources.*
 
 @Composable
 internal fun ShopItemDetailsContent(
@@ -168,12 +166,24 @@ internal fun ShopItemDetailsContent(
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = shopItem.price.toString(),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = shopItem.price.toString(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Image(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(Res.drawable.icon_currency),
+                contentDescription = null,
+            )
+        }
     }
 }

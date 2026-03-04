@@ -66,7 +66,7 @@ private fun CartScreenContentPreview() {
     }
 }
 
-private val shopItemsPreviewData = listOf(
+val shopItemsPreviewData = listOf(
     ShopItem(
         id = 0,
         name = "Ежедневник в кожаной обложке",

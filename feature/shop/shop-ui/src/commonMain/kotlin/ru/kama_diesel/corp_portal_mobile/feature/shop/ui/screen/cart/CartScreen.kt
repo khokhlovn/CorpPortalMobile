@@ -1,8 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,6 +14,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartV
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.arrow_back_24px
 import ru.kama_diesel.corp_portal_mobile.resources.cart
+import ru.kama_diesel.corp_portal_mobile.resources.icon_currency
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +49,6 @@ fun CartScreen(
                 actions = {
                     if (viewState.balance != null) {
                         Text(
-                            modifier = Modifier.padding(end = 16.dp),
                             text = viewState.balance.toString(),
                             maxLines = 1,
                             fontSize = 20.sp,
@@ -57,6 +56,13 @@ fun CartScreen(
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onPrimary,
                         )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Image(
+                            modifier = Modifier.size(20.dp),
+                            painter = painterResource(Res.drawable.icon_currency),
+                            contentDescription = null,
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
                     }
                 }
             )

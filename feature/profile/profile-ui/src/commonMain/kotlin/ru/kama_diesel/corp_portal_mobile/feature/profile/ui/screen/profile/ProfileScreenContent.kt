@@ -1,6 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.profile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -333,7 +334,10 @@ private fun BalanceCard(
                     contentDescription = null,
                 )
                 Text(
-                    modifier = Modifier.widthIn(min = 90.dp),
+                    modifier = Modifier
+                        .widthIn(min = 50.dp)
+                        .fillMaxWidth()
+                        .weight(1f),
                     text = stringResource(Res.string.balance_count),
                     fontWeight = FontWeight.Medium,
                     fontSize = 12.sp,
@@ -348,6 +352,11 @@ private fun BalanceCard(
                     maxLines = 1,
                     style = TextStyle.Default.copy(textDecoration = TextDecoration.Underline),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
+                )
+                Image(
+                    modifier = Modifier.size(12.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
                 )
             }
             Row(

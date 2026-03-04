@@ -73,7 +73,7 @@ private fun ShopListScreenContentPreview() {
     }
 }
 
-private val shopItemsPreviewData = listOf(
+val shopItemsPreviewData = listOf(
     ShopItemUIModel(
         id = 0,
         name = "Ежедневник в кожаной обложке",

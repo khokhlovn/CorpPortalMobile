@@ -1,6 +1,7 @@
 package ru.kama_diesel.corp_portal_mobile.feature.profile.ui.screen.balance
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -282,6 +283,11 @@ private fun BalanceCard(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
+                Image(
+                    modifier = Modifier.size(20.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
+                )
             }
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -305,6 +311,11 @@ private fun BalanceCard(
                     style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
+                )
+                Image(
+                    modifier = Modifier.size(12.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
                 )
                 if (giftBalance > 0) {
                     Text(
@@ -351,6 +362,11 @@ private fun BalanceCard(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
+                Image(
+                    modifier = Modifier.size(12.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
+                )
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
@@ -386,6 +402,11 @@ private fun BalanceCard(
                     style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
+                )
+                Image(
+                    modifier = Modifier.size(12.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
                 )
                 if (weeklyAward > 0) {
                     Text(
@@ -513,7 +534,6 @@ private fun HistoryEventCard(
                 .fillMaxWidth()
                 .padding(all = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             val drawableResource = getIconIdByEventId(eventId = historyEvent.eventId)
             Icon(
@@ -522,6 +542,7 @@ private fun HistoryEventCard(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
             )
+            Spacer(modifier = Modifier.width(12.dp))
 
             Column(
                 modifier = Modifier
@@ -593,12 +614,19 @@ private fun HistoryEventCard(
                     )
                 }
             }
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = historyEvent.amount.toString(),
                 fontSize = 20.sp,
                 style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(Res.drawable.icon_currency),
+                contentDescription = null,
             )
         }
     }

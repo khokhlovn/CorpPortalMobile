@@ -1,5 +1,6 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -180,13 +181,25 @@ fun CartScreenContent(
             }
         }
         if (cartItems.isNotEmpty()) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = totalSum.toString(),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = totalSum.toString(),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Image(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(Res.drawable.icon_currency),
+                    contentDescription = null,
+                )
+            }
             Row(
                 modifier = Modifier
                     .height(72.dp)
@@ -301,20 +314,31 @@ fun CartItemContent(
                     .height(28.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .weight(1f)
-                        .wrapContentHeight(align = Alignment.CenterVertically),
-                    text = (shopItemPrice * cartItem.quantity).toString(),
-                    textAlign = TextAlign.End,
-                    autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),
-                    maxLines = 1,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.inverseOnSurface,
-                )
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .wrapContentHeight(align = Alignment.CenterVertically),
+                        text = (shopItemPrice * cartItem.quantity).toString(),
+                        textAlign = TextAlign.End,
+                        autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),
+                        maxLines = 1,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                    )
+                    Image(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(Res.drawable.icon_currency),
+                        contentDescription = null,
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
