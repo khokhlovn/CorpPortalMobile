@@ -98,7 +98,7 @@ fun ShopItemDetailsDialog(
                             ) {
                                 Text(
                                     text = stringResource(
-                                        resource = if (shopItem.isAvailable) {
+                                        resource = if (shopItem.isActive) {
                                             Res.string.add_cart
                                         } else {
                                             Res.string.order

@@ -301,7 +301,7 @@ fun ShopItemContent(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(
-                    resource = if (item.isAvailable) {
+                    resource = if (item.isActive) {
                         Res.string.in_stock
                     } else {
                         Res.string.to_order
@@ -368,14 +368,14 @@ fun ShopItemContent(
                             shape = ShapeDefaults.Small,
                             contentPadding = PaddingValues(all = 4.dp),
                             onClick = {
-                                if (item.isAvailable) {
+                                if (item.isActive) {
                                     onAddToCartClick()
                                 }
                             },
                         ) {
                             Text(
                                 text = stringResource(
-                                    resource = if (item.isAvailable) {
+                                    resource = if (item.isActive) {
                                         Res.string.add_cart
                                     } else {
                                         Res.string.order
