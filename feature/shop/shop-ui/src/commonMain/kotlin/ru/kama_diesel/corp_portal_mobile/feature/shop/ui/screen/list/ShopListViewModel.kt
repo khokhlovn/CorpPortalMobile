@@ -4,7 +4,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
-import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.ILogoutUseCase
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.di.ShopListScope
@@ -200,8 +199,8 @@ class ShopListViewModel(
                     sortedShopItems = shopItems.filter {
                         when (selectedFilter) {
                             Filter.All -> true
-                            Filter.Available -> it.isAvailable
-                            Filter.NotAvailable -> !it.isAvailable
+                            Filter.Available -> it.isActive
+                            Filter.NotAvailable -> !it.isActive
                         }
                     }.sortedWith(
                         when (selectedSorter) {

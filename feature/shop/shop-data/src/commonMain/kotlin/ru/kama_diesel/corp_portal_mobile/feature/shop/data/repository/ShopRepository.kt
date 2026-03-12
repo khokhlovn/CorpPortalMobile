@@ -21,7 +21,7 @@ class ShopRepository(
 
     override suspend fun getShopList(): List<ShopItem> {
         return withContext(Dispatchers.IO) {
-            corpPortalApi.getShopList().shopItems?.map {
+            corpPortalApi.getShopList().shopItems?.filter { it.isAvailable == true }?.map {
                 ShopItem(
                     id = it.itemId,
                     name = it.name,
