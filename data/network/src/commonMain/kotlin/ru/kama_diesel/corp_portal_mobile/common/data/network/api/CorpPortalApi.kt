@@ -68,10 +68,11 @@ class CorpPortalApi(
         return httpClient.get("tags").body()
     }
 
-    suspend fun getArticleDetails(articleId: String): ArticleDetailsResponseData {
+    suspend fun getArticleDetails(articleId: String, userId: String): ArticleDetailsResponseData {
         return httpClient.get("article") {
             url {
                 parameters.append("post_id", articleId)
+                parameters.append("user_id", userId)
             }
         }.body()
     }

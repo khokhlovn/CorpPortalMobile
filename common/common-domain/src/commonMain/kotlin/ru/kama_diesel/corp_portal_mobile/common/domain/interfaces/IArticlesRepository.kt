@@ -9,7 +9,7 @@ interface IArticlesRepository {
 
     suspend fun getTagsList(): List<TagItem>
 
-    suspend fun getArticleDetails(articleId: String): ArticleDetailsItem
+    suspend fun getArticleDetails(articleId: String, userId: String): ArticleDetailsItem
 
     suspend fun sendComment(postId: String, comment: String, replyTo: Int?)
 

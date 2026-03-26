@@ -63,9 +63,9 @@ class ArticlesRepository(
         }
     }
 
-    override suspend fun getArticleDetails(articleId: String): ArticleDetailsItem {
+    override suspend fun getArticleDetails(articleId: String, userId: String): ArticleDetailsItem {
         return withContext(Dispatchers.IO) {
-            corpPortalApi.getArticleDetails(articleId = articleId).article.let {
+            corpPortalApi.getArticleDetails(articleId = articleId, userId = userId).article.let {
                 ArticleDetailsItem(
                     text = it.text.replace("new_string", "\n"),
                     comments = it.comments?.map { comment ->

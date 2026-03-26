@@ -247,15 +247,15 @@ class ArticlesListViewModel(
                                         } else {
                                             it.copy(
                                                 isLiked = true,
-                                                likesAmount = likesAmount + 1,
+                                                likesAmount = it.likesAmount + 1,
                                             )
                                         }
                                     },
                                     comments = articleDetailsItem.comments.mapKeys {
-                                        if (it.key.commentId.toString() != commentId) {
+                                        if (it.key.commentId.toString() == commentId) {
                                             it.key.copy(
                                                 isLiked = true,
-                                                likesAmount = likesAmount + 1,
+                                                likesAmount = it.key.likesAmount + 1,
                                             )
                                         } else {
                                             it.key
@@ -267,7 +267,7 @@ class ArticlesListViewModel(
                                             } else {
                                                 commentItem.copy(
                                                     isLiked = true,
-                                                    likesAmount = likesAmount + 1,
+                                                    likesAmount = commentItem.likesAmount + 1,
                                                 )
                                             }
                                         }
@@ -364,8 +364,8 @@ class ArticlesListViewModel(
         likesAmount: Int,
     ) {
         coroutineScope.launch {
-            val articleDetailsItem = getArticleDetailsUseCase(articleId = articleId)
             val myUserId = getMyUserIdUseCase()
+            val articleDetailsItem = getArticleDetailsUseCase(articleId = articleId, userId = myUserId.toString())
             setState {
                 copy(
                     dialog = ArticlesListDialog.Details(
