@@ -15,5 +15,7 @@ interface IArticlesRepository {
 
     suspend fun like(postId: String)
 
+    suspend fun commentLike(commentId: String)
+
     suspend fun getMyUserId(): Int
 }

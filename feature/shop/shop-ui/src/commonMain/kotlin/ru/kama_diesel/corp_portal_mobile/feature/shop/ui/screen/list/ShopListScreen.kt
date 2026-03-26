@@ -1,8 +1,20 @@
 package ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -16,7 +28,11 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.details.ShopItem
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopListViewState
-import ru.kama_diesel.corp_portal_mobile.resources.*
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.account_circle_24px
+import ru.kama_diesel.corp_portal_mobile.resources.icon_currency
+import ru.kama_diesel.corp_portal_mobile.resources.menu_24px
+import ru.kama_diesel.corp_portal_mobile.resources.shop
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,7 +145,9 @@ fun ShopListScreen(
                 onCloseClick = onCloseDialogClick,
                 onAddToCartClick = onAddToCartClick,
                 onAddClick = {
-                    onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.plus(1) ?: 0)
+                    if ((cartItem?.quantity ?: 0) < dialog.shopItem.quantity) {
+                        onUpdateQuantityClick(cartItem?.inCartItemId ?: 0,  cartItem?.quantity?.plus(1) ?: 0)
+                    }
                 },
                 onRemoveClick = {
                     onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.minus(1) ?: 0)

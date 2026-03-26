@@ -30,4 +30,6 @@ data class ShopItemData(
     val isAvailable: Boolean? = null,
     @SerialName("is_active")
     val isActive: Boolean? = null,
+    @SerialName("quantity")
+    val quantity: Int,
 )

@@ -4,13 +4,34 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -38,7 +59,13 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartA
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartItemUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.MakingOrderState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.component.ShopItemQuantityComponent
-import ru.kama_diesel.corp_portal_mobile.resources.*
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.delete_24px
+import ru.kama_diesel.corp_portal_mobile.resources.drop_selected
+import ru.kama_diesel.corp_portal_mobile.resources.icon_currency
+import ru.kama_diesel.corp_portal_mobile.resources.make_order
+import ru.kama_diesel.corp_portal_mobile.resources.placeholder
+import ru.kama_diesel.corp_portal_mobile.resources.select_all
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -159,6 +186,7 @@ fun CartScreenContent(
                         shopItemName = shopItem?.name ?: "",
                         shopItemPrice = shopItem?.price ?: 0,
                         shopItemImagePath = shopItem?.imagePaths?.firstOrNull(),
+                        shopItemQuantity = shopItem?.quantity ?: 0,
                         isChecked = cartItem.isChecked,
                         onAddClick = {
                             onUpdateQuantityClick(cartItem.inCartItemId, cartItem.quantity.plus(1))
@@ -239,6 +267,7 @@ fun CartItemContent(
     shopItemName: String,
     shopItemPrice: Int,
     shopItemImagePath: String?,
+    shopItemQuantity: Int,
     isChecked: Boolean,
     onAddClick: () -> Unit,
     onRemoveClick: () -> Unit,
@@ -364,7 +393,8 @@ fun CartItemContent(
                         ShopItemQuantityComponent(
                             modifier = Modifier
                                 .padding(vertical = 4.dp),
-                            quantity = cartItem.quantity,
+                            inCartQuantity = cartItem.quantity,
+                            totalQuantity = shopItemQuantity,
                             onAddClick = onAddClick,
                             onRemoveClick = onRemoveClick,
                             onDeleteClick = onDeleteClick,

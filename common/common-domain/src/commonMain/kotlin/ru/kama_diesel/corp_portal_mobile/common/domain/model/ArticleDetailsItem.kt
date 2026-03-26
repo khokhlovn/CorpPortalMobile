@@ -19,4 +19,6 @@ data class CommentItem(
     val position: String,
     val department: String,
     val imagePath: String?,
+    val isLiked: Boolean,
+    val likesAmount: Int,
 )

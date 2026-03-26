@@ -28,6 +28,8 @@ private fun ArticleDetailsPreview() {
                         position = "Старший мастер",
                         department = "Цех обработки блока цилиндров",
                         imagePath = null,
+                        likesAmount = 0,
+                        isLiked = false
                     )
                 ),
                 comments = mapOf(),
@@ -48,6 +50,7 @@ private fun ArticleDetailsPreview() {
             onChangeRepliesVisibility = {},
             onReplyClick = {},
             onCancelClick = {},
+            onCommentLikeClick = {},
         )
     }
 }

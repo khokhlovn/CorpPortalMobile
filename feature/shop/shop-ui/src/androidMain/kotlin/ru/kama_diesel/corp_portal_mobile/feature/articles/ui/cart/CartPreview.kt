@@ -77,6 +77,7 @@ val shopItemsPreviewData = listOf(
         price = 1234,
         isAvailable = true,
         isActive = true,
+        quantity = 12,
     ),
     ShopItem(
         id = 1,
@@ -88,6 +89,7 @@ val shopItemsPreviewData = listOf(
         price = 1234,
         isAvailable = true,
         isActive = true,
+        quantity = 3,
     ),
     ShopItem(
         id = 2,
@@ -97,7 +99,8 @@ val shopItemsPreviewData = listOf(
         imagePaths = listOf(),
         partNumber = null,
         price = 1234,
-        isAvailable = true,
+        isAvailable = false,
         isActive = true,
+        quantity = 0,
     ),
 )

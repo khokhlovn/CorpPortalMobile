@@ -9,8 +9,8 @@ import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.di.OrdersScope
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.CancelOrderUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetAllShopListUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetOrdersUseCase
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetShopListUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.model.OrderItemUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.model.OrdersViewState
@@ -19,7 +19,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.orders.model.Ord
 @Inject
 class OrdersViewModel(
     private val getOrdersUseCase: GetOrdersUseCase,
-    private val getShopListUseCase: GetShopListUseCase,
+    private val getAllShopListUseCase: GetAllShopListUseCase,
     private val cancelOrderUseCase: CancelOrderUseCase,
     routerHolder: RouterHolder<IShopFlowRouter>,
     private val initialState: OrdersViewState,
@@ -63,7 +63,7 @@ class OrdersViewModel(
     private fun getOrdersData() {
         coroutineScope.launch {
             val orderItems = getOrdersUseCase()
-            val shopItems = getShopListUseCase()
+            val shopItems = getAllShopListUseCase()
             if (orderItems.isEmpty()) {
                 back()
             } else {

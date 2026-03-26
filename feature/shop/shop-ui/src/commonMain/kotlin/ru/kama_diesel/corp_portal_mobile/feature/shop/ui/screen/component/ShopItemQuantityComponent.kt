@@ -27,7 +27,8 @@ import ru.kama_diesel.corp_portal_mobile.resources.remove_24px
 @Composable
 internal fun ShopItemQuantityComponent(
     modifier: Modifier = Modifier,
-    quantity: Int,
+    totalQuantity: Int,
+    inCartQuantity: Int,
     onAddClick: () -> Unit,
     onRemoveClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -52,7 +53,7 @@ internal fun ShopItemQuantityComponent(
                 .fillMaxSize()
                 .wrapContentHeight(align = Alignment.CenterVertically)
                 .weight(1f),
-            text = quantity.toString(),
+            text = inCartQuantity.toString(),
             textAlign = TextAlign.Center,
             autoSize = TextAutoSize.StepBased(maxFontSize = 20.sp),
             lineHeight = 14.sp,
@@ -64,8 +65,15 @@ internal fun ShopItemQuantityComponent(
         Icon(
             modifier = Modifier
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
-                .clickable(onClick = onAddClick),
+                .background(
+                    color = if (inCartQuantity < totalQuantity) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                    shape = CircleShape,
+                )
+                .clickable(enabled = inCartQuantity < totalQuantity, onClick = onAddClick),
             painter = painterResource(Res.drawable.add_24px),
             tint = MaterialTheme.colorScheme.onPrimary,
             contentDescription = null,

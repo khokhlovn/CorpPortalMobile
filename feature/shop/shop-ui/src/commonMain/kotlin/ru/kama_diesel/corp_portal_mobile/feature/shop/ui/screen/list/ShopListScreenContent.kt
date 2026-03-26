@@ -4,7 +4,19 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -13,7 +25,18 @@ import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -44,7 +67,20 @@ import ru.kama_diesel.corp_portal_mobile.common.ui.component.PagerIndicator
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.component.ShopItemQuantityComponent
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
-import ru.kama_diesel.corp_portal_mobile.resources.*
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.add_cart
+import ru.kama_diesel.corp_portal_mobile.resources.all
+import ru.kama_diesel.corp_portal_mobile.resources.by_name
+import ru.kama_diesel.corp_portal_mobile.resources.by_price_decreasing
+import ru.kama_diesel.corp_portal_mobile.resources.by_price_increasing
+import ru.kama_diesel.corp_portal_mobile.resources.icon_currency
+import ru.kama_diesel.corp_portal_mobile.resources.in_stock
+import ru.kama_diesel.corp_portal_mobile.resources.list_alt_24px
+import ru.kama_diesel.corp_portal_mobile.resources.not_available
+import ru.kama_diesel.corp_portal_mobile.resources.order
+import ru.kama_diesel.corp_portal_mobile.resources.placeholder
+import ru.kama_diesel.corp_portal_mobile.resources.shopping_cart_24px
+import ru.kama_diesel.corp_portal_mobile.resources.to_order
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -136,7 +172,9 @@ fun ShopListScreenContent(
                                 onAddToCartClick(shopItem.id)
                             },
                             onAddClick = {
-                                onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.plus(1) ?: 0)
+                                if ((cartItem?.quantity ?: 0) < shopItem.quantity) {
+                                    onUpdateQuantityClick(cartItem?.inCartItemId ?: 0,  cartItem?.quantity?.plus(1) ?: 0)
+                                }
                             },
                             onRemoveClick = {
                                 onUpdateQuantityClick(cartItem?.inCartItemId ?: 0, cartItem?.quantity?.minus(1) ?: 0)
@@ -300,13 +338,11 @@ fun ShopItemContent(
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(
-                    resource = if (item.isActive) {
-                        Res.string.in_stock
-                    } else {
-                        Res.string.to_order
-                    }
-                ),
+                text = if (item.isActive) {
+                    stringResource(Res.string.in_stock, item.quantity)
+                } else {
+                    stringResource(Res.string.not_available)
+                },
                 fontSize = 10.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.outline,
@@ -357,7 +393,8 @@ fun ShopItemContent(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(vertical = 4.dp),
-                            quantity = quantity,
+                            inCartQuantity = quantity,
+                            totalQuantity = item.quantity,
                             onAddClick = onAddClick,
                             onRemoveClick = onRemoveClick,
                             onDeleteClick = onDeleteClick,

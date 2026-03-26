@@ -4,14 +4,30 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,7 +46,13 @@ import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.FullScreenImageViewer
 import ru.kama_diesel.corp_portal_mobile.common.ui.component.PagerIndicator
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
-import ru.kama_diesel.corp_portal_mobile.resources.*
+import ru.kama_diesel.corp_portal_mobile.resources.Res
+import ru.kama_diesel.corp_portal_mobile.resources.characteristics
+import ru.kama_diesel.corp_portal_mobile.resources.description
+import ru.kama_diesel.corp_portal_mobile.resources.icon_currency
+import ru.kama_diesel.corp_portal_mobile.resources.in_stock
+import ru.kama_diesel.corp_portal_mobile.resources.not_available
+import ru.kama_diesel.corp_portal_mobile.resources.placeholder
 
 @Composable
 internal fun ShopItemDetailsContent(
@@ -185,5 +207,18 @@ internal fun ShopItemDetailsContent(
                 contentDescription = null,
             )
         }
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = if (shopItem.quantity > 0) {
+                stringResource(Res.string.in_stock, shopItem.quantity)
+            } else {
+                stringResource(Res.string.not_available)
+            },
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.outline,
+            fontSize = 14.sp,
+        )
     }
 }
