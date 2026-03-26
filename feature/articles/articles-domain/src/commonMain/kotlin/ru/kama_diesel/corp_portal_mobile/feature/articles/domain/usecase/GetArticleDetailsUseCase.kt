@@ -8,7 +8,7 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleDetailsItem
 class GetArticleDetailsUseCase(
     private val articlesRepository: IArticlesRepository,
 ) {
-    suspend operator fun invoke(articleId: String): ArticleDetailsItem {
-        return articlesRepository.getArticleDetails(articleId = articleId)
+    suspend operator fun invoke(articleId: String, userId: String): ArticleDetailsItem {
+        return articlesRepository.getArticleDetails(articleId = articleId, userId = userId)
     }
 }

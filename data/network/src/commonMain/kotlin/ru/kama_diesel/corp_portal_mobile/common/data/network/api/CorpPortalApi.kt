@@ -1,12 +1,37 @@
 package ru.kama_diesel.corp_portal_mobile.common.data.network.api
 
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import me.tatarka.inject.annotations.Inject
-import ru.kama_diesel.corp_portal_mobile.common.data.network.model.*
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.AddToCartRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.ArticleDetailsResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.ArticlesResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.CancelOrderRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.CartResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.CommentLikeRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.DropCartItemRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.LikeRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.LoginRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.MeResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.OrdersListResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.PhoneDirectoryResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.ProfileResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.ReservationListResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.SendCommentRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.ShopListResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.TagsResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.ThxHistoryResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.TopWorkersListResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.TransferThxRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.TransferThxResponseData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.UpdateCartItemRequestData
+import ru.kama_diesel.corp_portal_mobile.common.data.network.model.UserIdsResponseData
 
 @Inject
 class CorpPortalApi(
@@ -43,10 +68,11 @@ class CorpPortalApi(
         return httpClient.get("tags").body()
     }
 
-    suspend fun getArticleDetails(articleId: String): ArticleDetailsResponseData {
+    suspend fun getArticleDetails(articleId: String, userId: String): ArticleDetailsResponseData {
         return httpClient.get("article") {
             url {
                 parameters.append("post_id", articleId)
+                parameters.append("user_id", userId)
             }
         }.body()
     }
@@ -162,5 +188,12 @@ class CorpPortalApi(
 
     suspend fun getWeeklyThx(): HttpResponse {
         return httpClient.post("get_weekly_thx")
+    }
+
+    suspend fun commentLike(commentLikeRequestData: CommentLikeRequestData): HttpResponse {
+        return httpClient.post("comment_like") {
+            contentType(type = ContentType.Application.Json)
+            setBody(body = commentLikeRequestData)
+        }
     }
 }

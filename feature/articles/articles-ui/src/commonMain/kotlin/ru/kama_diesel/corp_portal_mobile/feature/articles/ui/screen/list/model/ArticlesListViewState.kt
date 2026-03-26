@@ -78,5 +78,7 @@ data class CommentUIModel(
     val department: String,
     val imagePath: String?,
     val isExpanded: Boolean,
+    val isLiked: Boolean,
+    val likesAmount: Int,
 )
 

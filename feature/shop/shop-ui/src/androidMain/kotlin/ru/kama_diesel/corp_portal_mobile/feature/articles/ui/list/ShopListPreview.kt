@@ -73,7 +73,7 @@ private fun ShopListScreenContentPreview() {
     }
 }
 
-val shopItemsPreviewData = listOf(
+private val shopItemsPreviewData = listOf(
     ShopItemUIModel(
         id = 0,
         name = "Ежедневник в кожаной обложке",
@@ -84,6 +84,7 @@ val shopItemsPreviewData = listOf(
         price = 1234,
         isAvailable = true,
         isActive = true,
+        quantity = 12,
         cartAddingState = CartAddingState.No,
     ),
     ShopItemUIModel(
@@ -96,6 +97,7 @@ val shopItemsPreviewData = listOf(
         price = 1234,
         isAvailable = true,
         isActive = true,
+        quantity = 12,
         cartAddingState = CartAddingState.No,
     ),
     ShopItemUIModel(
@@ -108,6 +110,7 @@ val shopItemsPreviewData = listOf(
         price = 1234,
         isAvailable = true,
         isActive = true,
+        quantity = 12,
         cartAddingState = CartAddingState.Adding,
     ),
 )

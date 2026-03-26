@@ -11,8 +11,19 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.CommentItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.di.ArticlesListScope
-import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.*
-import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.*
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.CommentLikeUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetArticleDetailsUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetArticlesListUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetMyUserIdUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetTagsUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.LikeUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.SendCommentUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticleDetailsUIModel
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListViewState
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentSendingState
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentUIModel
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.TagItemUIModel
 
 @ArticlesListScope
 @Inject
@@ -22,6 +33,7 @@ class ArticlesListViewModel(
     private val getArticleDetailsUseCase: GetArticleDetailsUseCase,
     private val sendCommentUseCase: SendCommentUseCase,
     private val likeUseCase: LikeUseCase,
+    private val commentLikeUseCase: CommentLikeUseCase,
     private val getMyUserIdUseCase: GetMyUserIdUseCase,
     private val initialState: ArticlesListViewState,
 ) : BaseStateViewModel<ArticlesListViewState>() {
@@ -220,6 +232,55 @@ class ArticlesListViewModel(
         }
     }
 
+    fun onCommentLikeClick(commentId: String) {
+        with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+            coroutineScope.launch {
+                val isLikeSuccess = commentLikeUseCase(commentId = commentId)
+                if (isLikeSuccess) {
+                    setState {
+                        copy(
+                            dialog = copy(
+                                articleDetailsItem = articleDetailsItem.copy(
+                                    originalComments = articleDetailsItem.originalComments.map {
+                                        if (it.commentId.toString() != commentId) {
+                                            it
+                                        } else {
+                                            it.copy(
+                                                isLiked = true,
+                                                likesAmount = it.likesAmount + 1,
+                                            )
+                                        }
+                                    },
+                                    comments = articleDetailsItem.comments.mapKeys {
+                                        if (it.key.commentId.toString() == commentId) {
+                                            it.key.copy(
+                                                isLiked = true,
+                                                likesAmount = it.key.likesAmount + 1,
+                                            )
+                                        } else {
+                                            it.key
+                                        }
+                                    }.mapValues {
+                                        it.value.map { commentItem ->
+                                            if (commentItem.commentId.toString() != commentId) {
+                                                commentItem
+                                            } else {
+                                                commentItem.copy(
+                                                    isLiked = true,
+                                                    likesAmount = commentItem.likesAmount + 1,
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     fun onChangeRepliesVisibility(commentId: Int) {
         with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
             setState {
@@ -303,8 +364,8 @@ class ArticlesListViewModel(
         likesAmount: Int,
     ) {
         coroutineScope.launch {
-            val articleDetailsItem = getArticleDetailsUseCase(articleId = articleId)
             val myUserId = getMyUserIdUseCase()
+            val articleDetailsItem = getArticleDetailsUseCase(articleId = articleId, userId = myUserId.toString())
             setState {
                 copy(
                     dialog = ArticlesListDialog.Details(
@@ -334,6 +395,8 @@ class ArticlesListViewModel(
                                         position = comment.position,
                                         department = comment.department,
                                         imagePath = comment.imagePath,
+                                        likesAmount = comment.likesAmount,
+                                        isLiked = comment.isLiked,
                                         isExpanded = false,
                                     )
                                     commentsWithReplies[rootComment] = listOf()

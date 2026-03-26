@@ -22,6 +22,7 @@ private fun ShopItemDetailsPreview() {
                 price = 1234,
                 isAvailable = true,
                 isActive = true,
+                quantity = 12,
                 cartAddingState = CartAddingState.No,
             ),
             quantity = 0,

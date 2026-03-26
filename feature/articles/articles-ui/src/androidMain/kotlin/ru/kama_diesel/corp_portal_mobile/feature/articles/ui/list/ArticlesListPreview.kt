@@ -41,6 +41,7 @@ private fun ArticlesListScreenPreview() {
             onChangeRepliesVisibility = {},
             onReplyClick = {},
             onCancelReplyClick = {},
+            onCommentLikeClick = {},
         )
     }
 }
@@ -59,7 +60,7 @@ private fun ArticlesListScreenContentPreview() {
     }
 }
 
-private val articleItemsPreviewData = listOf(
+val articleItemsPreviewData = listOf(
     ArticleItem(
         id = "",
         title = "План выполнен!",

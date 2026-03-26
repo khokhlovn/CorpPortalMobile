@@ -25,5 +25,6 @@ fun ArticlesListScreenContainer(viewModel: ArticlesListViewModel) {
         onChangeRepliesVisibility = viewModel::onChangeRepliesVisibility,
         onReplyClick = viewModel::onReplyClick,
         onCancelReplyClick = viewModel::onCancelReplyClick,
+        onCommentLikeClick = viewModel::onCommentLikeClick,
     )
 }

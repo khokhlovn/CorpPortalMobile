@@ -40,6 +40,7 @@ data class ShopItemUIModel(
     val imagePaths: List<String>?,
     val isAvailable: Boolean,
     val isActive: Boolean,
+    val quantity: Int,
     val cartAddingState: CartAddingState,
 )
 

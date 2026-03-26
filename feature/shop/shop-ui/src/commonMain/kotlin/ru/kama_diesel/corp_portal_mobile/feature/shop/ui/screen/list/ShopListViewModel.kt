@@ -7,7 +7,13 @@ import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.di.ShopListScope
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.*
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.AddToCartUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.DropCartItemUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetBalanceUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetCartDataUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetOrdersUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetShopListUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.UpdateCartItemUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.list.model.ShopItemUIModel
@@ -96,6 +102,7 @@ class ShopListViewModel(
                         imagePaths = it.imagePaths,
                         isAvailable = it.isAvailable,
                         isActive = it.isActive,
+                        quantity = it.quantity,
                         cartAddingState = CartAddingState.No,
                     )
                 },
@@ -219,6 +226,7 @@ class ShopListViewModel(
                             imagePaths = it.imagePaths,
                             isAvailable = it.isAvailable,
                             isActive = it.isActive,
+                            quantity = it.quantity,
                             cartAddingState = CartAddingState.No,
                         )
                     },

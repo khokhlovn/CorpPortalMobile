@@ -7,7 +7,12 @@ import me.tatarka.inject.annotations.Inject
 import ru.kama_diesel.corp_portal_mobile.common.ui.base.BaseStateViewModel
 import ru.kama_diesel.corp_portal_mobile.common.ui.navigation.RouterHolder
 import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.di.CartScope
-import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.*
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.DropCartItemUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetAllShopListUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetBalanceUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.GetCartDataUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.MakeOrderUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.shop.domain.usecase.UpdateCartItemUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.api.IShopFlowRouter
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartAddingState
 import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.CartItemUIModel
@@ -18,7 +23,7 @@ import ru.kama_diesel.corp_portal_mobile.feature.shop.ui.screen.cart.model.Makin
 @Inject
 class CartViewModel(
     private val getCartDataUseCase: GetCartDataUseCase,
-    private val getShopListUseCase: GetShopListUseCase,
+    private val getAllShopListUseCase: GetAllShopListUseCase,
     private val updateCartItemUseCase: UpdateCartItemUseCase,
     private val dropCartItemUseCase: DropCartItemUseCase,
     private val getBalanceUseCase: GetBalanceUseCase,
@@ -173,7 +178,7 @@ class CartViewModel(
     private fun getCartData() {
         coroutineScope.launch {
             val cartItems = getCartDataUseCase()
-            val shopItems = getShopListUseCase()
+            val shopItems = getAllShopListUseCase()
             if (cartItems.isEmpty()) {
                 back()
             } else {

@@ -12,7 +12,11 @@ import ru.kama_diesel.corp_portal_mobile.common.data.network.model.CancelOrderRe
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.DropCartItemRequestData
 import ru.kama_diesel.corp_portal_mobile.common.data.network.model.UpdateCartItemRequestData
 import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IShopRepository
-import ru.kama_diesel.corp_portal_mobile.common.domain.model.*
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.CartItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderPositionItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.OrderStatus
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.ShopItem
 
 @Inject
 class ShopRepository(
@@ -32,6 +36,26 @@ class ShopRepository(
                     imagePaths = it.photoPaths,
                     isAvailable = it.isAvailable ?: false,
                     isActive = it.isActive ?: false,
+                    quantity = it.quantity,
+                )
+            } ?: listOf()
+        }
+    }
+
+    override suspend fun getAllShopList(): List<ShopItem> {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getShopList().shopItems?.map {
+                ShopItem(
+                    id = it.itemId,
+                    name = it.name,
+                    description = it.description,
+                    characteristics = Json.decodeFromString<Map<String, String>>(it.characteristics.toString()),
+                    partNumber = it.partNumber,
+                    price = it.price,
+                    imagePaths = it.photoPaths,
+                    isAvailable = it.isAvailable ?: false,
+                    isActive = it.isActive ?: false,
+                    quantity = it.quantity,
                 )
             } ?: listOf()
         }

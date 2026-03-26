@@ -1,8 +1,20 @@
 package ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
@@ -39,6 +51,7 @@ fun ArticlesListScreen(
     onSendComment: () -> Unit,
     onHideSnackbar: () -> Unit,
     onLikeClick: () -> Unit,
+    onCommentLikeClick: (String) -> Unit,
     onChangeRepliesVisibility: (Int) -> Unit,
     onReplyClick: (Int) -> Unit,
     onCancelReplyClick: () -> Unit,
@@ -133,6 +146,7 @@ fun ArticlesListScreen(
                 onLikeClick = onLikeClick,
                 onChangeRepliesVisibility = onChangeRepliesVisibility,
                 onReplyClick = onReplyClick,
+                onCommentLikeClick = onCommentLikeClick,
                 onCancelClick = onCancelReplyClick,
             )
 
