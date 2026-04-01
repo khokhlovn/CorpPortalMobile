@@ -25,20 +25,23 @@ jobs:
           java-version: 21
 
       - name: Generate signed APK
-        run: ./gradlew assembleRelease --stacktrace
+        run: ./gradlew :composeApp:assembleRelease --stacktrace
 
-      - uses: ilharp/sign-android-release@v2 # Or use @nightly
-        name: Sign app APK
-        id: sign_app
-        with:
-          signingKey: ${{ secrets.KEYSTORE_BASE64 }}
-          keyAlias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-          buildToolsVersion: 36.0.0
+      - name: Decode Keystore
+        id: decode_keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
+
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease
+        env:
+            STORE_FILE: release.jks
+            STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+            KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+            KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     
       # Upload your signed file if you want
       - uses: actions/upload-artifact@v4
         with:
           name: Signed app bundle
-          path: ${{steps.sign_app.outputs.signedFile}}
+          path: composeApp/build/outputs/apk/release
