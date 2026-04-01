@@ -24,16 +24,13 @@ jobs:
           distribution: 'corretto'
           java-version: 21
 
-      - name: Generate signed APK
-        run: ./gradlew :composeApp:assembleRelease --stacktrace
-
       - name: Decode Keystore
         id: decode_keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew :composeApp:assembleRelease --stacktrace
         env:
             STORE_FILE: release.jks
             STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
