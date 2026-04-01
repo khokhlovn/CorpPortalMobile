@@ -23,33 +23,19 @@ jobs:
         with:
           java-version: 21
 
-      - name: Generate signed APK
-        run: ./gradlew assembleRelease --stacktrace
-
-      - name: Sign APK with keystore
-        uses: r0adkll/sign-android-release@v1
+      - uses: ilharp/sign-android-release@v2 # Or use @nightly
+        name: Sign app APK
         id: sign_app
         with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.KEY_STORE }}
-          alias: ${{ secrets.KEY_STORE_ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
-          keyPassword: ${{ secrets.KEY_STORE_PASS }}
-        env:
-          BUILD_TOOLS_VERSION: "30.0.2"
+          releaseDir: app/build/outputs/apk/release
+          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
+          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          buildToolsVersion: 36.0.0
 
-      - name: Upload release APK
-        uses: actions/upload-artifact@v4
+      # Upload your signed file if you want
+      - uses: actions/upload-artifact@v4
         with:
-          name: app-release.apk
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
-
-      - name: Echo APK
-        run: echo Signed APK FILE ${{steps.sign_app.outputs.signedReleaseFile}}
-
-      - name: Release signed APK
-        uses: MicahSphelele/action-publish-signed-apk@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          APP_FOLDER: app
-          FILE_DIR: ${{steps.sign_app.outputs.signedReleaseFile}}
+          name: Signed app bundle
+          path: ${{steps.sign_app.outputs.signedFile}}
