@@ -35,6 +35,27 @@ jobs:
             STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
             KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
             KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: get nested property
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'composeApp/build/outputs/apk/release/output-metadata.json'
+            prop_path: 'elements.versionName'
+
+      - name: get nested property
+        id: file
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'composeApp/build/outputs/apk/release/output-metadata.json'
+            prop_path: 'elements.versionName'
+
+      - name: Create JSON
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "changelog.json"
+          json: '{"latest_version": "${{steps.version.outputs.prop}}", "changelog": "Исправлены ошибки и улучшена производительность", "apk_url": "https://github.com/khokhlovn/CorpPortalMobile/releases/download/latest/${{steps.file.outputs.prop}}"}'
+          dir: "composeApp/build/outputs/apk/release/"
     
       # Upload your signed file if you want
       - uses: actions/upload-artifact@v4
@@ -47,4 +68,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           title: "Development Build"
-          files: composeApp/build/outputs/apk/release/*.apk
+          files: |
+            composeApp/build/outputs/apk/release/*.apk
+            composeApp/build/outputs/apk/release/changelog.json
