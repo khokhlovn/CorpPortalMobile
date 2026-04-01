@@ -24,6 +24,9 @@ jobs:
           distribution: 'corretto'
           java-version: 21
 
+      - name: Generate signed APK
+        run: ./gradlew assembleRelease --stacktrace
+
       - uses: ilharp/sign-android-release@v2 # Or use @nightly
         name: Sign app APK
         id: sign_app
