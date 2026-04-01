@@ -1,11 +1,9 @@
 name: Publish release APK
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    tags:
-      - '*'
+    branches:
+      - master # Triggers on push or merge to master
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,6 +28,7 @@ jobs:
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
 
       - name: Build with Gradle
+        id: sign_app
         run: ./gradlew :composeApp:assembleRelease --stacktrace
         env:
             STORE_FILE: release.jks
@@ -42,3 +41,10 @@ jobs:
         with:
           name: Signed app bundle
           path: composeApp/build/outputs/apk/release
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          title: "Development Build"
+          files: composeApp/build/outputs/apk/release/*.apk
