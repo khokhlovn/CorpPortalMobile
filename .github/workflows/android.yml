@@ -27,8 +27,17 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
 
-      - name: Build with Gradle
+      - uses: NoCrypt/sign-android@main
         id: sign_app
+        with:
+          releaseDir: composeApp/build/outputs/apk/release
+          signingKey: ${{ secrets.KEYSTORE_BASE64 }}
+          keyAlias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Build with Gradle
+        id: signd_app
         run: ./gradlew :composeApp:assembleRelease --stacktrace
         env:
             STORE_FILE: release.jks
