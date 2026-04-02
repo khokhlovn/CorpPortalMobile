@@ -27,6 +27,15 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
 
+      - name: Build with Gradle
+        id: build_app
+        run: ./gradlew :composeApp:assembleRelease --stacktrace
+        env:
+            STORE_FILE: release.jks
+            STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+            KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+            KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
       - uses: NoCrypt/sign-android@main
         id: sign_app
         with:
@@ -35,15 +44,6 @@ jobs:
           keyAlias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Build with Gradle
-        id: signd_app
-        run: ./gradlew :composeApp:assembleRelease --stacktrace
-        env:
-            STORE_FILE: release.jks
-            STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-            KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-            KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Parse JSON file get version
         id: version
