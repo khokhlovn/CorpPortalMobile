@@ -36,6 +36,12 @@ jobs:
             KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
             KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
+      - name: Parse JSON file get version
+        id: version
+        run: |
+          VALUE=$(jq -r '.elements.[0].versionName' composeApp/build/outputs/apk/release/output-metadata.json)
+          echo "app_version=$VALUE" >> $GITHUB_OUTPUT
+
       - uses: NoCrypt/sign-android@main
         id: sign_app
         with:
@@ -45,24 +51,13 @@ jobs:
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
           appName: "CorpPortalMobile"
-
-      - name: Parse JSON file get version
-        id: version
-        run: |
-          VALUE=$(jq -r '.elements.[0].versionName' composeApp/build/outputs/apk/release/output-metadata.json)
-          echo "app_version=$VALUE" >> $GITHUB_OUTPUT
-
-      - name: Parse JSON file get app name
-        id: file
-        run: |
-          VALUE=$(jq -r '.elements.[0].outputFile' composeApp/build/outputs/apk/release/output-metadata.json)
-          echo "output_file=$VALUE" >> $GITHUB_OUTPUT
+          appVersion: "${{ steps.version.outputs.app_version }}"
 
       - name: Create JSON
         uses: jsdaniell/create-json@v1.2.3
         with:
           name: "changelog.json"
-          json: '{"latest_version": "${{ steps.version.outputs.app_version }}", "changelog": "Исправлены ошибки и улучшена производительность", "apk_url": "https://github.com/khokhlovn/CorpPortalMobile/releases/download/latest/CorpPortalMobile.apk"}'
+          json: '{"latest_version": "${{ steps.version.outputs.app_version }}", "changelog": "Исправлены ошибки и улучшена производительность", "apk_url": "https://github.com/khokhlovn/CorpPortalMobile/releases/download/latest/CorpPortalMobile-${{ steps.version.outputs.app_version }}.apk"}'
           dir: "composeApp/build/outputs/apk/release/"
     
       # Upload your signed file if you want
@@ -78,5 +73,5 @@ jobs:
           automatic_release_tag: "latest"
           title: "${{ steps.version.outputs.app_version }}"
           files: |
-            composeApp/build/outputs/apk/release/CorpPortalMobile.apk
+            composeApp/build/outputs/apk/release/CorpPortalMobile-${{ steps.version.outputs.app_version }}.apk
             composeApp/build/outputs/apk/release/changelog.json
