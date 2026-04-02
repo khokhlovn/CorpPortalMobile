@@ -1,7 +1,7 @@
 [versions]
 
-app-versionCode = "19"
-app-versionName = "1.0.0"
+app-versionCode = "21"
+app-versionName = "1.0.1"
 kotlin = "2.2.20"
 compose = "1.9.1"
 agp = "8.12.0"
@@ -35,6 +35,7 @@ kotlinx-datetime = "0.7.1"
 desugaring = "2.1.5"
 splash-screen = "1.2.0"
 lazy-pagination-compose = "1.7.1"
+app-updater = "1.0.1"
 
 [libraries]
 
@@ -82,6 +83,7 @@ appmetrica = { module = "io.appmetrica.analytics:analytics", version.ref = "appm
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
 lazyPaginationCompose = { module = "io.github.ahmad-hamwi:lazy-pagination-compose", version.ref = "lazy-pagination-compose" }
+app-updater = { module = "com.github.CSAbhiOnline:AutoUpdater", version.ref = "app-updater" }
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }

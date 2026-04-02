@@ -47,10 +47,14 @@ kotlin {
 
         androidMain.dependencies {
             implementation(projects.data.network)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.appmetrica)
             implementation(libs.splash.screen)
+            implementation(libs.app.updater)
         }
 
         jvmMain.dependencies {

@@ -50,20 +50,20 @@ internal fun MenuComponent(
             onClick = onArticlesClick,
         )
 
-        NavigationDrawerItem(
-            label = {
-                Text(text = stringResource(Res.string.reservation))
-            },
-            icon = {
-                Icon(
-                    painter = painterResource(Res.drawable.table_restaurant_24px),
-                    contentDescription = null,
-                )
-            },
-            shape = RectangleShape,
-            selected = selectedIndex == 1,
-            onClick = onReservationClick,
-        )
+//        NavigationDrawerItem(
+//            label = {
+//                Text(text = stringResource(Res.string.reservation))
+//            },
+//            icon = {
+//                Icon(
+//                    painter = painterResource(Res.drawable.table_restaurant_24px),
+//                    contentDescription = null,
+//                )
+//            },
+//            shape = RectangleShape,
+//            selected = selectedIndex == 1,
+//            onClick = onReservationClick,
+//        )
 
         NavigationDrawerItem(
             label = {
