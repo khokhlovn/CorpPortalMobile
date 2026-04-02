@@ -44,6 +44,7 @@ jobs:
           keyAlias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+          appName: "CorpPortalMobile"
 
       - name: Parse JSON file get version
         id: version
@@ -61,7 +62,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.3
         with:
           name: "changelog.json"
-          json: '{"latest_version": "${{ steps.version.outputs.app_version }}", "changelog": "Исправлены ошибки и улучшена производительность", "apk_url": "https://github.com/khokhlovn/CorpPortalMobile/releases/download/latest/${{ steps.file.outputs.output_file }}"}'
+          json: '{"latest_version": "${{ steps.version.outputs.app_version }}", "changelog": "Исправлены ошибки и улучшена производительность", "apk_url": "https://github.com/khokhlovn/CorpPortalMobile/releases/download/latest/CorpPortalMobile.apk"}'
           dir: "composeApp/build/outputs/apk/release/"
     
       # Upload your signed file if you want
@@ -73,8 +74,9 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: "false"
           automatic_release_tag: "latest"
-          title: "Development Build"
+          title: "${{ steps.version.outputs.app_version }}"
           files: |
-            composeApp/build/outputs/apk/release/*.apk
+            composeApp/build/outputs/apk/release/CorpPortalMobile.apk
             composeApp/build/outputs/apk/release/changelog.json
