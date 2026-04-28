@@ -10,4 +10,5 @@ data class EmployeeItem(
     val service: String,
     val mail: String,
     val mobile: String? = null,
+    val imagePath: String?,
 )

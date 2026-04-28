@@ -7,6 +7,7 @@ import ru.kama_diesel.corp_portal_mobile.common.ui.theme.AppTheme
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.dialog.details.ArticleDetailsDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticleDetailsUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentSendingState
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.DetailsSubdialog
 
 @Preview
 @Composable
@@ -28,8 +29,7 @@ private fun ArticleDetailsPreview() {
                         position = "Старший мастер",
                         department = "Цех обработки блока цилиндров",
                         imagePath = null,
-                        likesAmount = 0,
-                        isLiked = false
+                        usersLikes = listOf(),
                     )
                 ),
                 comments = mapOf(),
@@ -42,6 +42,7 @@ private fun ArticleDetailsPreview() {
             replyTo = 0,
             myUserId = 0,
             commentSendingState = CommentSendingState.No,
+            dialog = DetailsSubdialog.No,
             onCloseClick = {},
             onCommentChange = {},
             onSendComment = {},
@@ -51,6 +52,8 @@ private fun ArticleDetailsPreview() {
             onReplyClick = {},
             onCancelClick = {},
             onCommentLikeClick = {},
+            onCommentLikesClick = {},
+            onCloseCommentLikesClick = {},
         )
     }
 }

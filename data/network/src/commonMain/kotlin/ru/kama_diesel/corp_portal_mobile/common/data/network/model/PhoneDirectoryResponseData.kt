@@ -23,4 +23,6 @@ data class Employee(
     var mail: String,
     @SerialName("mobile")
     var mobile: String? = null,
+    @SerialName("image_path")
+    var imagePath: String? = null,
 )

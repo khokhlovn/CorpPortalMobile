@@ -15,14 +15,19 @@ import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.Comment
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetArticleDetailsUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetArticlesListUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetMyUserIdUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetPhoneBookUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetTagsUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.GetUserIdsUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.LikeUseCase
 import ru.kama_diesel.corp_portal_mobile.feature.articles.domain.usecase.SendCommentUseCase
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.dialog.details.CommentLikesDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticleDetailsUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListViewState
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentLikeUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentSendingState
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentUIModel
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.DetailsSubdialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.TagItemUIModel
 
 @ArticlesListScope
@@ -35,6 +40,8 @@ class ArticlesListViewModel(
     private val likeUseCase: LikeUseCase,
     private val commentLikeUseCase: CommentLikeUseCase,
     private val getMyUserIdUseCase: GetMyUserIdUseCase,
+    private val getPhoneBookUseCase: GetPhoneBookUseCase,
+    private val getUserIdsUseCase: GetUserIdsUseCase,
     private val initialState: ArticlesListViewState,
 ) : BaseStateViewModel<ArticlesListViewState>() {
 
@@ -246,16 +253,14 @@ class ArticlesListViewModel(
                                             it
                                         } else {
                                             it.copy(
-                                                isLiked = true,
-                                                likesAmount = it.likesAmount + 1,
+                                                usersLikes = it.usersLikes.plus(myUserId),
                                             )
                                         }
                                     },
                                     comments = articleDetailsItem.comments.mapKeys {
                                         if (it.key.commentId.toString() == commentId) {
                                             it.key.copy(
-                                                isLiked = true,
-                                                likesAmount = it.key.likesAmount + 1,
+                                                usersLikes = it.key.usersLikes.plus(myUserId),
                                             )
                                         } else {
                                             it.key
@@ -266,8 +271,7 @@ class ArticlesListViewModel(
                                                 commentItem
                                             } else {
                                                 commentItem.copy(
-                                                    isLiked = true,
-                                                    likesAmount = commentItem.likesAmount + 1,
+                                                    usersLikes = commentItem.usersLikes.plus(myUserId),
                                                 )
                                             }
                                         }
@@ -297,6 +301,54 @@ class ArticlesListViewModel(
                                 }
                             }
                         )
+                    ),
+                )
+            }
+        }
+    }
+
+    fun onCommentLikesClick(commentId: Int) {
+       with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+           coroutineScope.launch {
+               setState {
+                   copy(
+                       dialog = copy(
+                           dialog = DetailsSubdialog.Loading,
+                       ),
+                   )
+               }
+               val userIdWithNameItems = getUserIdsUseCase()
+               val employees = getPhoneBookUseCase()
+               setState {
+                   copy(
+                       dialog = copy(
+                           dialog = DetailsSubdialog.CommentLikes(
+                               usersLikes = articleDetailsItem.originalComments.first { it.commentId == commentId }.usersLikes
+                                   .map { userId ->
+                                       userIdWithNameItems.find { it.userId == userId }?.fullName ?: ""
+                                   }
+                                   .map { fullName ->
+                                       val employee = employees.find { it.fullName == fullName }
+                                       CommentLikeUIModel(
+                                           fullName = employee?.fullName ?: "",
+                                           position = employee?.position ?: "",
+                                           imagePath = employee?.imagePath,
+                                       )
+                                   }
+                           ),
+                       ),
+                   )
+               }
+           }
+       }
+    }
+
+    fun onCloseCommentLikesClick() {
+        with(currentState.dialog as? ArticlesListDialog.Details ?: return) {
+            setState {
+                copy(
+                    dialog = copy(
+                        dialog = DetailsSubdialog.No,
                     ),
                 )
             }
@@ -395,8 +447,7 @@ class ArticlesListViewModel(
                                         position = comment.position,
                                         department = comment.department,
                                         imagePath = comment.imagePath,
-                                        likesAmount = comment.likesAmount,
-                                        isLiked = comment.isLiked,
+                                        usersLikes = comment.usersLikes,
                                         isExpanded = false,
                                     )
                                     commentsWithReplies[rootComment] = listOf()
@@ -420,6 +471,7 @@ class ArticlesListViewModel(
                         replyTo = null,
                         myUserId = myUserId,
                         commentSendingState = CommentSendingState.No,
+                        dialog = DetailsSubdialog.No,
                     ),
                 )
             }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -92,6 +93,7 @@ internal fun ArticleDetailsContent(
     onCommentLikeClick: (String) -> Unit,
     onChangeRepliesVisibility: (Int) -> Unit,
     onReplyClick: (Int) -> Unit,
+    onCommentLikesClick: (Int) -> Unit,
 ) {
     var selectedImageIndex by remember { mutableIntStateOf(0) }
     var isImageOpened by remember { mutableStateOf(false) }
@@ -312,6 +314,7 @@ internal fun ArticleDetailsContent(
                     onChangeRepliesVisibility = onChangeRepliesVisibility,
                     onReplyClick = onReplyClick,
                     onCommentLikeClick = onCommentLikeClick,
+                    onCommentLikesClick = onCommentLikesClick,
                 )
             }
             if (commentWithReplies.key.isExpanded) {
@@ -364,6 +367,7 @@ internal fun ArticleDetailsContent(
                                     myUserId = myUserId,
                                     onReplyClick = onReplyClick,
                                     onCommentLikeClick = onCommentLikeClick,
+                                    onCommentLikesClick = onCommentLikesClick,
                                 )
                             }
                         }
@@ -382,6 +386,7 @@ private fun CommentListItem(
     onChangeRepliesVisibility: (Int) -> Unit,
     onReplyClick: (Int) -> Unit,
     onCommentLikeClick: (String) -> Unit,
+    onCommentLikesClick: (Int) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -482,9 +487,19 @@ private fun CommentListItem(
                     )
                 }
                 Row(
-                    modifier = Modifier.clickable(
-                        enabled = !commentUIModel.isLiked,
-                        onClick = { onCommentLikeClick(commentUIModel.commentId.toString()) }
+                    modifier = Modifier.combinedClickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                        onClick = {
+                            if (!commentUIModel.usersLikes.contains(myUserId)) {
+                                onCommentLikeClick(commentUIModel.commentId.toString())
+                            }
+                        },
+                        onLongClick = {
+                            if (commentUIModel.usersLikes.isNotEmpty()) {
+                                onCommentLikesClick(commentUIModel.commentId)
+                            }
+                        },
                     ).then(
                         if (commentUIModel.userId == myUserId) {
                             Modifier.fillMaxWidth()
@@ -495,7 +510,7 @@ private fun CommentListItem(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (commentUIModel.isLiked) {
+                    if (commentUIModel.usersLikes.contains(myUserId)) {
                         Icon(
                             modifier = Modifier.size(14.dp),
                             painter = painterResource(Res.drawable.favorite_filled_24px),
@@ -512,7 +527,7 @@ private fun CommentListItem(
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = commentUIModel.likesAmount.toString(),
+                        text = commentUIModel.usersLikes.size.toString(),
                         lineHeight = 14.sp,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
@@ -557,6 +572,7 @@ private fun SubcommentListItem(
     myUserId: Int,
     onReplyClick: (Int) -> Unit,
     onCommentLikeClick: (String) -> Unit,
+    onCommentLikesClick: (Int) -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -678,9 +694,19 @@ private fun SubcommentListItem(
                     )
                 }
                 Row(
-                    modifier = Modifier.clickable(
-                        enabled = !commentItem.isLiked,
-                        onClick = { onCommentLikeClick(commentItem.commentId.toString()) }
+                    modifier = Modifier.combinedClickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                        onClick = {
+                            if (!commentItem.usersLikes.contains(myUserId)) {
+                                onCommentLikeClick(commentItem.commentId.toString())
+                            }
+                        },
+                        onLongClick = {
+                            if (commentItem.usersLikes.isNotEmpty()) {
+                                onCommentLikesClick(commentItem.commentId)
+                            }
+                        },
                     ).then(
                         if (commentItem.userId == myUserId) {
                             Modifier.fillMaxWidth()
@@ -691,7 +717,7 @@ private fun SubcommentListItem(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (commentItem.isLiked) {
+                    if (commentItem.usersLikes.contains(myUserId)) {
                         Icon(
                             modifier = Modifier.size(10.dp),
                             painter = painterResource(Res.drawable.favorite_filled_24px),
@@ -708,7 +734,7 @@ private fun SubcommentListItem(
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = commentItem.likesAmount.toString(),
+                        text = commentItem.usersLikes.size.toString(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.outline,

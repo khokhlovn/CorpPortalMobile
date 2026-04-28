@@ -37,8 +37,6 @@ data class CommentData(
     val department: String,
     @SerialName("image_path")
     val imagePath: String? = null,
-    @SerialName("likes_amount")
-    val likesAmount: Int,
-    @SerialName("is_liked")
-    val isLiked: Boolean,
+    @SerialName("users_likes")
+    val userLikes: List<Int>? = null,
 )
