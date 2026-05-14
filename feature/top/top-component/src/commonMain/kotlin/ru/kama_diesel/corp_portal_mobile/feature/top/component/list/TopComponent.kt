@@ -16,7 +16,7 @@ class TopComponent(
     private val savedState: TopViewState = registerAndGetSavedState(
         key = TOP_SAVED_STATE,
         initialValue = TopViewState(
-            topWorkers = listOf(),
+            wallOfFameItems = listOf(),
             isLoading = true,
         ),
         deserialization = TopViewState.serializer(),

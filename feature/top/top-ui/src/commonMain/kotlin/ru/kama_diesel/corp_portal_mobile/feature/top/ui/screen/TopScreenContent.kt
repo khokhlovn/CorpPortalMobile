@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
@@ -18,6 +20,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,14 +34,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.TopWorkerItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.WallOfFameItem
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.logo
 import ru.kama_diesel.corp_portal_mobile.resources.more
@@ -45,7 +53,7 @@ import ru.kama_diesel.corp_portal_mobile.resources.person_placeholder
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TopScreenContent(
-    topWorkers: List<TopWorkerItem>,
+    wallOfFameItems: List<WallOfFameItem>,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
 ) {
@@ -56,12 +64,14 @@ fun TopScreenContent(
         behindFraction = 0.5f,
     )
     val gridState = rememberLazyGridState(cacheWindow = percentCacheWindow)
+    val pagerState = rememberPagerState(pageCount = { wallOfFameItems.size })
+    val selectedTabIndex = remember { derivedStateOf { pagerState.currentPage } }
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(red = 243, green = 243, blue = 243))
-            .paint(painter = painterResource(Res.drawable.logo)),
+            .background(color = Color(red = 243, green = 243, blue = 243)),
     ) {
         PullToRefreshBox(
             modifier = Modifier.weight(1f).fillMaxSize(),
@@ -78,21 +88,65 @@ fun TopScreenContent(
             },
             onRefresh = onRefresh,
         ) {
-            LazyVerticalGrid(
+            Column(
                 modifier = Modifier.fillMaxSize(),
-                state = gridState,
-                columns = GridCells.Fixed(count = 2),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
             ) {
-                items(items = topWorkers) { topWorker ->
-                    TopWorkerItemContent(
-                        item = topWorker,
-                        onLinkClick = {
-                            uriHandler.openUri(topWorker.link)
-                        },
-                    )
+                PrimaryTabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = selectedTabIndex.value,
+                    containerColor = MaterialTheme.colorScheme.inverseSurface,
+                    indicator = {
+                        TabRowDefaults.PrimaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(selectedTabIndex.value, matchContentSize = true)
+                                .fillMaxWidth(),
+                            width = Dp.Unspecified,
+                        )
+                    }
+                ) {
+                    wallOfFameItems.forEachIndexed { index, wallOfFameItem ->
+                        Tab(
+                            modifier = Modifier.fillMaxWidth(),
+                            selected = selectedTabIndex.value == index,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            text = {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = wallOfFameItem.year.toString(),
+                                )
+                            },
+                        )
+                    }
+                }
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .paint(painter = painterResource(Res.drawable.logo))
+                        .weight(1f)
+                ) {
+                    LazyVerticalGrid(
+                        modifier = Modifier.fillMaxSize(),
+                        state = gridState,
+                        columns = GridCells.Fixed(count = 2),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+                    ) {
+                        items(items = wallOfFameItems[selectedTabIndex.value].topWorkerItems) { topWorker ->
+                            TopWorkerItemContent(
+                                item = topWorker,
+                                onLinkClick = {
+                                    topWorker.link?.let {
+                                        uriHandler.openUri(it)
+                                    }
+                                },
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -184,20 +238,23 @@ fun TopWorkerItemContent(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .clickable {
-                            onLinkClick()
-                        },
-                    text = stringResource(Res.string.more),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.inverseOnSurface,
-                )
+
+                if (item.link != null) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                            .clickable {
+                                onLinkClick()
+                            },
+                        text = stringResource(Res.string.more),
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                    )
+                }
             }
         }
     }
