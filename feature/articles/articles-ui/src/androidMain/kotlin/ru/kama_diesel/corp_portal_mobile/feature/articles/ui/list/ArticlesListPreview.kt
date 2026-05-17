@@ -5,6 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.ahmad_hamwi.compose.pagination.rememberPaginationState
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 import ru.kama_diesel.corp_portal_mobile.common.ui.theme.AppTheme
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.list.articleItemsPreviewData
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.ArticlesListScreen
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.ArticlesListScreenContent
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticlesListDialog
@@ -42,6 +43,8 @@ private fun ArticlesListScreenPreview() {
             onReplyClick = {},
             onCancelReplyClick = {},
             onCommentLikeClick = {},
+            onCommentLikesClick = {},
+            onCloseCommentLikesClick = {},
         )
     }
 }

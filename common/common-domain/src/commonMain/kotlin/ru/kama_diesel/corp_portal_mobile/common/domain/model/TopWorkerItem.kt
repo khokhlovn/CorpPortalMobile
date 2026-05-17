@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class TopWorkerItem(
     val fullName: String,
     val position: String,
-    val link: String,
+    val link: String?,
     val imagePath: String?,
 )

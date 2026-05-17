@@ -34,10 +34,10 @@ class TopViewModel(
                 isLoading = true,
             )
         }
-        val topWorkers = getTopWorkersUseCase()
+        val wallOfFameItems = getTopWorkersUseCase()
         setState {
             copy(
-                topWorkers = topWorkers,
+                wallOfFameItems = wallOfFameItems,
                 isLoading = false,
             )
         }

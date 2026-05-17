@@ -13,7 +13,9 @@ import ru.kama_diesel.corp_portal_mobile.common.domain.interfaces.IArticlesRepos
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleDetailsItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.CommentItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.EmployeeItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.TagItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.UserIdWithNameItem
 
 @Inject
 class ArticlesRepository(
@@ -82,8 +84,7 @@ class ArticlesRepository(
                             position = comment.position,
                             department = comment.department,
                             imagePath = comment.imagePath,
-                            likesAmount = comment.likesAmount,
-                            isLiked = comment.isLiked,
+                            usersLikes = comment.userLikes ?: listOf(),
                         )
                     } ?: listOf()
                 )
@@ -127,5 +128,30 @@ class ArticlesRepository(
         return withContext(Dispatchers.IO) {
             corpPortalApi.getMyInfo().user.userId
         }
+    }
+
+    override suspend fun getPhoneDirectory(): List<EmployeeItem> {
+        return withContext(Dispatchers.IO) {
+            corpPortalApi.getPhoneBook().employees?.map {
+                EmployeeItem(
+                    fullName = it.fullName,
+                    position = it.position,
+                    department = it.department,
+                    service = it.service,
+                    mail = it.mail,
+                    mobile = it.mobile,
+                    imagePath = it.imagePath,
+                )
+            } ?: listOf()
+        }
+    }
+
+    override suspend fun getUserIdsWithNames(): List<UserIdWithNameItem> {
+        return corpPortalApi.getUserIds().users?.map {
+            UserIdWithNameItem(
+                userId = it.userId,
+                fullName = it.fullName,
+            )
+        } ?: listOf()
     }
 }

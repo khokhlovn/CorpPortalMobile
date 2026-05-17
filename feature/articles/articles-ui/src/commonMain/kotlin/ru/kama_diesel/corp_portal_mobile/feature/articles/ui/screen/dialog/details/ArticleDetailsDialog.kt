@@ -41,8 +41,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.kama_diesel.corp_portal_mobile.common.ui.component.LoadingDialog
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.ArticleDetailsUIModel
 import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.CommentSendingState
+import ru.kama_diesel.corp_portal_mobile.feature.articles.ui.screen.list.model.DetailsSubdialog
 import ru.kama_diesel.corp_portal_mobile.resources.Res
 import ru.kama_diesel.corp_portal_mobile.resources.close_24px
 import ru.kama_diesel.corp_portal_mobile.resources.comment
@@ -64,6 +66,7 @@ fun ArticleDetailsDialog(
     comment: String,
     replyTo: Int?,
     commentSendingState: CommentSendingState,
+    dialog: DetailsSubdialog,
     onCloseClick: () -> Unit,
     onChangeRepliesVisibility: (Int) -> Unit,
     onCommentChange: (String) -> Unit,
@@ -73,6 +76,8 @@ fun ArticleDetailsDialog(
     onCommentLikeClick: (String) -> Unit,
     onReplyClick: (Int) -> Unit,
     onCancelClick: () -> Unit,
+    onCommentLikesClick: (Int) -> Unit,
+    onCloseCommentLikesClick: () -> Unit,
 ) {
     Dialog(onDismissRequest = { onCloseClick() }) {
         Card(
@@ -157,9 +162,19 @@ fun ArticleDetailsDialog(
                         onReplyClick(it)
                     },
                     onCommentLikeClick = onCommentLikeClick,
+                    onCommentLikesClick = onCommentLikesClick,
                 )
             }
         }
+    }
+
+    when (dialog) {
+        is DetailsSubdialog.CommentLikes -> CommentLikesDialog(
+            commentLikeUIModels = dialog.usersLikes,
+            onCloseClick = onCloseCommentLikesClick,
+        )
+        DetailsSubdialog.Loading -> LoadingDialog()
+        DetailsSubdialog.No -> Unit
     }
 }
 

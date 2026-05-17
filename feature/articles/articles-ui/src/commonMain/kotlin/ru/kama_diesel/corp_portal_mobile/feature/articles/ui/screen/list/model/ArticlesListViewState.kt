@@ -39,7 +39,10 @@ sealed class ArticlesListDialog {
         val replyTo: Int?,
         val comment: String,
         val commentSendingState: CommentSendingState,
+        val dialog: DetailsSubdialog,
     ) : ArticlesListDialog()
+
+
 }
 
 @Serializable
@@ -78,7 +81,26 @@ data class CommentUIModel(
     val department: String,
     val imagePath: String?,
     val isExpanded: Boolean,
-    val isLiked: Boolean,
-    val likesAmount: Int,
+    val usersLikes: List<Int>,
 )
 
+@Serializable
+sealed class DetailsSubdialog {
+    @Serializable
+    data object No : DetailsSubdialog()
+
+    @Serializable
+    data object Loading : DetailsSubdialog()
+
+    @Serializable
+    data class CommentLikes(
+        val usersLikes: List<CommentLikeUIModel>,
+    ) : DetailsSubdialog()
+}
+
+@Serializable
+data class CommentLikeUIModel(
+    val fullName: String,
+    val position: String,
+    val imagePath: String?,
+)

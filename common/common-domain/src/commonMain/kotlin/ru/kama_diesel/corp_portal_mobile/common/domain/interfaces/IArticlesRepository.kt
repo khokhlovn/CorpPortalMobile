@@ -2,7 +2,9 @@ package ru.kama_diesel.corp_portal_mobile.common.domain.interfaces
 
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleDetailsItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.ArticleItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.EmployeeItem
 import ru.kama_diesel.corp_portal_mobile.common.domain.model.TagItem
+import ru.kama_diesel.corp_portal_mobile.common.domain.model.UserIdWithNameItem
 
 interface IArticlesRepository {
     suspend fun getArticlesList(page: Int, fromDate: Long?, toDate: Long?, selectedTagsIds: List<String>): List<ArticleItem>
@@ -18,4 +20,6 @@ interface IArticlesRepository {
     suspend fun commentLike(commentId: String)
 
     suspend fun getMyUserId(): Int
+    suspend fun getPhoneDirectory(): List<EmployeeItem>
+    suspend fun getUserIdsWithNames(): List<UserIdWithNameItem>
 }

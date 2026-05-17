@@ -11,7 +11,7 @@ fun TopScreen(
     onRefresh: () -> Unit,
 ) {
     TopScreenContent(
-        topWorkers = viewState.topWorkers,
+        wallOfFameItems = viewState.wallOfFameItems,
         isRefreshing = viewState.isLoading,
         onRefresh = onRefresh,
     )

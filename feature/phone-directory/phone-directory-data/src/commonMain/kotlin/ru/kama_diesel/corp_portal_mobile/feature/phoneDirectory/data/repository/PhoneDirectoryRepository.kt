@@ -25,6 +25,7 @@ class PhoneDirectoryRepository(
                     service = it.service,
                     mail = it.mail,
                     mobile = it.mobile,
+                    imagePath = it.imagePath,
                 )
             } ?: listOf()
         }

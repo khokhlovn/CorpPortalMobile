@@ -55,6 +55,8 @@ fun ArticlesListScreen(
     onChangeRepliesVisibility: (Int) -> Unit,
     onReplyClick: (Int) -> Unit,
     onCancelReplyClick: () -> Unit,
+    onCommentLikesClick: (Int) -> Unit,
+    onCloseCommentLikesClick: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -139,6 +141,7 @@ fun ArticlesListScreen(
                 comment = dialog.comment,
                 replyTo = dialog.replyTo,
                 commentSendingState = dialog.commentSendingState,
+                dialog = dialog.dialog,
                 onCloseClick = onCloseDetailsClick,
                 onCommentChange = onCommentChange,
                 onSendComment = onSendComment,
@@ -148,6 +151,8 @@ fun ArticlesListScreen(
                 onReplyClick = onReplyClick,
                 onCommentLikeClick = onCommentLikeClick,
                 onCancelClick = onCancelReplyClick,
+                onCommentLikesClick = onCommentLikesClick,
+                onCloseCommentLikesClick = onCloseCommentLikesClick,
             )
 
             ArticlesListDialog.Loading -> LoadingDialog()
