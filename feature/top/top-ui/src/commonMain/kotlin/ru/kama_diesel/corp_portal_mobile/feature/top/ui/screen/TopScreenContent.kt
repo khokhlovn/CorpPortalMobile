@@ -59,19 +59,18 @@ fun TopScreenContent(
 ) {
     val uriHandler = LocalUriHandler.current
     val state = rememberPullToRefreshState()
-    val percentCacheWindow = LazyLayoutCacheWindow(
-        aheadFraction = 1f,
-        behindFraction = 0.5f,
-    )
-    val gridState = rememberLazyGridState(cacheWindow = percentCacheWindow)
-    val pagerState = rememberPagerState(pageCount = { wallOfFameItems.size })
-    val selectedTabIndex = remember { derivedStateOf { pagerState.currentPage } }
-    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(red = 243, green = 243, blue = 243)),
+            .background(color = Color(red = 243, green = 243, blue = 243))
+            .then(
+                if (wallOfFameItems.isEmpty()) {
+                    Modifier.paint(painter = painterResource(Res.drawable.logo))
+                } else {
+                    Modifier
+                }
+            ),
     ) {
         PullToRefreshBox(
             modifier = Modifier.weight(1f).fillMaxSize(),
@@ -91,60 +90,71 @@ fun TopScreenContent(
             Column(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                PrimaryTabRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedTabIndex = selectedTabIndex.value,
-                    containerColor = MaterialTheme.colorScheme.inverseSurface,
-                    indicator = {
-                        TabRowDefaults.PrimaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(selectedTabIndex.value, matchContentSize = true)
-                                .fillMaxWidth(),
-                            width = Dp.Unspecified,
-                        )
-                    }
-                ) {
-                    wallOfFameItems.forEachIndexed { index, wallOfFameItem ->
-                        Tab(
-                            modifier = Modifier.fillMaxWidth(),
-                            selected = selectedTabIndex.value == index,
-                            onClick = {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                            text = {
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = wallOfFameItem.year.toString(),
-                                )
-                            },
-                        )
-                    }
-                }
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .paint(painter = painterResource(Res.drawable.logo))
-                        .weight(1f)
-                ) {
-                    LazyVerticalGrid(
-                        modifier = Modifier.fillMaxSize(),
-                        state = gridState,
-                        columns = GridCells.Fixed(count = 2),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+                if (wallOfFameItems.isNotEmpty()) {
+                    val percentCacheWindow = LazyLayoutCacheWindow(
+                        aheadFraction = 1f,
+                        behindFraction = 0.5f,
+                    )
+                    val gridState = rememberLazyGridState(cacheWindow = percentCacheWindow)
+                    val pagerState = rememberPagerState(pageCount = { wallOfFameItems.size }, initialPage = wallOfFameItems.size - 1)
+                    val selectedTabIndex = remember { derivedStateOf { pagerState.currentPage } }
+                    val scope = rememberCoroutineScope()
+
+                    PrimaryTabRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        selectedTabIndex = selectedTabIndex.value,
+                        containerColor = MaterialTheme.colorScheme.inverseSurface,
+                        indicator = {
+                            TabRowDefaults.PrimaryIndicator(
+                                modifier = Modifier.tabIndicatorOffset(selectedTabIndex.value, matchContentSize = true)
+                                    .fillMaxWidth(),
+                                width = Dp.Unspecified,
+                            )
+                        }
                     ) {
-                        items(items = wallOfFameItems[selectedTabIndex.value].topWorkerItems) { topWorker ->
-                            TopWorkerItemContent(
-                                item = topWorker,
-                                onLinkClick = {
-                                    topWorker.link?.let {
-                                        uriHandler.openUri(it)
+                        wallOfFameItems.sortedBy { it.year }.forEachIndexed { index, wallOfFameItem ->
+                            Tab(
+                                modifier = Modifier.fillMaxWidth(),
+                                selected = selectedTabIndex.value == index,
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(index)
                                     }
                                 },
+                                text = {
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        text = wallOfFameItem.year.toString(),
+                                    )
+                                },
                             )
+                        }
+                    }
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .paint(painter = painterResource(Res.drawable.logo))
+                            .weight(1f)
+                    ) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            state = gridState,
+                            columns = GridCells.Fixed(count = 2),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+                        ) {
+                            items(items = wallOfFameItems[selectedTabIndex.value].topWorkerItems) { topWorker ->
+                                TopWorkerItemContent(
+                                    item = topWorker,
+                                    onLinkClick = {
+                                        topWorker.link?.let {
+                                            uriHandler.openUri(it)
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                 }
