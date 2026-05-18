@@ -145,7 +145,7 @@ fun TopScreenContent(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
                         ) {
-                            items(items = wallOfFameItems[selectedTabIndex.value].topWorkerItems) { topWorker ->
+                            items(items = wallOfFameItems.sortedBy { it.year }[selectedTabIndex.value].topWorkerItems) { topWorker ->
                                 TopWorkerItemContent(
                                     item = topWorker,
                                     onLinkClick = {
